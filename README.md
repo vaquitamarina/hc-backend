@@ -70,141 +70,82 @@ Antes de comenzar, asegúrate de tener instalado:
    `npm run dev`
    El backend quedara disponible en localhost:3000/api, por ahora funciona el localhost:3000/api/users
 
-## 📌 Flujo de Git: Ship / Show / Ask
+---
 
-Usaremos la metodología **Ship/Show/Ask** para gestionar commits:
+## 🏗️ Flujo de Trabajo con Git
 
-### 🔹 Ship
+El flujo de trabajo del proyecto se basa en el uso de ramas para cada nueva tarea, ya sea una funcionalidad, un componente o un arreglo. Esto nos permite trabajar de forma paralela sin interferir en el trabajo de los demás.
 
-- Para cambios pequeños, simples y sin riesgo.
-- Se comitea directamente en la rama `main`.
+**Pasos:**
 
-**Ejemplo:**
-[SHIP]: fix typo in login validation
+1.  **Crear una nueva rama**: Antes de empezar a trabajar en una tarea, crea una rama específica desde la rama principal (`main` o `develop`).
 
-### 🔹 Show
+    ```bash
+    git checkout -b nombre-de-la-rama
+    ```
 
-- Para cambios medianos que pueden necesitar revisión ligera.
-- Se trabaja en una rama nueva y se comparte con el equipo para feedback.
+2.  **Realizar commits**: A medida que trabajas, haz `commits` en esta nueva rama para guardar tus cambios. Utiliza mensajes de `commit` descriptivos.
 
-**Ejemplo:**
-[SHOW]: add user profile card component
+    ```bash
+    git commit -m "add new user"
+    ```
 
-### 🔹 Ask
-
-- Para cambios grandes, con riesgo o que afectan partes críticas.
-- Se debe abrir un Pull Request y solicitar revisión antes de fusionar.
-
-**Ejemplo:**
-[ASK]: refactor authentication flow
+3.  **Subir la rama**: Una vez que hayas terminado la tarea, sube tu rama al repositorio remoto para que otros la puedan ver y revisar.
+    ```bash
+    git push origin nombre-de-la-rama
+    ```
 
 ---
 
-## 🌱 Guía de Ramas en Git
+## 🏷️ Convención de Nombres para Ramas
 
-Para mantener un flujo de trabajo organizado usaremos ramas según la metodología **Ship / Show / Ask**.
+Para mantener la coherencia y la claridad, usaremos una convención de nombres para las ramas. El formato es `<tipo>/<descripcion-de-la-tarea>`.
 
----
+**Tipos de ramas comunes:**
 
-### 🔹 Crear una rama nueva
+- `feat`: Para una **nueva funcionalidad** o característica.
+  - **Ejemplo:** `feat/add-contact-form`
+- `fix`: Para una **corrección de errores** (bug fix).
+  - **Ejemplo:** `fix/correct-email-validation`
+- `docs`: Para cambios en la **documentación**.
+  - **Ejemplo:** `docs/update-readme`
+- `refactor`: Para **refactorización** de código que no cambia la funcionalidad.
+  - **Ejemplo:** `refactor/improve-button-structure`
+- `chore`: Para tareas de **mantenimiento** o configuración del proyecto.
+  - **Ejemplo:** `chore/update-dependencies`
+- `test`: Para añadir o modificar **pruebas**.
+  - **Ejemplo:** `test/add-login-unit-tests`
 
-Siempre empieza desde `main` actualizado:
+**Consideraciones adicionales:**
 
-`git checkout main`
-`git pull`
-`git checkout -b nombre-de-la-rama`
-
-Ejemplo: `git checkout -b feature/button-component`
-
----
-
-### 🔹 Subir la rama al remoto (GitHub)
-
-`git push origin nombre-de-la-rama`
-Ejemplo: `git push origin feature/button-component`
-
----
-
-### 📌 Convenciones de nombres de ramas
-
-- `feature/...` → nuevas funcionalidades
-- `fix/...` → correcciones de errores
-- `docs/...` → documentación
-- `chore/...` → tareas de configuración o mantenimiento
-
----
-
-## 📌 Flujo de Git: Ship / Show / Ask
-
-Usaremos la metodología **Ship/Show/Ask** para gestionar commits:
-
-### 🔹 Ship
-
-- Para cambios pequeños, simples y sin riesgo.
-- Se comitea directamente en la rama `main`.
-
-**Ejemplo:**
-[SHIP]: fix typo in login validation
-
-### 🔹 Show
-
-- Para cambios medianos que pueden necesitar revisión ligera.
-- Se trabaja en una rama nueva y se comparte con el equipo para feedback.
-
-**Ejemplo:**
-[SHOW]: add user profile card component
-
-### 🔹 Ask
-
-- Para cambios grandes, con riesgo o que afectan partes críticas.
-- Se debe abrir un Pull Request y solicitar revisión antes de fusionar.
-
-**Ejemplo:**
-[ASK]: refactor authentication flow
-
----
-
-## 🌱 Guía de Ramas en Git
-
-Para mantener un flujo de trabajo organizado usaremos ramas según la metodología **Ship / Show / Ask**.
-
----
-
-### 🔹 Crear una rama nueva
-
-Siempre empieza desde `main` actualizado:
-
-`git checkout main`
-`git pull`
-`git checkout -b nombre-de-la-rama`
-
-Ejemplo: `git checkout -b feature/button-component`
-
----
-
-### 🔹 Subir la rama al remoto (GitHub)
-
-`git push origin nombre-de-la-rama`
-Ejemplo: `git push origin feature/button-component`
-
----
-
-### 📌 Convenciones de nombres de ramas
-
-- `feature/...` → nuevas funcionalidades
-- `fix/...` → correcciones de errores
-- `docs/...` → documentación
-- `chore/...` → tareas de configuración o mantenimiento
+- **Minúsculas**: Usa solo letras minúsculas.
+- **Guiones**: Separa las palabras con guiones (`-`).
+- **Sé descriptivo**: La descripción debe ser lo suficientemente clara para que, con solo leer el nombre de la rama, se entienda de qué trata la tarea.
 
 ---
 
 ## 📖 Convenciones
 
-- Código en **JavaScript**
-- Todo en camelCase en inglés (variables, funciones, archivos)
-- Controladores, middlewares, modelos y utilidades bien separados en sus carpetas
+### **📋 Convenciones de Nomenclatura para Front-end**
+
+Para mantener un código limpio y consistente, seguiremos las siguientes convenciones de nomenclatura para el desarrollo del front-end.
+
+#### **1. Nomenclatura en JavaScript**
+
+- **Variables**: Las variables se declararán utilizando **camelCase**.
+  - **Ejemplo**: `vaquitaMarina`
+- **Clases**: Los nombres de las clases se escribirán en **PascalCase**.
+  - **Ejemplo**: `UserModel`
+
+---
+
+#### **4. Convención de Idioma**
+
+- Todos los nombres de variables y clases se escribirán en **inglés** para mantener una convención global y evitar ambigüedades.
+  - **Ejemplo**: Usa `userModel` en lugar de `modeloDeUsuario`.
+
+---
 
 ## Notas
 
-- Por ahora se usan mockups (JSON en /data) en lugar de base de datos.
-- Autoformateo y linteo se ejecutan al hacer commit
+- El repo tiene autoformteo y linteo ya configurado, se activa al momento de
