@@ -25,9 +25,12 @@ export class UserModel {
     const user = result.rows[0];
     const isPasswordValid = await argo2.verify(user.contrasena_hash, password);
     if (!isPasswordValid) {
+      //debug
       console.log('Invalid password');
+      return null;
     }
-
+    //dbugline
+    console.log('Sesion iniciada, usuario:', user.nombre);
     return {
       id: user.id_usuario,
       userCode: userCode,
