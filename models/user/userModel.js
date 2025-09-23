@@ -20,24 +20,10 @@ export class UserModel {
         hashedPassword,
       ]);
 
-      return { success: true, message: 'Usuario registrado exitosamente' };
+      return true;
     } catch (error) {
-      if (error.code === '23505') {
-        let campo = 'Campo duplicado';
-        if (error.detail) {
-          if (error.detail.includes('email')) {
-            campo = 'Email';
-          } else if (error.detail.includes('dni')) {
-            campo = 'DNI';
-          } else if (error.detail.includes('user_code')) {
-            campo = 'Código de usuario';
-          }
-        }
-        return { success: false, message: `${campo} ya existe` };
-      }
-
       console.error('Error al registrar usuario:', error.message);
-      return { success: false, message: error.message };
+      return null;
     }
   }
 
