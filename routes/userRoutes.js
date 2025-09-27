@@ -10,3 +10,4 @@ const userController = new UserController(UserModel);
 userRoutes.get('/', userController.getAll);
 userRoutes.post('/', userController.insert);
 userRoutes.post('/login', userController.login);
+userRoutes.get('/:id', userController.getUserById);
