@@ -8,8 +8,8 @@ export class UserController {
     res.json(users);
   };
 
-  insert = async (req, res) => {
-    const newUser = await this.UserModel.insert(req.body);
+  register = async (req, res) => {
+    const newUser = await this.UserModel.register(req.body);
     res.status(201).json(newUser);
   };
 

@@ -3,7 +3,7 @@ import argon2 from 'argon2';
 import pool from '../../db/db.js';
 
 export class UserModel {
-  static async insert(userData) {
+  static async register(userData) {
     const { userCode, firstName, lastName, dni, email, role, password } =
       userData;
 
@@ -28,10 +28,9 @@ export class UserModel {
   }
 
   static async getUserById(id) {
-    const result = await pool.query(
-      'SELECT id_usuario, usuario_login, nombre, apellido, dni, email FROM usuarios WHERE id_usuario = $1',
-      [id]
-    );
+    const result = await pool.query('SELECT * FROM fn_obtener_usuario($1)', [
+      id,
+    ]);
     if (result.rows.length === 0) {
       return null;
     }

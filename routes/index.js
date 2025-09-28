@@ -6,6 +6,6 @@ import { hcRoutes } from './hcRoutes.js';
 
 export const router = Router();
 
-router.use('/users', userRoutes);
+router.use('/user', userRoutes);
 router.use('/pacient', pacientRoutes);
 router.use('/hc', hcRoutes);
