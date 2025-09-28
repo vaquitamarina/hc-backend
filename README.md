@@ -15,6 +15,30 @@ Antes de comenzar, asegúrate de tener instalado:
 
 ---
 
+# 📌 Convención de Respuestas API (GET & POST)
+
+## 🔹 GET (obtener datos)
+
+| Escenario                       | Código HTTP     | Respuesta JSON                                 |
+| ------------------------------- | --------------- | ---------------------------------------------- |
+| ✅ Con resultados (lista)       | `200 OK`        | `[ { "id": 1, "nombre": "Paciente Adulto" } ]` |
+| ✅ Con resultado (recurso)      | `200 OK`        | `{ "id": 1, "nombre": "Paciente Adulto" }`     |
+| ✅ Sin resultados (lista vacía) | `200 OK`        | `[]`                                           |
+| ❌ Recurso no encontrado        | `404 Not Found` | `{ "error": "Recurso no encontrado" }`         |
+
+---
+
+## 🔹 POST (crear recurso o acción, ej: registro/login)
+
+| Escenario                         | Código HTTP                 | Respuesta JSON                                                            |
+| --------------------------------- | --------------------------- | ------------------------------------------------------------------------- |
+| ✅ Creación exitosa               | `201 Created`               | `{ "id": 101, "nombre": "Juan Pérez" }`                                   |
+| ✅ Acción exitosa (ej: login)     | `200 OK`                    | `{ "token": "jwt123...", "user": { "id": 101, "nombre": "Juan Pérez" } }` |
+| ❌ Datos inválidos / conflicto    | `400 Bad Request`           | `{ "error": "El email ya está registrado" }`                              |
+| ❌ Usuario no encontrado (login)  | `404 Not Found`             | `{ "error": "Usuario no encontrado" }`                                    |
+| ❌ Credenciales inválidas (login) | `401 Unauthorized`          | `{ "error": "Credenciales inválidas" }`                                   |
+| ❌ Error interno                  | `500 Internal Server Error` | `{ "error": "Ocurrió un error inesperado" }`                              |
+
 ## 📂 Estructura del proyecto
 
 ### 📁 Descripción de carpetas y archivos
