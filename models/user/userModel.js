@@ -3,14 +3,19 @@ import argon2 from 'argon2';
 import pool from '../../db/db.js';
 
 export class UserModel {
-  static async register(userData) {
-    const { userCode, firstName, lastName, dni, email, role, password } =
-      userData;
-
+  static async register(
+    userCode,
+    firstName,
+    lastName,
+    dni,
+    email,
+    role,
+    password
+  ) {
     try {
       const hashedPassword = await argon2.hash(password);
 
-      await pool.query('CALL registrar_usario($1, $2, $3, $4, $5, $6, $7)', [
+      await pool.query('CALL i_registrar_usuario($1, $2, $3, $4, $5, $6, $7)', [
         userCode,
         firstName,
         lastName,
@@ -19,8 +24,14 @@ export class UserModel {
         role,
         hashedPassword,
       ]);
-
-      return true;
+      return {
+        userCode,
+        firstName,
+        lastName,
+        dni,
+        email,
+        role,
+      };
     } catch (error) {
       console.error('Error al registrar usuario:', error.message);
       return null;

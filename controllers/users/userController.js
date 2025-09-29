@@ -1,3 +1,4 @@
+import { validatePasswd } from '../../schemas/passwdSchema.js';
 export class UserController {
   constructor(UserModel) {
     this.UserModel = UserModel;
@@ -9,7 +10,26 @@ export class UserController {
   };
 
   register = async (req, res) => {
-    const newUser = await this.UserModel.register(req.body);
+    const { userCode, firstName, lastName, dni, email, role, password } =
+      req.body;
+    const result = validatePasswd(password);
+    if (!result.success) {
+      return res.status(400).json({
+        error: JSON.parse(result.error.message).map((e) => e.message),
+      });
+    }
+    const newUser = await this.UserModel.register(
+      userCode,
+      firstName,
+      lastName,
+      dni,
+      email,
+      role,
+      password
+    );
+    if (!newUser) {
+      return res.status(400).json({ error: 'Error registering user' });
+    }
     res.status(201).json(newUser);
   };
 
@@ -17,9 +37,9 @@ export class UserController {
     const { userCode, password } = req.body;
     const user = await this.UserModel.login(userCode, password);
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
-    res.json(user);
+    res.status(200).json(user);
   };
 
   getUserById = async (req, res) => {
