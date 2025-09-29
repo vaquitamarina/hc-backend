@@ -1,4 +1,7 @@
+import jwt from 'jsonwebtoken';
+
 import { validatePasswd } from '../../schemas/passwdSchema.js';
+
 export class UserController {
   constructor(UserModel) {
     this.UserModel = UserModel;
@@ -39,6 +42,7 @@ export class UserController {
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+    const token = jwt.sign(user.id, process.env.JWT_SECRET);
     res.status(200).json(user);
   };
 

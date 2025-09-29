@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch api.js",
+    "dev": "dotenv -e .env.local -- node --watch api.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -28,7 +28,9 @@
     "argon2": "^0.44.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
+    "dotenv-cli": "^10.0.0",
     "express": "5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
     "zod": "^4.1.11"
   },
