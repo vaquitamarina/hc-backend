@@ -1,10 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import { router } from './routes/index.js';
+import authMiddleware from './middlewares/authMiddleware.js';
 
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 
 app.disable('x-powered-by');
 app.use(express.json());

@@ -26,6 +26,7 @@
   "homepage": "https://github.com/vaquitamarina/hc-backend#readme",
   "dependencies": {
     "argon2": "^0.44.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "dotenv-cli": "^10.0.0",
