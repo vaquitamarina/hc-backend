@@ -12,9 +12,8 @@ export class AuthController {
       if (!userCode || !password) {
         return res.status(400).json({ error: 'Missing credentials' });
       }
-
+      console.log('Attempting login for userCode:', userCode);
       const user = await this.UserModel.login(userCode, password);
-
       if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
@@ -25,13 +24,12 @@ export class AuthController {
       CookieService.setTokenCookies(res, accessToken, refreshToken);
 
       res.status(200).json({
-        user: {
-          id: user.id,
-          userCode: user.userCode,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        },
+        id: user.id,
+        userCode: user.userCode,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
       });
     } catch (error) {
       console.error('Login error:', error);
