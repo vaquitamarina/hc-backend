@@ -6,7 +6,7 @@ const authMiddleware = async (req, res, next) => {
     if (!accessToken) {
       return res.status(401).json({ error: 'No token provided' });
     }
-    const decoded = await TokenService.verifyAccessToken(accessToken);
+    const decoded = TokenService.verifyAccessToken(accessToken);
     if (!decoded) {
       return res.status(401).json({ error: 'Invalid token' });
     }
