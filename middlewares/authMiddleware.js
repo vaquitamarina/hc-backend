@@ -2,7 +2,6 @@ import { TokenService } from '../services/tokenService.js';
 const authMiddleware = async (req, res, next) => {
   try {
     const accessToken = req.cookies.accessToken;
-    console.log('Cookies:', req.cookies);
     if (!accessToken) {
       return res.status(401).json({ error: 'No token provided' });
     }
