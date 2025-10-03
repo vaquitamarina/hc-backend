@@ -6,7 +6,29 @@ import { router } from './routes/index.js';
 import authMiddleware from './middlewares/authMiddleware.js';
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://vaquitamarina.github.io',
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error('CORS no permitido para este origen'));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(cookieParser());
 
 app.disable('x-powered-by');
