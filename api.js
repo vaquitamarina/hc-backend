@@ -7,24 +7,9 @@ import authMiddleware from './middlewares/authMiddleware.js';
 
 const app = express();
 
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://vaquitamarina.github.io',
-];
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error('CORS no permitido para este origen'));
-      }
-    },
+    origin: ['http://localhost:5173', 'https://vaquitamarina.github.io'],
     credentials: true,
   })
 );
