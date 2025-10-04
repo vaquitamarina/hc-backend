@@ -12,3 +12,6 @@ studentRoutes.get(
   '/:id/patients/adult',
   studentController.getAdultPatientsByStudentId
 );
+
+// POST /api/students/:studentId/patients
+studentRoutes.post('/:studentId/patients', studentController.registerPatient);
