@@ -3,6 +3,7 @@ export class CookieService {
     const cookieOptions = {
       httpOnly: true,
       sameSite: 'none',
+      secure: true,
       path: '/',
     };
     res.cookie('accessToken', accessToken, {
