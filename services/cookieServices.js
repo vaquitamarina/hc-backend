@@ -3,7 +3,7 @@ export class CookieService {
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      sameSite: 'none',
       path: '/',
     };
     res.cookie('accessToken', accessToken, {
