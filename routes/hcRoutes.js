@@ -8,3 +8,4 @@ export const hcRoutes = Router();
 const hcController = new HcController(HcModel);
 
 hcRoutes.post('/review', hcController.createReview);
+hcRoutes.get('/:id/filiacion', hcController.getFiliationByIdHistory);

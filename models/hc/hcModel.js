@@ -16,4 +16,14 @@ export class HcModel {
       return null;
     }
   }
+
+  static async getFiliationByIdHistory(idHistory) {
+    const result = await pool.query('SELECT * FROM fn_obtener_filiacion($1)', [
+      idHistory,
+    ]);
+    if (result.rows.length === 0) {
+      return null;
+    }
+    return result.rows[0];
+  }
 }
