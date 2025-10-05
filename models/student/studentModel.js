@@ -12,6 +12,10 @@ export class StudentModel {
         idPatient: row.id_paciente,
         idHistory: row.id_historia,
         name: row.nombre_completo,
+        age: row.edad,
+        phone: row.telefono,
+        email: row.email,
+        gender: row.sexo,
         lastUpdate: row.ultima_modificacion,
       }));
     } catch (error) {
