@@ -2,13 +2,13 @@ export class CookieService {
   static setTokenCookies(res, accessToken, refreshToken) {
     const cookieOptions = {
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      secure: true,
       path: '/',
     };
     res.cookie('accessToken', accessToken, {
       ...cookieOptions,
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      maxAge: 30 * 60 * 1000, // 15 minutes
     });
 
     res.cookie('refreshToken', refreshToken, {
