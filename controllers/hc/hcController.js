@@ -23,4 +23,15 @@ export class HcController {
       });
     }
   };
+
+  getFiliationByIdHistory = async (req, res) => {
+    const { id } = req.params;
+    const filiation = await this.HcModel.getFiliationByIdHistory(id);
+    if (!filiation) {
+      return res.status(404).json({
+        error: 'Filiación no encontrada',
+      });
+    }
+    res.status(200).json(filiation);
+  };
 }
