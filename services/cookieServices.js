@@ -2,7 +2,8 @@ export class CookieService {
   static setTokenCookies(res, accessToken, refreshToken) {
     const cookieOptions = {
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
       path: '/',
     };
     res.cookie('accessToken', accessToken, {
