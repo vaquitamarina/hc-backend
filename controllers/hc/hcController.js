@@ -34,4 +34,15 @@ export class HcController {
     }
     res.status(200).json(filiation);
   };
+
+  registerHc = async (req, res) => {
+    const { idPatient, idStudent } = req.body;
+    const hc = await this.HcModel.registerHc(idPatient, idStudent);
+    if (!hc) {
+      return res.status(500).json({
+        error: 'Error al registrar la historia clinica',
+      });
+    }
+    res.status(201).json(hc);
+  };
 }

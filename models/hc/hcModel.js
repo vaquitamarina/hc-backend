@@ -26,4 +26,15 @@ export class HcModel {
     }
     return result.rows[0];
   }
+
+  static async registerHc(idPatient, idStudent) {
+    const result = await pool.query(
+      'SELECT * FROM fn_registrar_historia_clinica($1, $2)',
+      [idPatient, idStudent]
+    );
+    if (result.rows.length === 0) {
+      return null;
+    }
+    return result.rows[0];
+  }
 }
