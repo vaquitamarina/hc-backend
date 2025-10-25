@@ -15,7 +15,7 @@ export class UserModel {
     try {
       const hashedPassword = await argon2.hash(password);
 
-      await pool.query('CALL i_registrar_usuario($1, $2, $3, $4, $5, $6, $7)', [
+      await pool.query('CALL i_usuario($1, $2, $3, $4, $5, $6, $7)', [
         userCode,
         firstName,
         lastName,
@@ -49,9 +49,10 @@ export class UserModel {
   }
 
   static async login(userCode, password) {
-    const result = await pool.query('SELECT * FROM fn_usuario_login($1)', [
-      userCode,
-    ]);
+    const result = await pool.query(
+      'SELECT * FROM fn_obtener_usuario_login($1)',
+      [userCode]
+    );
     if (result.rows.length === 0) {
       return null;
     }

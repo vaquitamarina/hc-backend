@@ -27,14 +27,29 @@ export class HcModel {
     return result.rows[0];
   }
 
-  static async registerHc(idPatient, idStudent) {
+  static async registerHc(idStudent) {
     const result = await pool.query(
-      'SELECT * FROM fn_registrar_historia_clinica($1, $2)',
-      [idPatient, idStudent]
+      'SELECT * FROM fn_crear_historia_clinica($1)',
+      [idStudent]
     );
     if (result.rows.length === 0) {
       return null;
     }
     return result.rows[0];
+  }
+
+  static async createDraft(idStudent) {
+    const result = await pool.query(
+      'CALL i_historia_clinica_borrador($1, NULL)',
+      [idStudent]
+    );
+    return result.rows[0];
+  }
+
+  static async assignPatient(idHistory, idPatient) {
+    await pool.query('CALL u_historia_clinica_asignar_paciente($1, $2)', [
+      idHistory,
+      idPatient,
+    ]);
   }
 }

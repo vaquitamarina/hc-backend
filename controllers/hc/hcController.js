@@ -45,4 +45,56 @@ export class HcController {
     }
     res.status(201).json(hc);
   };
+
+  createDraft = async (req, res) => {
+    try {
+      // El idStudent viene del token JWT (req.user.id)
+      const result = await this.HcModel.createDraft(req.user.id);
+
+      return res.status(201).json({
+        success: true,
+        id_historia: result.p_id_historia,
+        message: 'Historia clinica en borrador creada',
+      });
+    } catch (error) {
+      console.error('Error al crear borrador:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Error al crear historia clinica en borrador',
+        error: error.message,
+      });
+    }
+  };
+
+  assignPatient = async (req, res) => {
+    try {
+      const { idHistory, idPatient } = req.body;
+
+      await this.HcModel.assignPatient(idHistory, idPatient);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Paciente asignado a la historia clinica',
+      });
+    } catch (error) {
+      console.error('Error al asignar paciente:', error);
+
+      // Errores específicos de validación del procedure
+      if (
+        error.message.includes('no encontrada') ||
+        error.message.includes('no está en estado borrador')
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        message: 'Error al asignar paciente a la historia',
+        error: error.message,
+      });
+    }
+  };
 }
