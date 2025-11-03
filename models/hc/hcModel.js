@@ -40,16 +40,27 @@ export class HcModel {
 
   static async createDraft(idStudent) {
     const result = await pool.query(
-      'CALL i_historia_clinica_borrador($1, NULL)',
+      'SELECT fn_obtener_o_crear_borrador($1) AS id_historia',
       [idStudent]
     );
-    return result.rows[0];
+    return { id_historia: result.rows[0].id_historia };
   }
 
   static async assignPatient(idHistory, idPatient) {
-    await pool.query('CALL u_historia_clinica_asignar_paciente($1, $2)', [
+    await pool.query('SELECT fn_asignar_paciente_a_historia($1, $2)', [
       idHistory,
       idPatient,
     ]);
+  }
+
+  static async getPatientByHistory(idHistory) {
+    const result = await pool.query(
+      'SELECT * FROM fn_obtener_paciente_por_historia($1)',
+      [idHistory]
+    );
+    if (result.rows.length === 0) {
+      return null;
+    }
+    return result.rows[0];
   }
 }

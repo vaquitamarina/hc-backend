@@ -330,25 +330,24 @@ Crea un entorno con las siguientes variables:
 
 **Body:** Vacío (el backend usa el ID del estudiante del token JWT)
 
-**Respuesta Esperada:**
+**Respuesta Esperada (200):**
 
 ```json
 {
-  "success": true,
-  "id_historia": "550e8400-e29b-41d4-a716-446655440000",
-  "message": "Historia clinica en borrador creada"
+  "id_historia": "550e8400-e29b-41d4-a716-446655440000"
 }
 ```
 
 **⚠️ IMPORTANTE:**
 
-- Guarda el `id_historia` devuelto
+- Si ya tienes un borrador activo, **devuelve el mismo ID** (no crea uno nuevo)
+- Si es tu primer borrador, crea uno nuevo
 - Esta historia está en estado 'borrador' sin paciente asignado
-- Necesitarás este ID para asignar un paciente después
+- Garantiza que cada estudiante tenga máximo un borrador a la vez
 
 **Flujo recomendado:**
 
-1. Crear borrador (este endpoint)
+1. Llamar este endpoint (obtiene o crea borrador)
 2. Navegar a `/historia/:id` en el frontend
 3. Llenar formulario de paciente
 4. Asignar paciente al borrador (endpoint #8)
@@ -373,11 +372,10 @@ Crea un entorno con las siguientes variables:
 }
 ```
 
-**Respuesta Esperada:**
+**Respuesta Esperada (200):**
 
 ```json
 {
-  "success": true,
   "message": "Paciente asignado a la historia clinica"
 }
 ```
@@ -388,8 +386,7 @@ Crea un entorno con las siguientes variables:
 
 ```json
 {
-  "success": false,
-  "message": "Historia clínica no encontrada o no está en estado borrador"
+  "error": "Historia clínica no encontrada o no está en estado borrador"
 }
 ```
 
@@ -397,8 +394,7 @@ Crea un entorno con las siguientes variables:
 
 ```json
 {
-  "success": false,
-  "message": "El paciente ya tiene una historia clínica asignada"
+  "error": "El paciente ya tiene una historia clínica asignada"
 }
 ```
 
@@ -406,8 +402,7 @@ Crea un entorno con las siguientes variables:
 
 ```json
 {
-  "success": false,
-  "message": "Paciente no encontrado"
+  "error": "Paciente no encontrado"
 }
 ```
 
@@ -447,18 +442,62 @@ Crea un entorno con las siguientes variables:
 - `rechazado`
 - `revision`
 
-**Respuesta Esperada:**
+**Respuesta Esperada (201):**
 
 ```json
 {
-  "success": true,
   "message": "Revisión registrada exitosamente"
 }
 ```
 
 ---
 
-### 10. Get Filiación by History ID (GET)
+### 10. Get Patient by History ID (GET) 🆕
+
+**Endpoint:** `{{base_url}}/hc/{{history_id}}/patient`
+
+**Headers:**
+
+- Cookie: `accessToken=<token>`
+
+**Descripción:** Obtiene los datos del paciente asociado a una historia clínica específica.
+
+**Respuesta Esperada (200):**
+
+```json
+{
+  "id_paciente": "uuid-paciente",
+  "dni": "12345678",
+  "nombre": "Juan",
+  "apellido": "Pérez García",
+  "nombre_completo": "Juan Pérez García",
+  "fecha_nacimiento": "1990-05-15",
+  "edad": 35,
+  "sexo": "Masculino",
+  "telefono": "987654321",
+  "email": "juan@example.com",
+  "fecha_registro": "2025-10-20T10:30:00.000Z",
+  "activo": true
+}
+```
+
+**404 Not Found - Sin paciente:**
+
+```json
+{
+  "error": "Paciente no encontrado o historia sin paciente asignado"
+}
+```
+
+**💡 Casos de uso:**
+
+- Mostrar datos del paciente en el header de `HcLayout`
+- Validar si una historia tiene paciente antes de mostrar formularios
+- Obtener datos para pre-llenar formularios de filiación
+
+---
+
+### 11. Get Filiación by History ID (GET)
 
 **Endpoint:** `{{base_url}}/hc/{{history_id}}/filiacion`
 

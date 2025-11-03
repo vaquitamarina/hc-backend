@@ -117,27 +117,42 @@ SELECT * FROM fn_obtener_filiacion($1)
 
 ### 8. POST `/api/hc/draft`
 
-**Descripción:** Crea un borrador de historia clínica. El ID del estudiante se obtiene del token JWT.
+**Descripción:** Crea un nuevo borrador de historia clínica o devuelve uno existente para el estudiante autenticado.
 
 **Middleware:** Requiere autenticación (`verifyToken`)
 
 **Query SQL:**
 
 ```sql
-CALL i_historia_clinica_borrador($1, NULL)
+SELECT fn_obtener_o_crear_borrador($1) AS id_historia
 ```
 
 **Parámetros:**
 
-- `$1`: idStudent (obtenido del token JWT - req.user.id)
+- `$1`: idStudent (obtenido del token JWT - `req.user.id`)
 
-**Respuesta:**
+**Body:** Vacío (el backend usa el ID del estudiante del token JWT)
+
+**Lógica:**
+
+1. Busca si ya existe un borrador con `estado='borrador'` para el estudiante
+2. Si existe, devuelve su `id_historia`
+3. Si no existe, crea uno nuevo y devuelve su `id_historia`
+4. Garantiza que cada estudiante tenga máximo un borrador a la vez
+
+**Respuesta Exitosa (200):**
 
 ```json
 {
-  "success": true,
-  "id_historia": "uuid-generado",
-  "message": "Historia clinica en borrador creada"
+  "id_historia": "uuid-generado-o-existente"
+}
+```
+
+**Respuesta Error (500):**
+
+```json
+{
+  "error": "Error al crear historia clinica en borrador"
 }
 ```
 
@@ -152,7 +167,7 @@ CALL i_historia_clinica_borrador($1, NULL)
 **Query SQL:**
 
 ```sql
-CALL u_historia_clinica_asignar_paciente($1, $2)
+SELECT fn_asignar_paciente_a_historia($1, $2)
 ```
 
 **Parámetros:**
@@ -175,11 +190,10 @@ CALL u_historia_clinica_asignar_paciente($1, $2)
 - Paciente debe existir
 - Paciente no debe tener otra historia asignada
 
-**Respuesta Exitosa:**
+**Respuesta Exitosa (200):**
 
 ```json
 {
-  "success": true,
   "message": "Paciente asignado a la historia clinica"
 }
 ```
@@ -188,14 +202,76 @@ CALL u_historia_clinica_asignar_paciente($1, $2)
 
 ```json
 {
-  "success": false,
-  "message": "Historia clínica no encontrada o no está en estado borrador"
+  "error": "Historia clínica no encontrada o no está en estado borrador"
+}
+```
+
+**Respuesta Error (500):**
+
+```json
+{
+  "error": "Error al asignar paciente a la historia"
 }
 ```
 
 ---
 
-## Estudiantes (`/api/students`)
+### 10. GET `/api/hc/:id/patient`
+
+**Descripción:** Obtiene los datos completos del paciente asociado a una historia clínica.
+
+**Middleware:** Requiere autenticación (`verifyToken`)
+
+**Query SQL:**
+
+```sql
+SELECT * FROM fn_obtener_paciente_por_historia($1)
+```
+
+**Parámetros:**
+
+- `:id` - UUID de la historia clínica (en la URL)
+
+**Respuesta Exitosa (200):**
+
+```json
+{
+  "id_paciente": "uuid-paciente",
+  "dni": "12345678",
+  "nombre": "Juan",
+  "apellido": "Pérez García",
+  "nombre_completo": "Juan Pérez García",
+  "fecha_nacimiento": "1990-05-15",
+  "edad": 35,
+  "sexo": "Masculino",
+  "telefono": "987654321",
+  "email": "juan@example.com",
+  "fecha_registro": "2025-10-20T10:30:00.000Z",
+  "activo": true
+}
+```
+
+**Respuesta Error (404):**
+
+```json
+{
+  "error": "Paciente no encontrado o historia sin paciente asignado"
+}
+```
+
+**Respuesta Error (500):**
+
+```json
+{
+  "error": "Error al obtener datos del paciente"
+}
+```
+
+**Nota:** Este endpoint es útil para obtener los datos del paciente cuando solo tienes el ID de la historia clínica, especialmente en el layout de la historia donde necesitas mostrar el nombre del paciente.
+
+---
+
+## Pacientes (`/api/patients`)
 
 ### 8. GET `/api/students/:id/patients/adult`
 
@@ -304,8 +380,15 @@ SELECT fn_crear_paciente($1, $2, $3, $4, $5, $6, $7) AS id_paciente
 
 ```json
 {
-  "success": true,
   "id": "uuid-del-paciente-creado"
+}
+```
+
+**Respuesta Error (400):**
+
+```json
+{
+  "error": "Los campos nombre, apellido, dni, fechaNacimiento y sexo son requeridos."
 }
 ```
 
@@ -313,8 +396,15 @@ SELECT fn_crear_paciente($1, $2, $3, $4, $5, $6, $7) AS id_paciente
 
 ```json
 {
-  "success": false,
   "error": "Ya existe un paciente con ese DNI."
+}
+```
+
+**Respuesta Error (500):**
+
+```json
+{
+  "error": "Error al crear paciente."
 }
 ```
 
@@ -331,13 +421,14 @@ SELECT fn_crear_paciente($1, $2, $3, $4, $5, $6, $7) AS id_paciente
 - `fn_obtener_filiacion($1)` - Selecciona la filiación de una historia clínica
 - `fn_obtener_pacientes_adultos($1)` - Selecciona pacientes adultos de un estudiante
 - `fn_crear_paciente($1, $2, $3, $4, $5, $6, $7)` - Crea un paciente y retorna su UUID
+- `fn_obtener_o_crear_borrador($1)` - Obtiene borrador existente o crea uno nuevo
+- `fn_asignar_paciente_a_historia($1, $2)` - Asigna paciente a historia y retorna BOOLEAN
+- `fn_obtener_paciente_por_historia($1)` - Obtiene datos del paciente asociado a una historia
 
 ### Procedimientos Almacenados (CALL)
 
 - `i_usuario($1, $2, $3, $4, $5, $6, $7)` - Inserta un nuevo usuario
 - `i_revision_historia($1, $2, $3, $4)` - Inserta una revisión de historia
-- `i_historia_clinica_borrador($1, OUT p_id_historia)` - Crea borrador de historia clínica
-- `u_historia_clinica_asignar_paciente($1, $2)` - Asigna paciente a historia en borrador
 - `i_paciente($1, $2, $3, $4, $5, $6, $7)` - Inserta paciente (usado en seeds)
 
 ### Queries SQL Directas

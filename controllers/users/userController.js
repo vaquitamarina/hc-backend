@@ -51,13 +51,9 @@ export class UserController {
     const user = await this.UserModel.getUserById(id);
     if (!user) {
       return res.status(404).json({
-        success: false,
-        message: 'Usuario no encontrado',
+        error: 'Usuario no encontrado',
       });
     }
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
+    res.status(200).json(user);
   };
 }

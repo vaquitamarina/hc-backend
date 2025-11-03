@@ -8,16 +8,8 @@ export class StudentModel {
         [studentId]
       );
 
-      return result.rows.map((row) => ({
-        idPatient: row.id_paciente,
-        idHistory: row.id_historia,
-        name: row.nombre_completo,
-        age: row.edad,
-        phone: row.telefono,
-        email: row.email,
-        gender: row.sexo,
-        lastUpdate: row.ultima_modificacion,
-      }));
+      // Devolver los datos directamente en español como vienen de la BD
+      return result.rows;
     } catch (error) {
       console.error('Error al obtener pacientes adultos:', error.message);
       throw error;

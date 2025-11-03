@@ -30,7 +30,7 @@ import { createDraftHistoria } from '@/services/historiaService';
 const { setDraftHistoriaId } = useHistoriaStore();
 
 const handleNuevaHistoria = async () => {
-  // Crear borrador
+  // Crear o obtener borrador existente
   const { id_historia } = await createDraftHistoria();
 
   // Guardar en Zustand
@@ -51,25 +51,30 @@ Response:
 {
   "success": true,
   "id_historia": "550e8400-e29b-41d4-a716-446655440000",
-  "message": "Historia clinica en borrador creada"
+  "message": "Historia clinica en borrador obtenida o creada"
 }
 ```
 
 **Base de Datos:**
 
 ```sql
--- Procedure: i_historia_clinica_borrador
-CALL i_historia_clinica_borrador('a1b2c3d4-...', NULL);
+-- Función: fn_obtener_o_crear_borrador
+SELECT fn_obtener_o_crear_borrador('a1b2c3d4-...');
 
--- Inserta en historia_clinica:
--- id_historia: <UUID generado>
--- id_estudiante: <del token JWT>
--- estado: 'borrador'
--- fecha_elaboracion: CURRENT_DATE
--- id_paciente: NULL (aún no asignado)
+-- Primero busca borrador existente:
+SELECT id_historia FROM historia_clinica
+WHERE id_estudiante = 'a1b2c3d4-...' AND estado = 'borrador'
+LIMIT 1;
+
+-- Si no existe, inserta nuevo:
+INSERT INTO historia_clinica (id_estudiante, estado, fecha_elaboracion)
+VALUES ('a1b2c3d4-...', 'borrador', CURRENT_DATE)
+RETURNING id_historia;
+
+-- Si existe, devuelve el ID existente
 ```
 
----
+**⚠️ IMPORTANTE:** Si el estudiante ya tiene un borrador, esta función **devuelve el ID del borrador existente** en lugar de crear uno nuevo. Esto evita tener múltiples borradores incompletos.---
 
 ### 2. Usuario navega a /historia/:id
 
@@ -140,9 +145,11 @@ Response:
 
 **Base de Datos:**
 
+````sql
+**Base de Datos:**
 ```sql
--- Procedure: u_historia_clinica_asignar_paciente
-CALL u_historia_clinica_asignar_paciente(
+-- Función: fn_asignar_paciente_a_historia
+SELECT fn_asignar_paciente_a_historia(
   '550e8400-e29b-41d4-a716-446655440000',
   'a1b2c3d4-e5f6-7890-1234-567890abcdef'
 );
@@ -156,9 +163,12 @@ CALL u_historia_clinica_asignar_paciente(
 UPDATE historia_clinica
 SET
   id_paciente = 'a1b2c3d4-...',
-  estado = 'en_proceso'
+  estado = 'en_proceso',
+  ultima_modificacion = CURRENT_TIMESTAMP
 WHERE id_historia = '550e8400-...';
-```
+````
+
+````
 
 ---
 
@@ -192,7 +202,7 @@ useEffect(() => {
     });
   }
 }, []);
-```
+````
 
 ---
 

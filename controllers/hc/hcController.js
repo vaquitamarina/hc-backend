@@ -13,13 +13,11 @@ export class HcController {
     });
     if (result) {
       return res.status(201).json({
-        success: true,
         message: 'Revision registrada con exito',
       });
     } else {
       return res.status(500).json({
-        success: false,
-        message: 'Error al registrar la revision',
+        error: 'Error al registrar la revision',
       });
     }
   };
@@ -51,17 +49,13 @@ export class HcController {
       // El idStudent viene del token JWT (req.user.id)
       const result = await this.HcModel.createDraft(req.user.id);
 
-      return res.status(201).json({
-        success: true,
-        id_historia: result.p_id_historia,
-        message: 'Historia clinica en borrador creada',
+      return res.status(200).json({
+        id_historia: result.id_historia,
       });
     } catch (error) {
-      console.error('Error al crear borrador:', error);
+      console.error('Error al crear/obtener borrador:', error);
       return res.status(500).json({
-        success: false,
-        message: 'Error al crear historia clinica en borrador',
-        error: error.message,
+        error: 'Error al crear historia clinica en borrador',
       });
     }
   };
@@ -73,7 +67,6 @@ export class HcController {
       await this.HcModel.assignPatient(idHistory, idPatient);
 
       return res.status(200).json({
-        success: true,
         message: 'Paciente asignado a la historia clinica',
       });
     } catch (error) {
@@ -85,15 +78,32 @@ export class HcController {
         error.message.includes('no está en estado borrador')
       ) {
         return res.status(400).json({
-          success: false,
-          message: error.message,
+          error: error.message,
         });
       }
 
       return res.status(500).json({
-        success: false,
-        message: 'Error al asignar paciente a la historia',
-        error: error.message,
+        error: 'Error al asignar paciente a la historia',
+      });
+    }
+  };
+
+  getPatientByHistory = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const patient = await this.HcModel.getPatientByHistory(id);
+
+      if (!patient) {
+        return res.status(404).json({
+          error: 'Paciente no encontrado o historia sin paciente asignado',
+        });
+      }
+
+      return res.status(200).json(patient);
+    } catch (error) {
+      console.error('Error al obtener paciente:', error);
+      return res.status(500).json({
+        error: 'Error al obtener datos del paciente',
       });
     }
   };

@@ -30,14 +30,14 @@ Antes de comenzar, asegúrate de tener instalado:
 
 ## 🔹 POST (crear recurso o acción, ej: registro/login)
 
-| Escenario                         | Código HTTP                 | Respuesta JSON                                                            |
-| --------------------------------- | --------------------------- | ------------------------------------------------------------------------- |
-| ✅ Creación exitosa               | `201 Created`               | `{ "id": 101, "nombre": "Juan Pérez" }`                                   |
-| ✅ Acción exitosa (ej: login)     | `200 OK`                    | `{ "token": "jwt123...", "user": { "id": 101, "nombre": "Juan Pérez" } }` |
-| ❌ Datos inválidos / conflicto    | `400 Bad Request`           | `{ "error": "El email ya está registrado" }`                              |
-| ❌ Usuario no encontrado (login)  | `404 Not Found`             | `{ "error": "Usuario no encontrado" }`                                    |
-| ❌ Credenciales inválidas (login) | `401 Unauthorized`          | `{ "error": "Credenciales inválidas" }`                                   |
-| ❌ Error interno                  | `500 Internal Server Error` | `{ "error": "Ocurrió un error inesperado" }`                              |
+| Escenario                         | Código HTTP                 | Respuesta JSON                               |
+| --------------------------------- | --------------------------- | -------------------------------------------- |
+| ✅ Creación exitosa               | `201 Created`               | `{ "id": 101, "nombre": "Juan Pérez" }`      |
+| ✅ Acción exitosa (ej: login)     | `200 OK`                    | `{"id": 101, "nombre": "Juan Pérez" }`       |
+| ❌ Datos inválidos / conflicto    | `400 Bad Request`           | `{ "error": "El email ya está registrado" }` |
+| ❌ Usuario no encontrado (login)  | `404 Not Found`             | `{ "error": "Usuario no encontrado" }`       |
+| ❌ Credenciales inválidas (login) | `401 Unauthorized`          | `{ "error": "Credenciales inválidas" }`      |
+| ❌ Error interno                  | `500 Internal Server Error` | `{ "error": "Ocurrió un error inesperado" }` |
 
 ## 📂 Estructura del proyecto
 
