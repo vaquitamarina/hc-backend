@@ -10,10 +10,10 @@ export const userRoutes = Router();
 const userController = new UserController(UserModel);
 const authController = new AuthController(UserModel);
 
+userRoutes.post('/register', userController.register);
 userRoutes.post('/login', authController.login);
 
 userRoutes.use(authMiddleware);
-userRoutes.post('/register', userController.register);
 
 userRoutes.get('/me', authController.getCurrentUser);
 userRoutes.get('/:id', userController.getUserById);
