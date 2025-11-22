@@ -49,9 +49,10 @@ export class UserModel {
   }
 
   static async login(userCode, password) {
-    const result = await pool.query('SELECT * FROM fn_usuario_login($1)', [
-      userCode,
-    ]);
+    const result = await pool.query(
+      'SELECT * FROM fn_obtener_usuario_login($1)',
+      [userCode]
+    );
     if (result.rows.length === 0) {
       return null;
     }
