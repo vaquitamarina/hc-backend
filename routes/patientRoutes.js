@@ -9,3 +9,4 @@ const patientController = new PatientController(PatientModel);
 
 // POST /api/pacientes - Crear nuevo paciente
 patientRoutes.post('/', patientController.createPatient);
+patientRoutes.put('/:id', patientController.updatePatient);

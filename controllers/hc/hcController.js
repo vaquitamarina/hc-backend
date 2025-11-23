@@ -107,4 +107,80 @@ export class HcController {
       });
     }
   };
+
+  updateFiliation = async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+
+    try {
+      await this.HcModel.updateFiliation({
+        idHistory: id,
+        ...data,
+      });
+
+      res.status(200).json({ message: 'Filiación guardada correctamente' });
+    } catch (error) {
+      if (error.message.includes('no encontrado')) {
+        return res.status(400).json({ error: error.message });
+      }
+      return res.status(500).json({ error: 'Error al guardar la filiación' });
+    }
+  };
+
+  // --- MÉTODOS EXAMEN GENERAL ---
+  getGeneralExam = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const exam = await this.HcModel.getGeneralExam(id);
+      res.status(200).json(exam || {});
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener el examen general' });
+    }
+  };
+
+  updateGeneralExam = async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+
+    try {
+      await this.HcModel.updateGeneralExam({
+        idHistory: id,
+        ...data,
+      });
+      res
+        .status(200)
+        .json({ message: 'Examen general guardado correctamente' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al guardar el examen general' });
+    }
+  };
+
+  // --- MÉTODOS EXAMEN REGIONAL ---
+
+  getRegionalExam = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const exam = await this.HcModel.getRegionalExam(id);
+      res.status(200).json(exam || {});
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener el examen regional' });
+    }
+  };
+
+  updateRegionalExam = async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+
+    try {
+      await this.HcModel.updateRegionalExam({
+        idHistory: id,
+        ...data,
+      });
+      res
+        .status(200)
+        .json({ message: 'Examen regional guardado correctamente' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al guardar el examen regional' });
+    }
+  };
 }

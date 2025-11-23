@@ -30,4 +30,22 @@ export class PatientModel {
       throw error;
     }
   }
+
+  static async updatePatient(id, nombre, apellido, telefono, email) {
+    try {
+      await pool.query('CALL u_paciente($1, $2, $3, $4, $5, $6)', [
+        id,
+        nombre || null, // Si viene undefined, mandamos null
+        apellido || null,
+        telefono || null,
+        email || null,
+        null, // activo: null para que no lo modifique el procedure
+      ]);
+
+      return true;
+    } catch (error) {
+      console.error('Error al actualizar paciente:', error.message);
+      throw error;
+    }
+  }
 }
