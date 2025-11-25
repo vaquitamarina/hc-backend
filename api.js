@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 
 import { router } from './routes/index.js';
 
@@ -17,6 +19,21 @@ app.use(cookieParser());
 
 app.disable('x-powered-by');
 app.use(express.json());
+
+// Swagger/OpenAPI configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API Historia Clínica',
+      version: '1.0.0',
+      description: 'Documentación de la API interna',
+    },
+  },
+  apis: ['./docs/swagger-endpoints.js', './routes/*.js'], // Incluye el archivo de documentación aparte
+};
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api', router);
 
