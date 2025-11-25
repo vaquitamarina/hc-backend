@@ -19,11 +19,11 @@ hcRoutes.post(
   motivoConsultaController.createMotivoConsulta
 );
 hcRoutes.get(
-  '/motivo-consulta/:id_motivo',
+  '/motivo-consulta/historia/:id_historia',
   motivoConsultaController.getMotivoConsulta
 );
 hcRoutes.put(
-  '/motivo-consulta/:id_motivo',
+  '/motivo-consulta/historia/:id_historia',
   motivoConsultaController.updateMotivoConsulta
 );
 
@@ -33,18 +33,12 @@ hcRoutes.post(
   antecedentePersonalController.createAntecedentePersonal
 );
 hcRoutes.get(
-  '/antecedente-personal/:id_antecedente',
+  '/antecedente-personal/historia/:id_historia',
   antecedentePersonalController.getAntecedentePersonal
 );
 hcRoutes.put(
-  '/antecedente-personal/:id_antecedente',
-  antecedentePersonalController.updateAntecedentePersonal
-);
-
-// Buscar antecedente personal por id_historia
-hcRoutes.get(
   '/antecedente-personal/historia/:id_historia',
-  antecedentePersonalController.getAntecedentePersonalByHistoria
+  antecedentePersonalController.updateAntecedentePersonal
 );
 
 // Endpoints enfermedad_actual
@@ -53,11 +47,11 @@ hcRoutes.post(
   enfermedadActualController.createEnfermedadActual
 );
 hcRoutes.get(
-  '/enfermedad-actual/:id_enfermedad_actual',
+  '/enfermedad-actual/historia/:id_historia',
   enfermedadActualController.getEnfermedadActual
 );
 hcRoutes.put(
-  '/enfermedad-actual/:id_enfermedad_actual',
+  '/enfermedad-actual/historia/:id_historia',
   enfermedadActualController.updateEnfermedadActual
 );
 hcRoutes.post('/review', hcController.createReview);
