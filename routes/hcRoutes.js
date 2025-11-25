@@ -3,12 +3,63 @@ import { Router } from 'express';
 import { HcController } from '../controllers/hc/hcController.js';
 import { HcModel } from '../models/hc/hcModel.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
+import * as motivoConsultaController from '../controllers/hc/motivoConsultaController.js';
+import * as antecedentePersonalController from '../controllers/hc/antecedentePersonalController.js';
+import * as enfermedadActualController from '../controllers/hc/enfermedadActualController.js';
 
 export const hcRoutes = Router();
 
 const hcController = new HcController(HcModel);
 
 hcRoutes.use(authMiddleware);
+
+// Endpoints motivo_consulta
+hcRoutes.post(
+  '/motivo-consulta',
+  motivoConsultaController.createMotivoConsulta
+);
+hcRoutes.get(
+  '/motivo-consulta/:id_motivo',
+  motivoConsultaController.getMotivoConsulta
+);
+hcRoutes.put(
+  '/motivo-consulta/:id_motivo',
+  motivoConsultaController.updateMotivoConsulta
+);
+
+// Endpoints antecedente_personal
+hcRoutes.post(
+  '/antecedente-personal',
+  antecedentePersonalController.createAntecedentePersonal
+);
+hcRoutes.get(
+  '/antecedente-personal/:id_antecedente',
+  antecedentePersonalController.getAntecedentePersonal
+);
+hcRoutes.put(
+  '/antecedente-personal/:id_antecedente',
+  antecedentePersonalController.updateAntecedentePersonal
+);
+
+// Buscar antecedente personal por id_historia
+hcRoutes.get(
+  '/antecedente-personal/historia/:id_historia',
+  antecedentePersonalController.getAntecedentePersonalByHistoria
+);
+
+// Endpoints enfermedad_actual
+hcRoutes.post(
+  '/enfermedad-actual',
+  enfermedadActualController.createEnfermedadActual
+);
+hcRoutes.get(
+  '/enfermedad-actual/:id_enfermedad_actual',
+  enfermedadActualController.getEnfermedadActual
+);
+hcRoutes.put(
+  '/enfermedad-actual/:id_enfermedad_actual',
+  enfermedadActualController.updateEnfermedadActual
+);
 hcRoutes.post('/review', hcController.createReview);
 hcRoutes.get('/:id/filiacion', hcController.getFiliationByIdHistory);
 hcRoutes.put('/:id/filiacion', hcController.updateFiliation);
