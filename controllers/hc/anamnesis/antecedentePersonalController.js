@@ -1,5 +1,5 @@
-import AntecedentePersonal from '../../models/hc/antecedentePersonalModel.js';
-import BaseService from '../../services/baseService.js';
+import AntecedentePersonal from '../../../models/hc/anamnesis/antecedentePersonalModel.js';
+import BaseService from '../../../services/baseService.js';
 
 const antecedentePersonalService = new BaseService(AntecedentePersonal);
 

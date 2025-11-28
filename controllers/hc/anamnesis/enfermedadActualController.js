@@ -1,5 +1,5 @@
-import EnfermedadActual from '../../models/hc/enfermedadActualModel.js';
-import BaseService from '../../services/baseService.js';
+import EnfermedadActual from '../../../models/hc/anamnesis/enfermedadActualModel.js';
+import BaseService from '../../../services/baseService.js';
 
 const enfermedadActualService = new BaseService(EnfermedadActual);
 

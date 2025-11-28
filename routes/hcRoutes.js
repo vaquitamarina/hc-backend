@@ -3,9 +3,10 @@ import { Router } from 'express';
 import { HcController } from '../controllers/hc/hcController.js';
 import { HcModel } from '../models/hc/hcModel.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
-import * as motivoConsultaController from '../controllers/hc/motivoConsultaController.js';
-import * as antecedentePersonalController from '../controllers/hc/antecedentePersonalController.js';
-import * as enfermedadActualController from '../controllers/hc/enfermedadActualController.js';
+import * as motivoConsultaController from '../controllers/hc/anamnesis/motivoConsultaController.js';
+import * as antecedentePersonalController from '../controllers/hc/anamnesis/antecedentePersonalController.js';
+import * as enfermedadActualController from '../controllers/hc/anamnesis/enfermedadActualController.js';
+import * as filiacionController from '../controllers/hc/anamnesis/filiacionController.js';
 
 export const hcRoutes = Router();
 
@@ -54,10 +55,21 @@ hcRoutes.put(
   '/enfermedad-actual/historia/:id_historia',
   enfermedadActualController.updateEnfermedadActual
 );
-hcRoutes.post('/review', hcController.createReview);
-hcRoutes.get('/:id/filiacion', hcController.getFiliationByIdHistory);
-hcRoutes.put('/:id/filiacion', hcController.updateFiliation);
+
+// Endpoints filiacion
+hcRoutes.post('/filiacion', filiacionController.createFiliacion);
+hcRoutes.get(
+  '/filiacion/historia/:id_historia',
+  filiacionController.getFiliacion
+);
+hcRoutes.put(
+  '/filiacion/historia/:id_historia',
+  filiacionController.updateFiliacion
+);
+
 hcRoutes.get('/:id/patient', hcController.getPatientByHistory);
+
+hcRoutes.post('/review', hcController.createReview);
 
 // Nuevas rutas para el flujo de borrador
 hcRoutes.post('/draft', hcController.createDraft);

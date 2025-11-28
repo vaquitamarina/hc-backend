@@ -1,4 +1,4 @@
-import db from '../../db/db.js';
+import db from '../../../db/db.js';
 
 const MotivoConsulta = {
   async create({ id_historia, motivo }) {

@@ -10,16 +10,16 @@ class BaseService {
     return await this.model.create(data);
   }
 
-  async findById(id) {
+  async getById(id) {
     return await this.model.getById(id);
   }
 
-  async updateById(id, data) {
+  async update(id, data) {
     return await this.model.update(id, data);
   }
 
-  async deleteById(id) {
-    return await this.model.deleteById(id);
+  async delete(id) {
+    return await this.model.delete(id);
   }
 }
 

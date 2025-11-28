@@ -77,27 +77,28 @@
  *               frecuencia_cepillado:
  *                 type: integer
  *             example:
+ *               id_historia: "{id_historia}"
  *               esta_embarazada: false
- *               mac: "DIU"
- *               otros: "Ninguno"
- *               psicosocial: "Sin antecedentes"
+ *               mac: "N/A"
+ *               otros: "Sin antecedentes"
+ *               psicosocial: "Normal"
  *               vacunas: "Completo"
  *               hepatitis_b: false
- *               id_grupo_sanguineo: "a1b2c3d4"
+ *               id_grupo_sanguineo: "{id_grupo_sanguineo}"
  *               fuma: false
  *               cigarrillos_dia: 0
  *               toma_te: true
  *               tazas_te_dia: 2
  *               toma_alcohol: false
- *               frecuencia_alcohol: "Ocasional"
- *               aprieta_dientes: true
- *               momento_aprieta: "Noche"
+ *               frecuencia_alcohol: ""
+ *               aprieta_dientes: false
+ *               momento_aprieta: ""
  *               rechina: false
  *               dolor_muscular: false
  *               chupa_dedo: false
  *               muerde_objetos: false
  *               muerde_labios: false
- *               otros_habitos: "Ninguno"
+ *               otros_habitos: ""
  *               frecuencia_cepillado: 2
  *     responses:
  *       201:
@@ -169,27 +170,28 @@
  *               frecuencia_cepillado:
  *                 type: integer
  *             example:
+ *               id_antecedente: "{id_antecedente}"
  *               esta_embarazada: false
- *               mac: "DIU"
- *               otros: "Ninguno"
- *               psicosocial: "Sin antecedentes"
+ *               mac: "N/A"
+ *               otros: "Sin antecedentes"
+ *               psicosocial: "Normal"
  *               vacunas: "Completo"
  *               hepatitis_b: false
- *               id_grupo_sanguineo: "a1b2c3d4"
+ *               id_grupo_sanguineo: "{id_grupo_sanguineo}"
  *               fuma: false
  *               cigarrillos_dia: 0
  *               toma_te: true
  *               tazas_te_dia: 2
  *               toma_alcohol: false
- *               frecuencia_alcohol: "Ocasional"
- *               aprieta_dientes: true
- *               momento_aprieta: "Noche"
+ *               frecuencia_alcohol: ""
+ *               aprieta_dientes: false
+ *               momento_aprieta: ""
  *               rechina: false
  *               dolor_muscular: false
  *               chupa_dedo: false
  *               muerde_objetos: false
  *               muerde_labios: false
- *               otros_habitos: "Ninguno"
+ *               otros_habitos: ""
  *               frecuencia_cepillado: 2
  *     responses:
  *       200:
@@ -234,6 +236,7 @@
  *               motivo:
  *                 type: string
  *             example:
+ *               id_historia: "{id_historia}"
  *               motivo: "Dolor de muelas"
  *     responses:
  *       201:
@@ -263,6 +266,7 @@
  *               motivo:
  *                 type: string
  *             example:
+ *               id_motivo: "{id_motivo}"
  *               motivo: "Dolor de muelas"
  *     responses:
  *       200:
@@ -317,6 +321,7 @@
  *               tratamiento_prev:
  *                 type: string
  *             example:
+ *               id_historia: "{id_historia}"
  *               sintoma_principal: "Dolor intenso"
  *               tiempo_enfermedad: "2 semanas"
  *               forma_inicio: "Repentino"
@@ -361,6 +366,7 @@
  *               tratamiento_prev:
  *                 type: string
  *             example:
+ *               id_enfermedad_actual: "{id_enfermedad_actual}"
  *               sintoma_principal: "Dolor intenso"
  *               tiempo_enfermedad: "2 semanas"
  *               forma_inicio: "Repentino"

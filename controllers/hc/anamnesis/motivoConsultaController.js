@@ -1,5 +1,5 @@
-import MotivoConsulta from '../../models/hc/motivoConsultaModel.js';
-import BaseService from '../../services/baseService.js';
+import MotivoConsulta from '../../../models/hc/anamnesis/motivoConsultaModel.js';
+import BaseService from '../../../services/baseService.js';
 
 const motivoConsultaService = new BaseService(MotivoConsulta);
 
