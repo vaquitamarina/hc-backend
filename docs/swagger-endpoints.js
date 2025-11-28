@@ -1,123 +1,111 @@
 /**
  * @swagger
- * /hc/antecedente-personal/historia/{id_historia}:
+ * /api/hc/antecedente-personal/historia/{id_historia}:
  *   get:
  *     tags:
- *       - Anamnesis
- *     summary: Obtiene el antecedente personal por id_historia
+ *       - Historia Clínica
+ *     summary: Obtiene el antecedente personal por historia
  *     parameters:
  *       - in: path
  *         name: id_historia
  *         required: true
  *         schema:
  *           type: string
- *         description: Identificador único de la historia clínica
+ *         description: UUID de la historia clínica
  *     responses:
  *       200:
- *         description: Antecedente personal encontrado
+ *         description: Datos del antecedente personal
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_historia:
+ *                   type: string
+ *                   example: "e1a2b3c4-d5f6-7890-abcd-1234567890ab"
+ *                 esta_embarazada:
+ *                   type: boolean
+ *                   example: false
+ *                 mac:
+ *                   type: string
+ *                   example: "N/A"
+ *                 otros:
+ *                   type: string
+ *                   example: "Sin antecedentes"
+ *                 psicosocial:
+ *                   type: string
+ *                   example: "Normal"
+ *                 vacunas:
+ *                   type: string
+ *                   example: "Completo"
+ *                 hepatitis_b:
+ *                   type: boolean
+ *                   example: false
+ *                 id_grupo_sanguineo:
+ *                   type: string
+ *                   description: UUID que referencia el grupo sanguíneo
+ *                   example: "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
+ *                 fuma:
+ *                   type: boolean
+ *                   example: false
+ *                 cigarrillos_dia:
+ *                   type: integer
+ *                   example: 0
+ *                 toma_te:
+ *                   type: boolean
+ *                   example: true
+ *                 tazas_te_dia:
+ *                   type: integer
+ *                   example: 2
+ *                 toma_alcohol:
+ *                   type: boolean
+ *                   example: false
+ *                 frecuencia_alcohol:
+ *                   type: string
+ *                   example: ""
+ *                 aprieta_dientes:
+ *                   type: boolean
+ *                   example: false
+ *                 momento_aprieta:
+ *                   type: string
+ *                   example: ""
+ *                 rechina:
+ *                   type: boolean
+ *                   example: false
+ *                 dolor_muscular:
+ *                   type: boolean
+ *                   example: false
+ *                 chupa_dedo:
+ *                   type: boolean
+ *                   example: false
+ *                 muerde_objetos:
+ *                   type: boolean
+ *                   example: false
+ *                 muerde_labios:
+ *                   type: boolean
+ *                   example: false
+ *                 otros_habitos:
+ *                   type: string
+ *                   example: ""
+ *                 frecuencia_cepillado:
+ *                   type: integer
+ *                   example: 2
  *       404:
  *         description: No encontrado
  */
 /**
  * @swagger
- * /hc/antecedente-personal:
- *   post:
- *     tags:
- *       - Anamnesis
- *     summary: Crea un antecedente personal
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               esta_embarazada:
- *                 type: boolean
- *               mac:
- *                 type: string
- *               otros:
- *                 type: string
- *               psicosocial:
- *                 type: string
- *               vacunas:
- *                 type: string
- *               hepatitis_b:
- *                 type: boolean
- *               id_grupo_sanguineo:
- *                 type: string
- *               fuma:
- *                 type: boolean
- *               cigarrillos_dia:
- *                 type: integer
- *               toma_te:
- *                 type: boolean
- *               tazas_te_dia:
- *                 type: integer
- *               toma_alcohol:
- *                 type: boolean
- *               frecuencia_alcohol:
- *                 type: string
- *               aprieta_dientes:
- *                 type: boolean
- *               momento_aprieta:
- *                 type: string
- *               rechina:
- *                 type: boolean
- *               dolor_muscular:
- *                 type: boolean
- *               chupa_dedo:
- *                 type: boolean
- *               muerde_objetos:
- *                 type: boolean
- *               muerde_labios:
- *                 type: boolean
- *               otros_habitos:
- *                 type: string
- *               frecuencia_cepillado:
- *                 type: integer
- *             example:
- *               id_historia: "{id_historia}"
- *               esta_embarazada: false
- *               mac: "N/A"
- *               otros: "Sin antecedentes"
- *               psicosocial: "Normal"
- *               vacunas: "Completo"
- *               hepatitis_b: false
- *               id_grupo_sanguineo: "{id_grupo_sanguineo}"
- *               fuma: false
- *               cigarrillos_dia: 0
- *               toma_te: true
- *               tazas_te_dia: 2
- *               toma_alcohol: false
- *               frecuencia_alcohol: ""
- *               aprieta_dientes: false
- *               momento_aprieta: ""
- *               rechina: false
- *               dolor_muscular: false
- *               chupa_dedo: false
- *               muerde_objetos: false
- *               muerde_labios: false
- *               otros_habitos: ""
- *               frecuencia_cepillado: 2
- *     responses:
- *       201:
- *         description: Antecedente personal creado
- */
-/**
- * @swagger
- * /hc/antecedente-personal/historia/{id_historia}:
+ * /api/hc/antecedente-personal/historia/{id_historia}:
  *   put:
  *     tags:
- *       - Anamnesis
- *     summary: Actualiza el antecedente personal por id_historia
+ *       - Historia Clínica
+ *     summary: Actualiza el antecedente personal por historia
  *     parameters:
  *       - in: path
  *         name: id_historia
  *         required: true
  *         schema:
  *           type: string
- *         description: Identificador único de la historia clínica
  *     requestBody:
  *       required: true
  *       content:
@@ -127,72 +115,71 @@
  *             properties:
  *               esta_embarazada:
  *                 type: boolean
+ *                 example: false
  *               mac:
  *                 type: string
+ *                 example: "N/A"
  *               otros:
  *                 type: string
+ *                 example: "Sin antecedentes"
  *               psicosocial:
  *                 type: string
+ *                 example: "Normal"
  *               vacunas:
  *                 type: string
+ *                 example: "Completo"
  *               hepatitis_b:
  *                 type: boolean
+ *                 example: false
  *               id_grupo_sanguineo:
  *                 type: string
+ *                 description: UUID que referencia el grupo sanguíneo
+ *                 example: "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
  *               fuma:
  *                 type: boolean
+ *                 example: false
  *               cigarrillos_dia:
  *                 type: integer
+ *                 example: 0
  *               toma_te:
  *                 type: boolean
+ *                 example: true
  *               tazas_te_dia:
  *                 type: integer
+ *                 example: 2
  *               toma_alcohol:
  *                 type: boolean
+ *                 example: false
  *               frecuencia_alcohol:
  *                 type: string
+ *                 example: ""
  *               aprieta_dientes:
  *                 type: boolean
+ *                 example: false
  *               momento_aprieta:
  *                 type: string
+ *                 example: ""
  *               rechina:
  *                 type: boolean
+ *                 example: false
  *               dolor_muscular:
  *                 type: boolean
+ *                 example: false
  *               chupa_dedo:
  *                 type: boolean
+ *                 example: false
  *               muerde_objetos:
  *                 type: boolean
+ *                 example: false
  *               muerde_labios:
  *                 type: boolean
+ *                 example: false
  *               otros_habitos:
  *                 type: string
+ *                 example: ""
  *               frecuencia_cepillado:
  *                 type: integer
- *             example:
- *               id_antecedente: "{id_antecedente}"
- *               esta_embarazada: false
- *               mac: "N/A"
- *               otros: "Sin antecedentes"
- *               psicosocial: "Normal"
- *               vacunas: "Completo"
- *               hepatitis_b: false
- *               id_grupo_sanguineo: "{id_grupo_sanguineo}"
- *               fuma: false
- *               cigarrillos_dia: 0
- *               toma_te: true
- *               tazas_te_dia: 2
- *               toma_alcohol: false
- *               frecuencia_alcohol: ""
- *               aprieta_dientes: false
- *               momento_aprieta: ""
- *               rechina: false
- *               dolor_muscular: false
- *               chupa_dedo: false
- *               muerde_objetos: false
- *               muerde_labios: false
- *               otros_habitos: ""
- *               frecuencia_cepillado: 2
+ *                 example: 2
  *     responses:
  *       200:
  *         description: Antecedente personal actualizado
@@ -201,31 +188,11 @@
  */
 /**
  * @swagger
- * /hc/motivo-consulta/historia/{id_historia}:
- *   get:
- *     tags:
- *       - Anamnesis
- *     summary: Obtiene el motivo de consulta por id_historia
- *     parameters:
- *       - in: path
- *         name: id_historia
- *         required: true
- *         schema:
- *           type: string
- *         description: Identificador único de la historia clínica
- *     responses:
- *       200:
- *         description: Motivo de consulta encontrado
- *       404:
- *         description: No encontrado
- */
-/**
- * @swagger
- * /hc/motivo-consulta:
+ * /api/hc/antecedente-personal:
  *   post:
  *     tags:
- *       - Anamnesis
- *     summary: Crea un motivo de consulta
+ *       - Historia Clínica
+ *     summary: Crea un antecedente personal
  *     requestBody:
  *       required: true
  *       content:
@@ -233,74 +200,87 @@
  *           schema:
  *             type: object
  *             properties:
- *               motivo:
+ *               id_historia:
  *                 type: string
- *             example:
- *               id_historia: "{id_historia}"
- *               motivo: "Dolor de muelas"
+ *                 example: "e1a2b3c4-d5f6-7890-abcd-1234567890ab"
+ *               esta_embarazada:
+ *                 type: boolean
+ *                 example: false
+ *               mac:
+ *                 type: string
+ *                 example: "N/A"
+ *               otros:
+ *                 type: string
+ *                 example: "Sin antecedentes"
+ *               psicosocial:
+ *                 type: string
+ *                 example: "Normal"
+ *               vacunas:
+ *                 type: string
+ *                 example: "Completo"
+ *               hepatitis_b:
+ *                 type: boolean
+ *                 example: false
+ *               id_grupo_sanguineo:
+ *                 type: string
+ *                 description: UUID que referencia el grupo sanguíneo
+ *                 example: "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
+ *               fuma:
+ *                 type: boolean
+ *                 example: false
+ *               cigarrillos_dia:
+ *                 type: integer
+ *                 example: 0
+ *               toma_te:
+ *                 type: boolean
+ *                 example: true
+ *               tazas_te_dia:
+ *                 type: integer
+ *                 example: 2
+ *               toma_alcohol:
+ *                 type: boolean
+ *                 example: false
+ *               frecuencia_alcohol:
+ *                 type: string
+ *                 example: ""
+ *               aprieta_dientes:
+ *                 type: boolean
+ *                 example: false
+ *               momento_aprieta:
+ *                 type: string
+ *                 example: ""
+ *               rechina:
+ *                 type: boolean
+ *                 example: false
+ *               dolor_muscular:
+ *                 type: boolean
+ *                 example: false
+ *               chupa_dedo:
+ *                 type: boolean
+ *                 example: false
+ *               muerde_objetos:
+ *                 type: boolean
+ *                 example: false
+ *               muerde_labios:
+ *                 type: boolean
+ *                 example: false
+ *               otros_habitos:
+ *                 type: string
+ *                 example: ""
+ *               frecuencia_cepillado:
+ *                 type: integer
+ *                 example: 2
  *     responses:
  *       201:
- *         description: Motivo de consulta creado
+ *         description: Antecedente personal creado
  */
 /**
  * @swagger
- * /hc/motivo-consulta/historia/{id_historia}:
- *   put:
- *     tags:
- *       - Anamnesis
- *     summary: Actualiza el motivo de consulta por id_historia
- *     parameters:
- *       - in: path
- *         name: id_historia
- *         required: true
- *         schema:
- *           type: string
- *         description: Identificador único de la historia clínica
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               motivo:
- *                 type: string
- *             example:
- *               id_motivo: "{id_motivo}"
- *               motivo: "Dolor de muelas"
- *     responses:
- *       200:
- *         description: Motivo de consulta actualizado
- *       404:
- *         description: No encontrado
- */
-/**
- * @swagger
- * /hc/enfermedad-actual/historia/{id_historia}:
- *   get:
- *     tags:
- *       - Anamnesis
- *     summary: Obtiene la enfermedad actual por id_historia
- *     parameters:
- *       - in: path
- *         name: id_historia
- *         required: true
- *         schema:
- *           type: string
- *         description: Identificador único de la historia clínica
- *     responses:
- *       200:
- *         description: Enfermedad actual encontrada
- *       404:
- *         description: No encontrado
- */
-/**
- * @swagger
- * /hc/enfermedad-actual:
+ * /api/users/register:
  *   post:
  *     tags:
- *       - Anamnesis
- *     summary: Crea una enfermedad actual
+ *       - Autenticación
+ *     summary: Registra un nuevo usuario
  *     requestBody:
  *       required: true
  *       content:
@@ -308,44 +288,136 @@
  *           schema:
  *             type: object
  *             properties:
- *               sintoma_principal:
+ *               userCode:
  *                 type: string
- *               tiempo_enfermedad:
+ *                 example: "2023-119018"
+ *               password:
  *                 type: string
- *               forma_inicio:
+ *                 example: "vaqMar12@"
+ *               firstName:
  *                 type: string
- *               curso:
+ *                 example: "Vaquita"
+ *               lastName:
  *                 type: string
- *               relato:
+ *                 example: "Marina"
+ *               email:
  *                 type: string
- *               tratamiento_prev:
- *                 type: string
- *             example:
- *               id_historia: "{id_historia}"
- *               sintoma_principal: "Dolor intenso"
- *               tiempo_enfermedad: "2 semanas"
- *               forma_inicio: "Repentino"
- *               curso: "Progresivo"
- *               relato: "El paciente refiere dolor desde hace dos semanas."
- *               tratamiento_prev: "Ibuprofeno"
+ *                 example: "caflores@unjbg.edu.pe"
  *     responses:
  *       201:
- *         description: Enfermedad actual creada
+ *         description: Usuario registrado exitosamente
+ *       400:
+ *         description: Datos inválidos o usuario ya existe
  */
+
 /**
  * @swagger
- * /hc/enfermedad-actual/historia/{id_historia}:
- *   put:
+ * /api/users/me:
+ *   get:
  *     tags:
- *       - Anamnesis
- *     summary: Actualiza la enfermedad actual por id_historia
+ *       - Autenticación
+ *     summary: Obtiene los datos del usuario autenticado
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Datos del usuario actual
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 userCode:
+ *                   type: string
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *       401:
+ *         description: No autenticado
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     tags:
+ *       - Usuarios
+ *     summary: Obtiene los datos de un usuario por ID
  *     parameters:
  *       - in: path
- *         name: id_historia
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: Identificador único de la historia clínica
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Datos del usuario
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 userCode:
+ *                   type: string
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *       404:
+ *         description: Usuario no encontrado
+ */
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     tags:
+ *       - Usuarios
+ *     summary: Obtiene la lista de todos los usuarios
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   userCode:
+ *                     type: string
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   email:
+ *                     type: string
+ *                   role:
+ *                     type: string
+ */
+/**
+ * @swagger
+ * /api/users/login:
+ *   post:
+ *     tags:
+ *       - Autenticación
+ *     summary: Inicia sesión y obtiene los datos del usuario
  *     requestBody:
  *       required: true
  *       content:
@@ -353,29 +425,38 @@
  *           schema:
  *             type: object
  *             properties:
- *               sintoma_principal:
+ *               userCode:
  *                 type: string
- *               tiempo_enfermedad:
+ *                 example: "2023-119018"
+ *               password:
  *                 type: string
- *               forma_inicio:
- *                 type: string
- *               curso:
- *                 type: string
- *               relato:
- *                 type: string
- *               tratamiento_prev:
- *                 type: string
- *             example:
- *               id_enfermedad_actual: "{id_enfermedad_actual}"
- *               sintoma_principal: "Dolor intenso"
- *               tiempo_enfermedad: "2 semanas"
- *               forma_inicio: "Repentino"
- *               curso: "Progresivo"
- *               relato: "El paciente refiere dolor desde hace dos semanas."
- *               tratamiento_prev: "Ibuprofeno"
+ *                 example: "vaqMar12@"
  *     responses:
  *       200:
- *         description: Enfermedad actual actualizada
- *       404:
- *         description: No encontrado
+ *         description: Login exitoso, retorna los datos del usuario
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "de4cd964-3e8b-4552-b90a-1bd30cca2f21"
+ *                 userCode:
+ *                   type: string
+ *                   example: "2023-119018"
+ *                 firstName:
+ *                   type: string
+ *                   example: "Vaquita"
+ *                 lastName:
+ *                   type: string
+ *                   example: "Marina"
+ *                 email:
+ *                   type: string
+ *                   example: "caflores@unjbg.edu.pe"
+ *                 role:
+ *                   type: string
+ *                   example: "estudiante"
+ *       401:
+ *         description: Credenciales inválidas
  */
