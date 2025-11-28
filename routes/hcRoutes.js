@@ -2,6 +2,8 @@ import { Router } from 'express';
 
 import { HcController } from '../controllers/hc/hcController.js';
 import { HcModel } from '../models/hc/hcModel.js';
+import * as examenGeneralController from '../controllers/hc/examenFisico/examenGeneralController.js';
+import * as examenRegionalController from '../controllers/hc/examenFisico/examenRegionalController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import * as motivoConsultaController from '../controllers/hc/anamnesis/motivoConsultaController.js';
 import * as antecedentePersonalController from '../controllers/hc/anamnesis/antecedentePersonalController.js';
@@ -76,9 +78,28 @@ hcRoutes.post('/draft', hcController.createDraft);
 hcRoutes.patch('/assign-patient', hcController.assignPatient);
 
 // --- RUTAS DE EXAMEN FÍSICO GENERAL ---
-hcRoutes.get('/:id/examen-general', hcController.getGeneralExam);
-hcRoutes.put('/:id/examen-general', hcController.updateGeneralExam);
 
-// --- RUTAS DE EXAMEN REGIONAL (CABEZA, ATM, CUELLO) ---
-hcRoutes.get('/:id/examen-regional', hcController.getRegionalExam);
-hcRoutes.put('/:id/examen-regional', hcController.updateRegionalExam);
+// Endpoints examen general
+hcRoutes.post('/examen-general', examenGeneralController.createExamenGeneral);
+hcRoutes.get(
+  '/examen-general/historia/:id_historia',
+  examenGeneralController.getExamenGeneral
+);
+hcRoutes.put(
+  '/examen-general/historia/:id_historia',
+  examenGeneralController.updateExamenGeneral
+);
+
+// Endpoints examen regional
+hcRoutes.post(
+  '/examen-regional',
+  examenRegionalController.createExamenRegional
+);
+hcRoutes.get(
+  '/examen-regional/historia/:id_historia',
+  examenRegionalController.getExamenRegional
+);
+hcRoutes.put(
+  '/examen-regional/historia/:id_historia',
+  examenRegionalController.updateExamenRegional
+);
