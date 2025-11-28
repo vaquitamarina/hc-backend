@@ -38,6 +38,14 @@ export class HcModel {
     return result.rows[0];
   }
 
+  static async getAllByStudentId(studentId) {
+    const result = await pool.query(
+      'SELECT * FROM historia_clinica WHERE id_estudiante = $1',
+      [studentId]
+    );
+    return result.rows;
+  }
+
   static async createDraft(idStudent) {
     const result = await pool.query(
       'SELECT fn_obtener_o_crear_borrador($1) AS id_historia',

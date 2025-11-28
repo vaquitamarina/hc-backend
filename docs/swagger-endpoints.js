@@ -1,5 +1,185 @@
 /**
  * @swagger
+ * /api/student-users:
+ *   get:
+ *     tags:
+ *       - Usuarios Estudiantes
+ *     summary: Obtiene la lista de todos los usuarios estudiantes
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios estudiantes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "e1a2b3c4-d5f6-7890-abcd-1234567890ab"
+ *                   nombre:
+ *                     type: string
+ *                     example: "Juan"
+ *                   apellido:
+ *                     type: string
+ *                     example: "Pérez"
+ *                   email:
+ *                     type: string
+ *                     example: "juan.perez@unjbg.edu.pe"
+ */
+
+/**
+ * @swagger
+ * /api/students/{id}/patients/adult:
+ *   get:
+ *     tags:
+ *       - Estudiantes
+ *     summary: Obtiene los pacientes adultos asignados a un estudiante
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID del estudiante
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de pacientes adultos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "a1b2c3d4-e5f6-7890-abcd-1234567890ab"
+ *                   nombre:
+ *                     type: string
+ *                     example: "Carlos"
+ *                   apellido:
+ *                     type: string
+ *                     example: "Ramírez"
+ *                   edad:
+ *                     type: integer
+ *                     example: 45
+ *                   sexo:
+ *                     type: string
+ *                     example: "Masculino"
+ *                   telefono:
+ *                     type: string
+ *                     example: "999888777"
+ *                   email:
+ *                     type: string
+ *                     example: "carlos.ramirez@unjbg.edu.pe"
+ *       400:
+ *         description: ID de estudiante inválido
+ */
+
+/**
+ * @swagger
+ * /api/pacientes:
+ *   post:
+ *     tags:
+ *       - Pacientes
+ *     summary: Crea un nuevo paciente
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 example: "Ana"
+ *               apellido:
+ *                 type: string
+ *                 example: "García"
+ *               dni:
+ *                 type: string
+ *                 example: "12345678"
+ *               fechaNacimiento:
+ *                 type: string
+ *                 format: date
+ *                 example: "1980-05-12"
+ *               sexo:
+ *                 type: string
+ *                 example: "Femenino"
+ *               telefono:
+ *                 type: string
+ *                 example: "987654321"
+ *               email:
+ *                 type: string
+ *                 example: "ana.garcia@unjbg.edu.pe"
+ *     responses:
+ *       201:
+ *         description: Paciente creado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "b1c2d3e4-f5a6-7890-abcd-1234567890ab"
+ *       400:
+ *         description: Campos requeridos faltantes o sexo inválido
+ *       409:
+ *         description: Ya existe un paciente con ese DNI
+ *       500:
+ *         description: Error al crear paciente
+ */
+
+/**
+ * @swagger
+ * /api/pacientes/{id}:
+ *   put:
+ *     tags:
+ *       - Pacientes
+ *     summary: Actualiza los datos de un paciente
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID del paciente
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 example: "Ana"
+ *               apellido:
+ *                 type: string
+ *                 example: "García"
+ *               telefono:
+ *                 type: string
+ *                 example: "987654321"
+ *               email:
+ *                 type: string
+ *                 example: "ana.garcia@unjbg.edu.pe"
+ *     responses:
+ *       200:
+ *         description: Datos del paciente actualizados correctamente
+ *       400:
+ *         description: ID de paciente inválido
+ *       404:
+ *         description: Paciente no encontrado
+ *       500:
+ *         description: Error interno al actualizar el paciente
+ */
+/**
+ * @swagger
  * /api/hc/antecedente-personal/historia/{id_historia}:
  *   get:
  *     tags:

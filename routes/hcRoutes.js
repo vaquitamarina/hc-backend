@@ -76,6 +76,9 @@ hcRoutes.post('/review', hcController.createReview);
 // Nuevas rutas para el flujo de borrador
 hcRoutes.post('/draft', hcController.createDraft);
 hcRoutes.patch('/assign-patient', hcController.assignPatient);
+// Endpoint para registrar una historia clínica
+hcRoutes.post('/register', hcController.registerHc);
+// Nuevo endpoint para asignar alumno a una historia clínica
 
 // --- RUTAS DE EXAMEN FÍSICO GENERAL ---
 
@@ -103,3 +106,6 @@ hcRoutes.put(
   '/examen-regional/historia/:id_historia',
   examenRegionalController.updateExamenRegional
 );
+
+// Endpoint para obtener todas las historias clínicas de un estudiante
+hcRoutes.get('/student/:id', hcController.getAllByStudentId);

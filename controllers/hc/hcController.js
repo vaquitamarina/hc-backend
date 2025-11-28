@@ -22,6 +22,17 @@ export class HcController {
     }
   };
 
+  getAllByStudentId = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const historias = await this.HcModel.getAllByStudentId(id);
+      res.status(200).json(historias);
+    } catch (error) {
+      console.error('Error al obtener historias clínicas:', error);
+      res.status(500).json({ error: 'Error al obtener historias clínicas' });
+    }
+  };
+
   getFiliationByIdHistory = async (req, res) => {
     const { id } = req.params;
     const filiation = await this.HcModel.getFiliationByIdHistory(id);
