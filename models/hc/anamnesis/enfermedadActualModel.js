@@ -1,4 +1,4 @@
-import db from '../../../db/db.js';
+import pool from '../../../db/db.js';
 
 const EnfermedadActual = {
   async create(data) {
@@ -16,13 +16,13 @@ const EnfermedadActual = {
       data.relato,
       data.tratamiento_prev,
     ];
-    const { rows } = await db.query(query, values);
+    const { rows } = await pool.query(query, values);
     return rows[0];
   },
 
   async getById(id_enfermedad_actual) {
     const query = `SELECT * FROM enfermedad_actual WHERE id_enfermedad_actual = $1`;
-    const { rows } = await db.query(query, [id_enfermedad_actual]);
+    const { rows } = await pool.query(query, [id_enfermedad_actual]);
     return rows[0];
   },
 
@@ -39,7 +39,7 @@ const EnfermedadActual = {
       data.tratamiento_prev,
       id_enfermedad_actual,
     ];
-    const { rows } = await db.query(query, values);
+    const { rows } = await pool.query(query, values);
     return rows[0];
   },
 };

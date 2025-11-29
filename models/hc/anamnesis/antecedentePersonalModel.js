@@ -1,4 +1,4 @@
-import db from '../../../db/db.js';
+import pool from '../../../db/db.js';
 
 const AntecedentePersonal = {
   async create(data) {
@@ -32,19 +32,19 @@ const AntecedentePersonal = {
       data.otros_habitos,
       data.frecuencia_cepillado,
     ];
-    const { rows } = await db.query(query, values);
+    const { rows } = await pool.query(query, values);
     return rows[0];
   },
 
   async getById(id_antecedente) {
     const query = `SELECT * FROM antecedente_personal WHERE id_antecedente = $1`;
-    const { rows } = await db.query(query, [id_antecedente]);
+    const { rows } = await pool.query(query, [id_antecedente]);
     return rows[0];
   },
 
   async getByHistoria(id_historia) {
     const query = `SELECT * FROM antecedente_personal WHERE id_historia = $1`;
-    const { rows } = await db.query(query, [id_historia]);
+    const { rows } = await pool.query(query, [id_historia]);
     return rows[0];
   },
 
@@ -77,7 +77,7 @@ const AntecedentePersonal = {
       data.frecuencia_cepillado,
       id_antecedente,
     ];
-    const { rows } = await db.query(query, values);
+    const { rows } = await pool.query(query, values);
     return rows[0];
   },
 };

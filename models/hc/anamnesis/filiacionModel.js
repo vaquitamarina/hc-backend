@@ -1,4 +1,4 @@
-import db from '../../../db/db.js';
+import pool from '../../../db/db.js';
 
 const Filiacion = {
   async create(data) {
@@ -27,19 +27,19 @@ const Filiacion = {
       data.telefono_emergencia,
       data.acompaniante,
     ];
-    const { rows } = await db.query(query, values);
+    const { rows } = await pool.query(query, values);
     return rows[0];
   },
 
   async getById(id_filiacion) {
     const query = `SELECT * FROM filiacion WHERE id_filiacion = $1`;
-    const { rows } = await db.query(query, [id_filiacion]);
+    const { rows } = await pool.query(query, [id_filiacion]);
     return rows[0];
   },
 
   async getByHistoria(id_historia) {
     const query = `SELECT * FROM filiacion WHERE id_historia = $1`;
-    const { rows } = await db.query(query, [id_historia]);
+    const { rows } = await pool.query(query, [id_historia]);
     return rows[0];
   },
 
@@ -67,7 +67,7 @@ const Filiacion = {
       data.acompaniante,
       id_filiacion,
     ];
-    const { rows } = await db.query(query, values);
+    const { rows } = await pool.query(query, values);
     return rows[0];
   },
 };

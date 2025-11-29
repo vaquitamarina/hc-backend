@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { HcController } from '../controllers/hc/hcController.js';
 import { HcModel } from '../models/hc/hcModel.js';
+import { listaHcAdultos } from '../controllers/hc/hcControlller/listaHcAdultos.js';
 import * as examenGeneralController from '../controllers/hc/examenFisico/examenGeneralController.js';
 import * as examenRegionalController from '../controllers/hc/examenFisico/examenRegionalController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
@@ -109,3 +110,5 @@ hcRoutes.put(
 
 // Endpoint para obtener todas las historias clínicas de un estudiante
 hcRoutes.get('/student/:id', hcController.getAllByStudentId);
+// Endpoint para obtener historias clínicas adultas de un estudiante específico
+hcRoutes.get('/student/:id/adult-historias', listaHcAdultos);
