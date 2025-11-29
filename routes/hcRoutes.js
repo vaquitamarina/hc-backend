@@ -7,7 +7,7 @@ import * as examenGeneralController from '../controllers/hc/examenFisico/examenG
 import * as examenRegionalController from '../controllers/hc/examenFisico/examenRegionalController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import * as motivoConsultaController from '../controllers/hc/anamnesis/motivoConsultaController.js';
-import * as antecedentePersonalController from '../controllers/hc/anamnesis/antecedentePersonalController.js';
+import * as antecedentePersonalController from '../controllers/hc/anamnesis/antecedenteController.js';
 import * as enfermedadActualController from '../controllers/hc/anamnesis/enfermedadActualController.js';
 import * as filiacionController from '../controllers/hc/anamnesis/filiacionController.js';
 
@@ -43,6 +43,45 @@ hcRoutes.get(
 hcRoutes.put(
   '/antecedente-personal/historia/:id_historia',
   antecedentePersonalController.updateAntecedentePersonal
+);
+// Endpoints antecedente_medico
+hcRoutes.post(
+  '/antecedente-medico',
+  antecedentePersonalController.createAntecedenteMedico
+);
+hcRoutes.get(
+  '/antecedente-medico/historia/:id_historia',
+  antecedentePersonalController.getAntecedenteMedico
+);
+hcRoutes.put(
+  '/antecedente-medico/historia/:id_historia',
+  antecedentePersonalController.updateAntecedenteMedico
+);
+// Endpoints antecedente_familiar
+hcRoutes.post(
+  '/antecedente-familiar',
+  antecedentePersonalController.createAntecedenteFamiliar
+);
+hcRoutes.get(
+  '/antecedente-familiar/historia/:id_historia',
+  antecedentePersonalController.getAntecedenteFamiliar
+);
+hcRoutes.put(
+  '/antecedente-familiar/historia/:id_historia',
+  antecedentePersonalController.updateAntecedenteFamiliar
+);
+// Endpoints antecedente_cumplimiento
+hcRoutes.post(
+  '/antecedente-cumplimiento',
+  antecedentePersonalController.createAntecedenteCumplimiento
+);
+hcRoutes.get(
+  '/antecedente-cumplimiento/historia/:id_historia',
+  antecedentePersonalController.getAntecedenteCumplimiento
+);
+hcRoutes.put(
+  '/antecedente-cumplimiento/historia/:id_historia',
+  antecedentePersonalController.updateAntecedenteCumplimiento
 );
 
 // Endpoints enfermedad_actual
