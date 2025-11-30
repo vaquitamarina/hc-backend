@@ -3,7 +3,7 @@ import pool from '../../../db/db.js';
 class AntecedentePersonal {
   static async create(data) {
     try {
-      await pool.query(
+      const result = await pool.query(
         `CALL i_antecedente_personal($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)`,
         [
           data.id_historia,
@@ -31,10 +31,15 @@ class AntecedentePersonal {
           data.frecuencia_cepillado,
         ]
       );
+      console.log('Antecedente personal creado exitosamente');
       return true;
     } catch (error) {
-      console.error('Error al crear antecedente personal:', error.message);
-      throw error;
+      console.error(
+        'Error al crear antecedente personal:',
+        error.message,
+        error.detail
+      );
+      throw new Error(error.message || 'Error al crear antecedente personal');
     }
   }
 
@@ -75,7 +80,7 @@ class AntecedentePersonal {
 
   static async update(id_historia, data) {
     try {
-      await pool.query(
+      const result = await pool.query(
         `CALL u_antecedente_personal($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)`,
         [
           id_historia,
@@ -103,10 +108,17 @@ class AntecedentePersonal {
           data.frecuencia_cepillado,
         ]
       );
+      console.log('Antecedente personal actualizado exitosamente');
       return true;
     } catch (error) {
-      console.error('Error al actualizar antecedente personal:', error.message);
-      throw error;
+      console.error(
+        'Error al actualizar antecedente personal:',
+        error.message,
+        error.detail
+      );
+      throw new Error(
+        error.message || 'Error al actualizar antecedente personal'
+      );
     }
   }
 }

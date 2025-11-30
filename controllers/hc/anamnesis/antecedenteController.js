@@ -110,7 +110,10 @@ export const createAntecedentePersonal = async (req, res) => {
       .status(500)
       .json({ error: 'No se pudo registrar el antecedente personal' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error en createAntecedentePersonal:', err);
+    return res.status(400).json({
+      error: err.message || 'Error al registrar el antecedente personal',
+    });
   }
 };
 
@@ -140,7 +143,10 @@ export const updateAntecedentePersonal = async (req, res) => {
       .status(500)
       .json({ error: 'No se pudo actualizar el antecedente personal' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error en updateAntecedentePersonal:', err);
+    return res.status(400).json({
+      error: err.message || 'Error al actualizar el antecedente personal',
+    });
   }
 };
 

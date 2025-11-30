@@ -1,25 +1,65 @@
 import pool from '../../../db/db.js';
 
-const MotivoConsulta = {
-  async create({ id_historia, motivo }) {
-    const query = `INSERT INTO motivo_consulta (id_historia, motivo) VALUES ($1, $2) RETURNING *`;
-    const values = [id_historia, motivo];
-    const { rows } = await pool.query(query, values);
-    return rows[0];
-  },
+class MotivoConsulta {
+  static async create({ id_historia, motivo }) {
+    try {
+      const query = `CALL i_motivo_consulta($1, $2)`;
+      const values = [id_historia, motivo];
+      await pool.query(query, values);
+      return true;
+    } catch (error) {
+      console.error('Error al crear motivo de consulta:', error.message);
+      throw new Error(error.message || 'Error al crear motivo de consulta');
+    }
+  }
 
-  async getById(id_motivo) {
-    const query = `SELECT * FROM motivo_consulta WHERE id_motivo = $1`;
-    const { rows } = await pool.query(query, [id_motivo]);
-    return rows[0];
-  },
+  static async getById(id_motivo) {
+    try {
+      const query = `SELECT * FROM motivo_consulta WHERE id_motivo = $1`;
+      const { rows } = await pool.query(query, [id_motivo]);
+      if (rows.length === 0) {
+        return null;
+      }
+      return rows[0];
+    } catch (error) {
+      console.error(
+        'Error al obtener motivo de consulta por ID:',
+        error.message
+      );
+      return null;
+    }
+  }
 
-  async update(id_motivo, { motivo }) {
-    const query = `UPDATE motivo_consulta SET motivo = $1 WHERE id_motivo = $2 RETURNING *`;
-    const values = [motivo, id_motivo];
-    const { rows } = await pool.query(query, values);
-    return rows[0];
-  },
-};
+  static async getByHistoria(id_historia) {
+    try {
+      const query = `SELECT * FROM motivo_consulta WHERE id_historia = $1`;
+      const { rows } = await pool.query(query, [id_historia]);
+      if (rows.length === 0) {
+        return null;
+      }
+      return rows[0];
+    } catch (error) {
+      console.error(
+        'Error al obtener motivo de consulta por historia:',
+        error.message
+      );
+      return null;
+    }
+  }
+
+  static async update(id_historia, { motivo }) {
+    try {
+      const query = `CALL u_motivo_consulta($1, $2)`;
+      const values = [id_historia, motivo];
+      await pool.query(query, values);
+      return true;
+    } catch (error) {
+      console.error('Error al actualizar motivo de consulta:', error.message);
+      throw new Error(
+        error.message || 'Error al actualizar motivo de consulta'
+      );
+    }
+  }
+}
 
 export default MotivoConsulta;

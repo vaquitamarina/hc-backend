@@ -1,14 +1,20 @@
 // Controlador para obtener historias clínicas de pacientes adultos de un estudiante específico
 import { getAdultHistoriasByStudent } from '../../../models/hc/hcModels/listaHcAdultos.js';
 
-export async function listaHcAdultos(req, res) {
+export const listaHcAdultos = async (req, res) => {
   try {
     const { id } = req.params;
     const historias = await getAdultHistoriasByStudent(id);
-    res.json(historias);
+    if (!historias || historias.length === 0) {
+      return res
+        .status(404)
+        .json({ error: 'No se encontraron historias clínicas adultas.' });
+    }
+    return res.status(200).json(historias);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: 'Error al obtener historias clínicas adultas.' });
+    console.error('Error en listaHcAdultos:', error);
+    return res.status(500).json({
+      error: error.message || 'Error al obtener historias clínicas adultas.',
+    });
   }
-}
+};
