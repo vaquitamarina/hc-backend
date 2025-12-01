@@ -10,14 +10,22 @@ export class PatientModel {
     apellido,
     dni,
     fechaNacimiento,
-    sexo, // 'Masculino' o 'Femenino'
+    sexo,
     telefono,
     email
   ) {
     try {
       const result = await pool.query(
         'SELECT fn_crear_paciente($1, $2, $3, $4, $5, $6, $7) AS id_paciente',
-        [nombre, apellido, dni, fechaNacimiento, sexo, telefono, email]
+        [
+          nombre,
+          apellido,
+          dni || null,
+          fechaNacimiento || null,
+          sexo || null,
+          telefono || null,
+          email || null,
+        ]
       );
 
       const idPaciente = result.rows[0].id_paciente;

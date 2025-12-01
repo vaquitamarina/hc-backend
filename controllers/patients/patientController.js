@@ -7,18 +7,10 @@ export class PatientController {
     const { nombre, apellido, dni, fechaNacimiento, sexo, telefono, email } =
       req.body;
 
-    // Validar campos requeridos
-    if (!nombre || !apellido || !dni || !fechaNacimiento || !sexo) {
+    // Validar campos requeridos (solo nombre y apellido)
+    if (!nombre || !apellido) {
       return res.status(400).json({
-        error:
-          'Los campos nombre, apellido, dni, fechaNacimiento y sexo son requeridos.',
-      });
-    }
-
-    // Validar sexo
-    if (sexo !== 'Masculino' && sexo !== 'Femenino') {
-      return res.status(400).json({
-        error: 'El sexo debe ser "Masculino" o "Femenino".',
+        error: 'Los campos nombre y apellido son requeridos.',
       });
     }
 

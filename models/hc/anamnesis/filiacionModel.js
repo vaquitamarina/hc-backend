@@ -2,7 +2,7 @@ import pool from '../../../db/db.js';
 
 const Filiacion = {
   async create(data) {
-    const query = `CALL i_filiacion($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)`;
+    const query = `CALL i_filiacion($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)`;
     const values = [
       data.id_historia,
       data.raza || null,
@@ -14,7 +14,6 @@ const Filiacion = {
       data.lugar_procedencia || null,
       data.tiempo_residencia_tacna || null,
       data.direccion || null,
-      data.grado_instruccion || null,
       data.ultima_visita_dentista || null,
       data.motivo_visita_dentista || null,
       data.ultima_visita_medico || null,
@@ -43,7 +42,7 @@ const Filiacion = {
   },
 
   async update(id_historia, data) {
-    const query = `CALL u_filiacion($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)`;
+    const query = `CALL u_filiacion($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)`;
     const values = [
       id_historia,
       data.raza || null,
@@ -55,7 +54,6 @@ const Filiacion = {
       data.lugar_procedencia || null,
       data.tiempo_residencia_tacna || null,
       data.direccion || null,
-      data.grado_instruccion || null,
       data.ultima_visita_dentista || null,
       data.motivo_visita_dentista || null,
       data.ultima_visita_medico || null,
