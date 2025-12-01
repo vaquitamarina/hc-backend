@@ -3,8 +3,8 @@ import pool from '../../../db/db.js';
 class AntecedentePersonal {
   static async create(data) {
     try {
-      const result = await pool.query(
-        `CALL i_antecedente_personal($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)`,
+      await pool.query(
+        `CALL i_antecedente_personal($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32)`,
         [
           data.id_historia,
           data.esta_embarazada,
@@ -29,6 +29,15 @@ class AntecedentePersonal {
           data.muerde_labios,
           data.otros_habitos,
           data.frecuencia_cepillado,
+          data.cepillo_duro,
+          data.cepillo_mediano,
+          data.cepillo_blando,
+          data.cepillo_electrico,
+          data.cepillo_interproximal,
+          data.tipo_interproximal,
+          data.seda_dental,
+          data.enjuague_bucal,
+          data.otros_elementos_higiene,
         ]
       );
       console.log('Antecedente personal creado exitosamente');
@@ -80,8 +89,8 @@ class AntecedentePersonal {
 
   static async update(id_historia, data) {
     try {
-      const result = await pool.query(
-        `CALL u_antecedente_personal($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)`,
+      await pool.query(
+        `CALL u_antecedente_personal($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32)`,
         [
           id_historia,
           data.esta_embarazada,
@@ -106,6 +115,15 @@ class AntecedentePersonal {
           data.muerde_labios,
           data.otros_habitos,
           data.frecuencia_cepillado,
+          data.cepillo_duro,
+          data.cepillo_mediano,
+          data.cepillo_blando,
+          data.cepillo_electrico,
+          data.cepillo_interproximal,
+          data.tipo_interproximal,
+          data.seda_dental,
+          data.enjuague_bucal,
+          data.otros_elementos_higiene,
         ]
       );
       console.log('Antecedente personal actualizado exitosamente');
@@ -127,16 +145,31 @@ class AntecedenteMedico {
   static async create(data) {
     try {
       await pool.query(
-        `CALL i_antecedente_medico($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+        `CALL i_antecedente_medico($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)`,
         [
           data.id_historia,
           data.salud_general,
           data.bajo_tratamiento,
           data.tipo_tratamiento,
           data.hospitalizaciones,
-          data.traumatismos,
+          data.tuvo_traumatismos,
+          data.tipo_traumatismos,
           data.alergias,
           data.medicamentos_contraindicados,
+          data.enf_hepatitis,
+          data.enf_alergia_cronica,
+          data.enf_corazon,
+          data.enf_fiebre_reumatica,
+          data.enf_anemia,
+          data.enf_asma,
+          data.enf_diabetes,
+          data.enf_epilepsia,
+          data.enf_coagulacion,
+          data.enf_tbc,
+          data.enf_hipertension,
+          data.enf_ulcera,
+          data.enf_neurologica,
+          data.otras_enf_patologicas,
           data.odontologicos,
         ]
       );
@@ -166,16 +199,31 @@ class AntecedenteMedico {
   static async update(id_historia, data) {
     try {
       await pool.query(
-        `CALL u_antecedente_medico($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+        `CALL u_antecedente_medico($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)`,
         [
           id_historia,
           data.salud_general,
           data.bajo_tratamiento,
           data.tipo_tratamiento,
           data.hospitalizaciones,
-          data.traumatismos,
+          data.tuvo_traumatismos,
+          data.tipo_traumatismos,
           data.alergias,
           data.medicamentos_contraindicados,
+          data.enf_hepatitis,
+          data.enf_alergia_cronica,
+          data.enf_corazon,
+          data.enf_fiebre_reumatica,
+          data.enf_anemia,
+          data.enf_asma,
+          data.enf_diabetes,
+          data.enf_epilepsia,
+          data.enf_coagulacion,
+          data.enf_tbc,
+          data.enf_hipertension,
+          data.enf_ulcera,
+          data.enf_neurologica,
+          data.otras_enf_patologicas,
           data.odontologicos,
         ]
       );
@@ -235,16 +283,21 @@ class AntecedenteCumplimiento {
   static async create(data) {
     try {
       await pool.query(
-        `CALL i_antecedente_cumplimiento($1,$2,$3,$4,$5,$6,$7,$8)`,
+        `CALL i_antecedente_cumplimiento($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
         [
           data.id_historia,
-          data.dentista_dolor,
-          data.frecuenca_dentista,
-          data.higiene_oral,
-          data.tranquilo,
-          data.nervioso,
-          data.panico,
+          data.motivo_dolor,
+          data.motivo_control,
+          data.frecuencia_control_meses,
+          data.motivo_limpieza,
+          data.frecuencia_limpieza_meses,
+          data.actitud_tranquilo,
+          data.actitud_aprensivo,
+          data.actitud_panico,
           data.desagrado_atencion,
+          data.fecha_consentimiento,
+          data.firma_nombre,
+          data.historia_elaborada_por,
         ]
       );
       return true;
@@ -276,16 +329,21 @@ class AntecedenteCumplimiento {
   static async update(id_historia, data) {
     try {
       await pool.query(
-        `CALL u_antecedente_cumplimiento($1,$2,$3,$4,$5,$6,$7,$8)`,
+        `CALL u_antecedente_cumplimiento($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
         [
           id_historia,
-          data.dentista_dolor,
-          data.frecuenca_dentista,
-          data.higiene_oral,
-          data.tranquilo,
-          data.nervioso,
-          data.panico,
+          data.motivo_dolor,
+          data.motivo_control,
+          data.frecuencia_control_meses,
+          data.motivo_limpieza,
+          data.frecuencia_limpieza_meses,
+          data.actitud_tranquilo,
+          data.actitud_aprensivo,
+          data.actitud_panico,
           data.desagrado_atencion,
+          data.fecha_consentimiento,
+          data.firma_nombre,
+          data.historia_elaborada_por,
         ]
       );
       return true;
