@@ -183,7 +183,7 @@
  * /api/hc/antecedente-personal/historia/{id_historia}:
  *   get:
  *     tags:
- *       - Historia Clínica
+ *       - Antecedente Personal
  *     summary: Obtiene el antecedente personal por historia
  *     parameters:
  *       - in: path
@@ -275,10 +275,98 @@
  */
 /**
  * @swagger
+ * /api/hc/motivo-consulta:
+ *   post:
+ *     tags:
+ *       - Motivo de Consulta
+ *     summary: Crea un motivo de consulta
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_historia:
+ *                 type: string
+ *                 example: "bea73607-a9cc-462f-b14f-bedb4d503e6d"
+ *               motivo:
+ *                 type: string
+ *                 example: "Dolor de cabeza"
+ *     responses:
+ *       201:
+ *         description: Motivo de consulta creado con éxito
+ *       400:
+ *         description: Error en los datos enviados
+ *
+ * @swagger
+ * /api/hc/motivo-consulta/historia/{id_historia}:
+ *   get:
+ *     tags:
+ *       - Motivo de Consulta
+ *     summary: Obtiene el motivo de consulta por historia clínica
+ *     parameters:
+ *       - in: path
+ *         name: id_historia
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID de la historia clínica
+ *     responses:
+ *       200:
+ *         description: Motivo de consulta obtenido correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_motivo:
+ *                   type: string
+ *                   example: "d1e2f3a4-b5c6-7890-abcd-1234567890ab"
+ *                 id_historia:
+ *                   type: string
+ *                   example: "bea73607-a9cc-462f-b14f-bedb4d503e6d"
+ *                 motivo:
+ *                   type: string
+ *                   example: "Dolor de cabeza"
+ *       404:
+ *         description: No se encontró motivo de consulta para la historia clínica indicada
+ *
+ *   put:
+ *     tags:
+ *       - Motivo de Consulta
+ *     summary: Actualiza el motivo de consulta por historia clínica
+ *     parameters:
+ *       - in: path
+ *         name: id_historia
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID de la historia clínica
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               motivo:
+ *                 type: string
+ *                 example: "Dolor de cabeza y mareos casi siempre"
+ *     responses:
+ *       200:
+ *         description: Motivo de consulta actualizado correctamente
+ *       404:
+ *         description: No se encontró motivo de consulta para la historia clínica indicada
+ *       500:
+ *         description: Error al actualizar el motivo de consulta
+ */
+/**
+ * @swagger
  * /api/hc/antecedente-personal/historia/{id_historia}:
  *   put:
  *     tags:
- *       - Historia Clínica
+ *       - Antecedente Personal
  *     summary: Actualiza el antecedente personal por historia
  *     parameters:
  *       - in: path
@@ -371,7 +459,7 @@
  * /api/hc/antecedente-personal:
  *   post:
  *     tags:
- *       - Historia Clínica
+ *       - Antecedente Personal
  *     summary: Crea un antecedente personal
  *     requestBody:
  *       required: true
@@ -639,4 +727,389 @@
  *                   example: "estudiante"
  *       401:
  *         description: Credenciales inválidas
+ */
+/**
+ * @swagger
+ * /api/hc/enfermedad-actual:
+ *   post:
+ *     tags:
+ *       - Enfermedad Actual
+ *     summary: Crea una enfermedad actual
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_historia:
+ *                 type: string
+ *                 example: "bea73607-a9cc-462f-b14f-bedb4d503e6d"
+ *               sintoma_principal:
+ *                 type: string
+ *                 example: "Fiebre"
+ *               tiempo_enfermedad:
+ *                 type: string
+ *                 example: "3 días"
+ *               forma_inicio:
+ *                 type: string
+ *                 example: "Brusco"
+ *               curso:
+ *                 type: string
+ *                 example: "Progresivo"
+ *               relato:
+ *                 type: string
+ *                 example: "Paciente refiere fiebre alta y malestar general."
+ *               tratamiento_prev:
+ *                 type: string
+ *                 example: "Paracetamol"
+ *     responses:
+ *       201:
+ *         description: Enfermedad actual registrada con éxito
+ *       400:
+ *         description: Error en los datos enviados
+ */
+/**
+ * @swagger
+ * /api/hc/enfermedad-actual/historia/{id_historia}:
+ *   get:
+ *     tags:
+ *       - Enfermedad Actual
+ *     summary: Obtiene la enfermedad actual por historia clínica
+ *     parameters:
+ *       - in: path
+ *         name: id_historia
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID de la historia clínica
+ *     responses:
+ *       200:
+ *         description: Enfermedad actual obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_historia:
+ *                   type: string
+ *                   example: "bea73607-a9cc-462f-b14f-bedb4d503e6d"
+ *                 sintoma_principal:
+ *                   type: string
+ *                   example: "Fiebre"
+ *                 tiempo_enfermedad:
+ *                   type: string
+ *                   example: "3 días"
+ *                 forma_inicio:
+ *                   type: string
+ *                   example: "Brusco"
+ *                 curso:
+ *                   type: string
+ *                   example: "Progresivo"
+ *                 relato:
+ *                   type: string
+ *                   example: "Paciente refiere fiebre alta y malestar general."
+ *                 tratamiento_prev:
+ *                   type: string
+ *                   example: "Paracetamol"
+ *       404:
+ *         description: No se encontró enfermedad actual para la historia clínica indicada
+ */
+/**
+ * @swagger
+ * /api/hc/enfermedad-actual/historia/{id_historia}:
+ *   put:
+ *     tags:
+ *       - Enfermedad Actual
+ *     summary: Actualiza la enfermedad actual por historia clínica
+ *     parameters:
+ *       - in: path
+ *         name: id_historia
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID de la historia clínica
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sintoma_principal:
+ *                 type: string
+ *                 example: "Fiebre y tos"
+ *               tiempo_enfermedad:
+ *                 type: string
+ *                 example: "4 días"
+ *               forma_inicio:
+ *                 type: string
+ *                 example: "Brusco"
+ *               curso:
+ *                 type: string
+ *                 example: "Progresivo"
+ *               relato:
+ *                 type: string
+ *                 example: "Paciente refiere fiebre alta, malestar general y tos seca."
+ *               tratamiento_prev:
+ *                 type: string
+ *                 example: "Paracetamol y jarabe"
+ *     responses:
+ *       200:
+ *         description: Enfermedad actual actualizada correctamente
+ *       404:
+ *         description: No se encontró enfermedad actual para la historia clínica indicada
+ *       500:
+ *         description: Error al actualizar la enfermedad actual
+ */
+/**
+ * @swagger
+ * /api/hc/filiacion:
+ *   post:
+ *     tags:
+ *       - Filiación
+ *     summary: Crea una filiación
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_historia:
+ *                 type: string
+ *                 example: "bea73607-a9cc-462f-b14f-bedb4d503e6d"
+ *               raza:
+ *                 type: string
+ *                 example: "Mestizo"
+ *               fecha_nacimiento:
+ *                 type: string
+ *                 example: "1990-01-01"
+ *               lugar:
+ *                 type: string
+ *                 example: "Tacna"
+ *               estado_civil:
+ *                 type: string
+ *                 example: "Soltero"
+ *               nombre_conyuge:
+ *                 type: string
+ *                 example: "N/A"
+ *               ocupacion:
+ *                 type: string
+ *                 example: "Estudiante"
+ *               lugar_procedencia:
+ *                 type: string
+ *                 example: "Tacna"
+ *               tiempo_residencia_tacna:
+ *                 type: string
+ *                 example: "10 años"
+ *               direccion:
+ *                 type: string
+ *                 example: "Av. Ejemplo 123"
+ *               ultima_visita_dentista:
+ *                 type: string
+ *                 example: "2023-01-01"
+ *               motivo_visita_dentista:
+ *                 type: string
+ *                 example: "Control"
+ *               ultima_visita_medico:
+ *                 type: string
+ *                 example: "2023-02-01"
+ *               motivo_visita_medico:
+ *                 type: string
+ *                 example: "Resfrío"
+ *               contacto_emergencia:
+ *                 type: string
+ *                 example: "Madre"
+ *               telefono_emergencia:
+ *                 type: string
+ *                 example: "999888777"
+ *               acompaniante:
+ *                 type: string
+ *                 example: "Hermano"
+ *               edad:
+ *                 type: integer
+ *                 example: 22
+ *               sexo:
+ *                 type: string
+ *                 example: "Masculino"
+ *               fecha_elaboracion:
+ *                 type: string
+ *                 example: "2023-12-01"
+ *     responses:
+ *       201:
+ *         description: Filiación registrada con éxito
+ *       400:
+ *         description: Error en los datos enviados
+ */
+/**
+ * @swagger
+ * /api/hc/filiacion/historia/{id_historia}:
+ *   get:
+ *     tags:
+ *       - Filiación
+ *     summary: Obtiene la filiación por historia clínica
+ *     parameters:
+ *       - in: path
+ *         name: id_historia
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID de la historia clínica
+ *     responses:
+ *       200:
+ *         description: Filiación obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_historia:
+ *                   type: string
+ *                   example: "bea73607-a9cc-462f-b14f-bedb4d503e6d"
+ *                 raza:
+ *                   type: string
+ *                   example: "Mestizo"
+ *                 fecha_nacimiento:
+ *                   type: string
+ *                   example: "1990-01-01"
+ *                 lugar:
+ *                   type: string
+ *                   example: "Tacna"
+ *                 estado_civil:
+ *                   type: string
+ *                   example: "Soltero"
+ *                 nombre_conyuge:
+ *                   type: string
+ *                   example: "N/A"
+ *                 ocupacion:
+ *                   type: string
+ *                   example: "Estudiante"
+ *                 lugar_procedencia:
+ *                   type: string
+ *                   example: "Tacna"
+ *                 tiempo_residencia_tacna:
+ *                   type: string
+ *                   example: "10 años"
+ *                 direccion:
+ *                   type: string
+ *                   example: "Av. Ejemplo 123"
+ *                 ultima_visita_dentista:
+ *                   type: string
+ *                   example: "2023-01-01"
+ *                 motivo_visita_dentista:
+ *                   type: string
+ *                   example: "Control"
+ *                 ultima_visita_medico:
+ *                   type: string
+ *                   example: "2023-02-01"
+ *                 motivo_visita_medico:
+ *                   type: string
+ *                   example: "Resfrío"
+ *                 contacto_emergencia:
+ *                   type: string
+ *                   example: "Madre"
+ *                 telefono_emergencia:
+ *                   type: string
+ *                   example: "999888777"
+ *                 acompaniante:
+ *                   type: string
+ *                   example: "Hermano"
+ *                 edad:
+ *                   type: integer
+ *                   example: 22
+ *                 sexo:
+ *                   type: string
+ *                   example: "Masculino"
+ *                 fecha_elaboracion:
+ *                   type: string
+ *                   example: "2023-12-01"
+ *       404:
+ *         description: No se encontró filiación para la historia clínica indicada
+ */
+/**
+ * @swagger
+ * /api/hc/filiacion/historia/{id_historia}:
+ *   put:
+ *     tags:
+ *       - Filiación
+ *     summary: Actualiza la filiación por historia clínica
+ *     parameters:
+ *       - in: path
+ *         name: id_historia
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID de la historia clínica
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               raza:
+ *                 type: string
+ *                 example: "Mestizo"
+ *               fecha_nacimiento:
+ *                 type: string
+ *                 example: "1990-01-01"
+ *               lugar:
+ *                 type: string
+ *                 example: "Tacna"
+ *               estado_civil:
+ *                 type: string
+ *                 example: "Soltero"
+ *               nombre_conyuge:
+ *                 type: string
+ *                 example: "N/A"
+ *               ocupacion:
+ *                 type: string
+ *                 example: "Estudiante"
+ *               lugar_procedencia:
+ *                 type: string
+ *                 example: "Tacna"
+ *               tiempo_residencia_tacna:
+ *                 type: string
+ *                 example: "10 años"
+ *               direccion:
+ *                 type: string
+ *                 example: "Av. Ejemplo 123"
+ *               ultima_visita_dentista:
+ *                 type: string
+ *                 example: "2023-01-01"
+ *               motivo_visita_dentista:
+ *                 type: string
+ *                 example: "Control"
+ *               ultima_visita_medico:
+ *                 type: string
+ *                 example: "2023-02-01"
+ *               motivo_visita_medico:
+ *                 type: string
+ *                 example: "Resfrío"
+ *               contacto_emergencia:
+ *                 type: string
+ *                 example: "Madre"
+ *               telefono_emergencia:
+ *                 type: string
+ *                 example: "999888777"
+ *               acompaniante:
+ *                 type: string
+ *                 example: "Hermano"
+ *               edad:
+ *                 type: integer
+ *                 example: 22
+ *               sexo:
+ *                 type: string
+ *                 example: "Masculino"
+ *               fecha_elaboracion:
+ *                 type: string
+ *                 example: "2023-12-01"
+ *     responses:
+ *       200:
+ *         description: Filiación actualizada correctamente
+ *       404:
+ *         description: No se encontró filiación para la historia clínica indicada
+ *       500:
+ *         description: Error al actualizar la filiación
  */

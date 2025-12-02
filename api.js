@@ -30,7 +30,17 @@ const swaggerOptions = {
       description: 'Documentación de la API interna',
     },
   },
-  apis: ['./docs/swagger-endpoints.js', './routes/*.js'], // Incluye el archivo de documentación aparte
+  apis: [
+    './docs/swagger-endpoints.js',
+    './docs/antecedente.js',
+    './docs/examenes.js',
+    './docs/examenesEndpoints.js',
+    './docs/seccionesEndpoints.js',
+    './docs/estudiantesEndpoints.js',
+    './docs/borradorEndpoints.js',
+    './docs/catalogoEndpoints.js',
+    './routes/*.js',
+  ], // Incluye los archivos de documentación aparte
 };
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
