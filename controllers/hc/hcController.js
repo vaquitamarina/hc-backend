@@ -194,4 +194,188 @@ export class HcController {
       res.status(500).json({ error: 'Error al guardar el examen regional' });
     }
   };
+
+  // --- MÉTODOS EXAMEN BOCA ---
+
+  getExamBoca = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const exam = await this.HcModel.getExamBoca(id);
+      res.status(200).json(exam || {});
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener el examen de boca' });
+    }
+  };
+
+  updateExamBoca = async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    try {
+      await this.HcModel.updateExamBoca({ idHistory: id, ...data });
+      res
+        .status(200)
+        .json({ message: 'Examen de boca guardado correctamente' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al guardar el examen de boca' });
+    }
+  };
+
+  // --- CONTROLADORES HIGIENE BUCAL ---
+
+  getHigieneOral = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const result = await this.HcModel.getHigieneOral(id);
+      // Si no hay datos, devolvemos un objeto vacío para que el frontend no falle
+      res.status(200).json(result || {});
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: 'Error al obtener el examen de higiene oral' });
+    }
+  };
+
+  updateHigieneOral = async (req, res) => {
+    const { id } = req.params; // ID de la Historia
+    const { estadoHigiene } = req.body;
+
+    // Obtenemos el ID del usuario autenticado desde el middleware
+    const idUsuario = req.user.id;
+
+    try {
+      await this.HcModel.updateHigieneOral({
+        idHistory: id,
+        estadoHigiene,
+        idUsuario,
+      });
+      res.status(200).json({ message: 'Higiene bucal guardada correctamente' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al guardar la higiene bucal' });
+    }
+  };
+
+  // --- CONTROLADORES SECCIÓN III (PRESUNTIVO) ---
+  getDiagnosticoPresuntivo = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = await this.HcModel.getDiagnosticoPresuntivo(id);
+      res.status(200).json(data);
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: 'Error al obtener diagnóstico presuntivo' });
+    }
+  };
+
+  updateDiagnosticoPresuntivo = async (req, res) => {
+    const { id } = req.params;
+    const { descripcion } = req.body;
+    try {
+      await this.HcModel.updateDiagnosticoPresuntivo({
+        idHistory: id,
+        descripcion,
+        idUsuario: req.user.id,
+      });
+      res.status(200).json({ message: 'Diagnóstico presuntivo guardado' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al guardar diagnóstico' });
+    }
+  };
+
+  // --- CONTROLADORES SECCIÓN IV (DERIVACIÓN) ---
+  getDerivacion = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = await this.HcModel.getDerivacion(id);
+      res.status(200).json(data || {});
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener derivaciones' });
+    }
+  };
+
+  updateDerivacion = async (req, res) => {
+    const { id } = req.params;
+    const { destinos, observaciones, alumno, docente } = req.body;
+    try {
+      await this.HcModel.updateDerivacion({
+        idHistory: id,
+        destinos,
+        observaciones,
+        alumno,
+        docente,
+        idUsuario: req.user.id,
+      });
+      res.status(200).json({ message: 'Derivación guardada correctamente' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al guardar derivación' });
+    }
+  };
+
+  // --- CONTROLADORES SECCIÓN V (CLÍNICAS) ---
+  getDiagnosticoClinicas = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = await this.HcModel.getDiagnosticoClinicas(id);
+      res.status(200).json(data || {});
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: 'Error al obtener diagnóstico de clínicas' });
+    }
+  };
+
+  updateDiagnosticoClinicas = async (req, res) => {
+    const { id } = req.params;
+    const { fecha, clinicaRespuesta } = req.body;
+    try {
+      await this.HcModel.updateDiagnosticoClinicas({
+        idHistory: id,
+        fecha,
+        clinicaRespuesta,
+        idUsuario: req.user.id,
+      });
+      res.status(200).json({ message: 'Diagnóstico en clínicas guardado' });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ error: 'Error al guardar diagnóstico en clínicas' });
+    }
+  };
+
+  // --- CONTROLADORES SECCIÓN VI (EVOLUCIÓN) ---
+
+  getEvolucion = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const list = await this.HcModel.getEvolucion(id);
+      res.status(200).json(list);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener evoluciones' });
+    }
+  };
+
+  addEvolucion = async (req, res) => {
+    const { id } = req.params;
+    const { fecha, actividad, alumno } = req.body;
+
+    // Validación básica
+    if (!fecha || !actividad || !alumno) {
+      return res
+        .status(400)
+        .json({ error: 'Todos los campos son obligatorios' });
+    }
+
+    try {
+      await this.HcModel.addEvolucion({
+        idHistory: id,
+        fecha,
+        actividad,
+        alumno,
+        idUsuario: req.user.id,
+      });
+      res.status(201).json({ message: 'Evolución registrada correctamente' });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al registrar evolución' });
+    }
+  };
 }

@@ -147,6 +147,47 @@ hcRoutes.put(
   examenRegionalController.updateExamenRegional
 );
 
+// --- RUTAS DE EXAMEN FÍSICO GENERAL ---
+hcRoutes.get('/:id/examen-general', hcController.getGeneralExam);
+hcRoutes.put('/:id/examen-general', hcController.updateGeneralExam);
+
+// --- RUTAS DE EXAMEN REGIONAL (CABEZA, ATM, CUELLO) ---
+hcRoutes.get('/:id/examen-regional', hcController.getRegionalExam);
+hcRoutes.put('/:id/examen-regional', hcController.updateRegionalExam);
+
+// --- RUTAS DE EXAMEN CLÍNICO DE LA BOCA ---
+hcRoutes.get('/:id/examen-boca', hcController.getExamBoca);
+hcRoutes.put('/:id/examen-boca', hcController.updateExamBoca);
+
+// --- RUTAS DE HIGIENE BUCAL ---
+hcRoutes.get('/:id/higiene', hcController.getHigieneOral);
+hcRoutes.put('/:id/higiene', hcController.updateHigieneOral);
+
+// SECCIÓN III
+hcRoutes.get(
+  '/:id/diagnostico-presuntivo',
+  hcController.getDiagnosticoPresuntivo
+);
+hcRoutes.put(
+  '/:id/diagnostico-presuntivo',
+  hcController.updateDiagnosticoPresuntivo
+);
+
+// SECCIÓN IV
+hcRoutes.get('/:id/derivacion', hcController.getDerivacion);
+hcRoutes.put('/:id/derivacion', hcController.updateDerivacion);
+
+// SECCIÓN V
+hcRoutes.get('/:id/diagnostico-clinicas', hcController.getDiagnosticoClinicas);
+hcRoutes.put(
+  '/:id/diagnostico-clinicas',
+  hcController.updateDiagnosticoClinicas
+);
+
+// --- RUTAS DE EVOLUCIÓN ---
+hcRoutes.get('/:id/evolucion', hcController.getEvolucion);
+hcRoutes.post('/:id/evolucion', hcController.addEvolucion);
+
 // Endpoint para obtener todas las historias clínicas de un estudiante
 hcRoutes.get('/student/:id', hcController.getAllByStudentId);
 // Endpoint para obtener historias clínicas adultas de un estudiante específico

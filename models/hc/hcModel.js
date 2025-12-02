@@ -419,4 +419,343 @@ export class HcModel {
       throw error;
     }
   }
+
+  // --- MÉTODOS PARA EXAMEN CLÍNICO DE BOCA ---
+
+  static async getExamBoca(idHistory) {
+    try {
+      const result = await pool.query(
+        'SELECT * FROM examen_clinico_boca WHERE id_historia = $1',
+        [idHistory]
+      );
+
+      const data = result.rows[0];
+      if (!data) {
+        return null;
+      }
+
+      // Convertimos a camelCase para el frontend
+      return {
+        // Tejidos Blandos
+        labiosSin: data.labios_sin_lesiones,
+        labiosCon: data.labios_con_lesiones,
+        vestibuloSin: data.vestibulo_sin_lesiones,
+        vestibuloCon: data.vestibulo_con_lesiones,
+        carrillosSin: data.carrillos_retromolar_sin_lesiones,
+        carrillosCon: data.carrillos_retromolar_con_lesiones,
+        paladarSin: data.paladar_sin_lesiones,
+        paladarCon: data.paladar_con_lesiones,
+        orofaringeSin: data.orofaringe_sin_lesiones,
+        orofaringeCon: data.orofaringe_con_lesiones,
+        pisoBocaSin: data.piso_boca_sin_lesiones,
+        pisoBocaCon: data.piso_boca_con_lesiones,
+        lenguaSin: data.lengua_sin_lesiones,
+        lenguaCon: data.lengua_con_lesiones,
+        enciaSin: data.encia_sin_lesiones,
+        enciaCon: data.encia_con_lesiones,
+
+        // Oclusión
+        oclusionMolarDer: data.oclusion_molar_der,
+        oclusionMolarIzq: data.oclusion_molar_izq,
+        oclusionCaninaDer: data.oclusion_canina_der,
+        oclusionCaninaIzq: data.oclusion_canina_izq,
+
+        // Relación Transversal
+        oclusionMordidaCruzada: data.oclusion_mordida_cruzada,
+        oclusionVestibuloclusion: data.oclusion_vestibuloclusion,
+
+        // Relación Vertical
+        oclusionOverbite: data.oclusion_overbite,
+        oclusionMordidaAbierta: data.oclusion_mordida_abierta,
+        oclusionSobremordida: data.oclusion_sobremordida,
+        oclusionVerticalOtros: data.oclusion_relacion_vertical_otros,
+
+        // Relación Sagital
+        oclusionOverjet: data.oclusion_overjet,
+        oclusionProtrusion: data.oclusion_protrusion,
+        oclusionGuiaIncisiva: data.oclusion_guia_incisiva,
+        oclusionContactoPosterior: data.oclusion_contacto_posterior,
+
+        // Lateralidad Derecha
+        latDerGuiaCanina: data.lat_der_guia_canina,
+        latDerFuncionGrupo: data.lat_der_funcion_grupo,
+        latDerContactoBalance: data.lat_der_contacto_balance,
+        latDerDescriba: data.lat_der_describa,
+
+        // Lateralidad Izquierda
+        latIzqGuiaCanina: data.lat_izq_guia_canina,
+        latIzqFuncionGrupo: data.lat_izq_funcion_grupo,
+        latIzqContactoBalance: data.lat_izq_contacto_balance,
+        latIzqDescriba: data.lat_izq_describa,
+      };
+    } catch (error) {
+      console.error('Error al obtener examen boca:', error.message);
+      throw error;
+    }
+  }
+
+  static async updateExamBoca(data) {
+    try {
+      // Llamada al procedure con 39 parámetros (1 ID + 38 Campos)
+      await pool.query(
+        `CALL u_examen_clinico_boca(
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 
+          $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, 
+          $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, 
+          $31, $32, $33, $34, $35, $36, $37, $38, $39
+        )`,
+        [
+          data.idHistory,
+          // Tejidos Blandos
+          data.labiosSin || null,
+          data.labiosCon || null,
+          data.vestibuloSin || null,
+          data.vestibuloCon || null,
+          data.carrillosSin || null,
+          data.carrillosCon || null,
+          data.paladarSin || null,
+          data.paladarCon || null,
+          data.orofaringeSin || null,
+          data.orofaringeCon || null,
+          data.pisoBocaSin || null,
+          data.pisoBocaCon || null,
+          data.lenguaSin || null,
+          data.lenguaCon || null,
+          data.enciaSin || null,
+          data.enciaCon || null,
+          // Oclusión
+          data.oclusionMolarDer || null,
+          data.oclusionMolarIzq || null,
+          data.oclusionCaninaDer || null,
+          data.oclusionCaninaIzq || null,
+          data.oclusionMordidaCruzada || null,
+          data.oclusionVestibuloclusion ?? null,
+          data.oclusionOverbite || null,
+          data.oclusionMordidaAbierta || null,
+          data.oclusionSobremordida ?? null,
+          data.oclusionVerticalOtros || null,
+          data.oclusionOverjet || null,
+          data.oclusionProtrusion ?? null,
+          data.oclusionGuiaIncisiva || null,
+          data.oclusionContactoPosterior || null,
+          // Lateralidad
+          data.latDerGuiaCanina ?? null,
+          data.latDerFuncionGrupo ?? null,
+          data.latDerContactoBalance ?? null,
+          data.latDerDescriba || null,
+          data.latIzqGuiaCanina ?? null,
+          data.latIzqFuncionGrupo ?? null,
+          data.latIzqContactoBalance ?? null,
+          data.latIzqDescriba || null,
+        ]
+      );
+      return true;
+    } catch (error) {
+      console.error('Error al actualizar examen boca:', error.message);
+      throw error;
+    }
+  }
+  // --- MÉTODOS PARA HIGIENE BUCAL ---
+
+  static async getHigieneOral(idHistory) {
+    try {
+      const result = await pool.query(
+        'SELECT estado_higiene FROM examen_higiene_oral WHERE id_historia = $1',
+        [idHistory]
+      );
+
+      const data = result.rows[0];
+      if (!data) {
+        return null;
+      }
+
+      return {
+        estadoHigiene: data.estado_higiene,
+      };
+    } catch (error) {
+      console.error('Error al obtener higiene oral:', error.message);
+      throw error;
+    }
+  }
+
+  static async updateHigieneOral({ idHistory, estadoHigiene, idUsuario }) {
+    try {
+      await pool.query('CALL i_examen_higiene_oral($1, $2, $3)', [
+        idHistory,
+        estadoHigiene,
+        idUsuario, // Pasamos el usuario para la auditoría automática
+      ]);
+      return true;
+    } catch (error) {
+      console.error('Error al actualizar higiene oral:', error.message);
+      throw error;
+    }
+  }
+
+  // --- SECCIÓN III: DIAGNÓSTICO PRESUNTIVO ---
+  static async getDiagnosticoPresuntivo(idHistory) {
+    try {
+      const result = await pool.query(
+        "SELECT descripcion FROM diagnostico WHERE id_historia = $1 AND tipo = 'presuntivo'",
+        [idHistory]
+      );
+      return result.rows[0] || { descripcion: '' };
+    } catch (error) {
+      console.error('Error getDiagnosticoPresuntivo:', error);
+      throw error;
+    }
+  }
+
+  static async updateDiagnosticoPresuntivo({
+    idHistory,
+    descripcion,
+    idUsuario,
+  }) {
+    try {
+      await pool.query('CALL i_diagnostico_presuntivo($1, $2, $3)', [
+        idHistory,
+        descripcion,
+        idUsuario,
+      ]);
+      return true;
+    } catch (error) {
+      console.error('Error updateDiagnosticoPresuntivo:', error);
+      throw error;
+    }
+  }
+
+  // --- SECCIÓN IV: DERIVADO A CLÍNICAS ---
+  static async getDerivacion(idHistory) {
+    try {
+      const result = await pool.query(
+        'SELECT * FROM derivacion_clinicas WHERE id_historia = $1',
+        [idHistory]
+      );
+      const data = result.rows[0];
+      if (!data) {
+        return null;
+      }
+
+      return {
+        destinos: data.destinos || {},
+        observaciones: data.observaciones,
+        fechaDerivacion: data.fecha_derivacion,
+        alumno: data.alumno_diagnostico,
+        docente: data.docente,
+      };
+    } catch (error) {
+      console.error('Error getDerivacion:', error);
+      throw error;
+    }
+  }
+
+  static async updateDerivacion({
+    idHistory,
+    destinos,
+    observaciones,
+    alumno,
+    docente,
+    idUsuario,
+  }) {
+    try {
+      await pool.query('CALL i_derivacion_clinicas($1, $2, $3, $4, $5, $6)', [
+        idHistory,
+        JSON.stringify(destinos),
+        observaciones,
+        alumno,
+        docente,
+        idUsuario,
+      ]);
+      return true;
+    } catch (error) {
+      console.error('Error updateDerivacion:', error);
+      throw error;
+    }
+  }
+
+  // --- SECCIÓN V: DIAGNÓSTICO EN CLÍNICAS ---
+  static async getDiagnosticoClinicas(idHistory) {
+    try {
+      const result = await pool.query(
+        "SELECT fecha, clinica_respuesta FROM diagnostico WHERE id_historia = $1 AND tipo = 'definitivo_clinicas'",
+        [idHistory]
+      );
+      // Solo devolvemos lo que corresponde a la Sección 5
+      return result.rows[0] || { fecha: null, clinica_respuesta: '' };
+    } catch (error) {
+      console.error('Error getDiagnosticoClinicas:', error);
+      throw error;
+    }
+  }
+
+  static async updateDiagnosticoClinicas({
+    idHistory,
+    fecha,
+    clinicaRespuesta,
+    idUsuario,
+  }) {
+    try {
+      // Llamamos al procedure completo pero mandamos NULL a todo lo que es Plan de Trabajo
+      await pool.query(
+        'CALL i_diagnostico_clinicas($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+        [
+          idHistory,
+          fecha || null, // Fecha (Sección V)
+          clinicaRespuesta, // Clínica de (Sección V)
+          null, // Descripción respuesta (No solicitado en PDF)
+          null, // Exámenes (Plan)
+          null, // Interconsulta (Plan)
+          null, // Fecha Interconsulta (Plan)
+          null, // Clínica Interconsulta (Plan)
+          null, // Diag Definitivo (Plan)
+          null, // Tratamiento (Plan)
+          null, // Pronóstico (Plan)
+          null, // Alumno (Plan)
+          idUsuario, // Auditoría
+        ]
+      );
+      return true;
+    } catch (error) {
+      console.error('Error updateDiagnosticoClinicas:', error);
+      throw error;
+    }
+  }
+
+  // --- SECCIÓN VI: EVOLUCIÓN (Lista) ---
+
+  static async getEvolucion(idHistory) {
+    try {
+      const result = await pool.query(
+        'SELECT * FROM evolucion WHERE id_historia = $1 ORDER BY fecha DESC, id_evolucion DESC',
+        [idHistory]
+      );
+      // Devolvemos el array completo (puede estar vacío)
+      return result.rows;
+    } catch (error) {
+      console.error('Error getEvolucion:', error);
+      throw error;
+    }
+  }
+
+  static async addEvolucion({
+    idHistory,
+    fecha,
+    actividad,
+    alumno,
+    idUsuario,
+  }) {
+    try {
+      await pool.query('CALL i_evolucion($1, $2, $3, $4, $5)', [
+        idHistory,
+        fecha,
+        actividad,
+        alumno,
+        idUsuario,
+      ]);
+      return true;
+    } catch (error) {
+      console.error('Error addEvolucion:', error);
+      throw error;
+    }
+  }
 }
