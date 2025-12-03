@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import { StudentController } from '../controllers/students/studentController.js';
 import { StudentModel } from '../models/student/studentModel.js';
 import authMiddleware from '../middlewares/authMiddleware.js';

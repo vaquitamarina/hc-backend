@@ -1,8 +1,7 @@
 import { Router } from 'express';
-
 import { HcController } from '../controllers/hc/hcController.js';
 import { HcModel } from '../models/hc/hcModel.js';
-import { listaHcAdultos } from '../controllers/hc/hcControlller/listaHcAdultos.js';
+import { listaHcAdultos } from '../controllers/hc/hcController/listaHcAdultos.js';
 import * as examenGeneralController from '../controllers/hc/examenFisico/examenGeneralController.js';
 import * as examenRegionalController from '../controllers/hc/examenFisico/examenRegionalController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';

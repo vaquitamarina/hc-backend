@@ -13,7 +13,7 @@ export const createFiliacion = async (req, res) => {
     }
     return res.status(400).json({ error: 'No se pudo registrar la filiación' });
   } catch (err) {
-    console.error('Error en createFiliacion:', err);
+    // console.error('Error en createFiliacion:', err);
     return res
       .status(400)
       .json({ error: err.message || 'Error al registrar la filiación' });
@@ -33,7 +33,7 @@ export const getFiliacion = async (req, res) => {
       message: 'Filiación obtenida correctamente',
       data: result,
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al obtener la filiación' });
   }
 };
@@ -59,7 +59,7 @@ export const updateFiliacion = async (req, res) => {
       .status(500)
       .json({ error: 'No se pudo actualizar la filiación' });
   } catch (err) {
-    console.error('Error en updateFiliacion:', err);
+    // console.error('Error en updateFiliacion:', err);
     res
       .status(500)
       .json({ error: err.message || 'Error al actualizar la filiación' });

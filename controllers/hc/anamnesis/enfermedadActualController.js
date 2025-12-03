@@ -15,7 +15,7 @@ export const createEnfermedadActual = async (req, res) => {
       message: 'Enfermedad actual registrada con éxito',
       data: result,
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al registrar la enfermedad actual' });
   }
 };
@@ -34,7 +34,7 @@ export const getEnfermedadActual = async (req, res) => {
       message: 'Enfermedad actual obtenida correctamente',
       data: result,
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al obtener la enfermedad actual' });
   }
 };
@@ -61,7 +61,7 @@ export const updateEnfermedadActual = async (req, res) => {
       message: 'Enfermedad actual actualizada correctamente',
       data: result,
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Error al actualizar la enfermedad actual' });
   }
 };

@@ -12,7 +12,8 @@ export class AuthController {
       if (!userCode || !password) {
         return res.status(400).json({ error: 'Missing credentials' });
       }
-      console.log('Attempting login for userCode:', userCode);
+
+      // console.log('Attempting login for userCode:', userCode);
       const user = await this.UserModel.login(userCode, password);
       if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });
@@ -31,8 +32,7 @@ export class AuthController {
         email: user.email,
         role: user.role,
       });
-    } catch (error) {
-      console.error('Login error:', error);
+    } catch {
       res.status(500).json({ error: 'Internal server error' });
     }
   };

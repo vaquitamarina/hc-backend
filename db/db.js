@@ -12,13 +12,17 @@ const pool = new Pool({
 // Probar conexión
 async function testConnection() {
   try {
-    const res = await pool.query('SELECT NOW()');
-    console.log('Conectado a Postgres:', res.rows[0]);
-  } catch (err) {
-    console.error('Error al conectar:', err);
+    await pool.query('SELECT NOW()');
+    // console.log('Conectado a Postgres');
+  } catch {
+    // console.error('Error al conectar');
   }
 }
 
-testConnection();
+// Ejecutar solo si no es test
+if (process.env.NODE_ENV !== 'test') {
+  testConnection();
+}
 
+export { testConnection };
 export default pool;

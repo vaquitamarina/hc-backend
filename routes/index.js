@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import { userRoutes } from './userRoutes.js';
 import { patientRoutes } from './patientRoutes.js';
 import { hcRoutes } from './hcRoutes.js';

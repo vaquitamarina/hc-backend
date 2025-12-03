@@ -12,14 +12,17 @@ try {
     passwordHash: 'clave123',
   };
 
-  const result = await UserModel.insert(userData);
-  console.log('Resultado insert:', result);
+  await UserModel.insert(userData);
 
-  const res = await pool.query('SELECT * FROM usuarios');
-  console.log('Usuarios en la BD:');
-  console.log(res.rows);
-} catch (error) {
-  console.error('Error en playground:', error);
+  // console.log('Resultado insert:', result);
+
+  await pool.query('SELECT * FROM usuarios');
+
+  // console.log('Usuarios en la BD:');
+
+  // console.log(res.rows);
+} catch {
+  // console.error('Error en playground:');
 } finally {
   await pool.end();
 }

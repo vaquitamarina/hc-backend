@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import { PatientController } from '../controllers/patients/patientController.js';
 import { PatientModel } from '../models/patient/patientModel.js';
 

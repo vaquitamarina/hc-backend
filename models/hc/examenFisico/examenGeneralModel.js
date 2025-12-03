@@ -15,8 +15,8 @@ class ExamenGeneral {
         return null;
       }
       return rows[0];
-    } catch (error) {
-      console.error('Error al crear examen general:', error.message);
+    } catch {
+      // console.error('Error al crear examen general');
       return null;
     }
   }
@@ -29,11 +29,8 @@ class ExamenGeneral {
         return null;
       }
       return rows[0];
-    } catch (error) {
-      console.error(
-        'Error al obtener examen general por historia:',
-        error.message
-      );
+    } catch {
+      // console.error('Error al obtener examen general por historia');
       return null;
     }
   }
@@ -49,8 +46,8 @@ class ExamenGeneral {
         return null;
       }
       return rows[0];
-    } catch (error) {
-      console.error('Error al actualizar examen general:', error.message);
+    } catch {
+      // console.error('Error al actualizar examen general');
       return null;
     }
   }

@@ -29,7 +29,7 @@ export class PatientController {
         id: result.id,
       });
     } catch (error) {
-      console.error('Error al crear paciente:', error.message);
+      // console.error('Error al crear paciente:', error.message);
 
       // Manejo de errores específicos
       if (error.message.includes('Ya existe un paciente')) {
@@ -71,7 +71,7 @@ export class PatientController {
         return res.status(404).json({ error: 'Paciente no encontrado' });
       }
 
-      console.error('Error en updatePatient:', error);
+      // console.error('Error en updatePatient:', error);
       res.status(500).json({
         error: 'Error interno al actualizar el paciente.',
       });

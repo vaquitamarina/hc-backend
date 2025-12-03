@@ -11,8 +11,8 @@ export class HcModel {
         observations,
       ]);
       return true;
-    } catch (error) {
-      console.error('Error al registrar revision de historia', error.message);
+    } catch {
+      // console.error('Error al registrar revision de historia');
       return null;
     }
   }
@@ -120,7 +120,7 @@ export class HcModel {
       );
       return true;
     } catch (error) {
-      console.error('Error al actualizar filiacion:', error.message);
+      // console.error('Error al actualizar filiacion:', error.message);
       throw error;
     }
   }
@@ -169,7 +169,7 @@ export class HcModel {
         gangliosObs: data.ganglios_obs,
       };
     } catch (error) {
-      console.error('Error al obtener examen general:', error.message);
+      // console.error('Error al obtener examen general:', error.message);
       throw error;
     }
   }
@@ -242,7 +242,7 @@ export class HcModel {
       );
       return true;
     } catch (error) {
-      console.error('Error al actualizar examen general:', error.message);
+      // console.error('Error al actualizar examen general:', error.message);
       throw error;
     }
   }
@@ -334,7 +334,7 @@ export class HcModel {
         cuelloOtros: data.cuello_otros,
       };
     } catch (error) {
-      console.error('Error al obtener examen regional:', error.message);
+      // console.error('Error al obtener examen regional:', error.message);
       throw error;
     }
   }
@@ -415,7 +415,7 @@ export class HcModel {
       );
       return true;
     } catch (error) {
-      console.error('Error al actualizar examen regional:', error.message);
+      // console.error('Error al actualizar examen regional:', error.message);
       throw error;
     }
   }
@@ -489,7 +489,7 @@ export class HcModel {
         latIzqDescriba: data.lat_izq_describa,
       };
     } catch (error) {
-      console.error('Error al obtener examen boca:', error.message);
+      // console.error('Error al obtener examen boca:', error.message);
       throw error;
     }
   }
@@ -551,7 +551,7 @@ export class HcModel {
       );
       return true;
     } catch (error) {
-      console.error('Error al actualizar examen boca:', error.message);
+      // console.error('Error al actualizar examen boca:', error.message);
       throw error;
     }
   }
@@ -573,7 +573,7 @@ export class HcModel {
         estadoHigiene: data.estado_higiene,
       };
     } catch (error) {
-      console.error('Error al obtener higiene oral:', error.message);
+      // console.error('Error al obtener higiene oral:', error.message);
       throw error;
     }
   }
@@ -587,7 +587,7 @@ export class HcModel {
       ]);
       return true;
     } catch (error) {
-      console.error('Error al actualizar higiene oral:', error.message);
+      // console.error('Error al actualizar higiene oral:', error.message);
       throw error;
     }
   }
@@ -601,7 +601,7 @@ export class HcModel {
       );
       return result.rows[0] || { descripcion: '' };
     } catch (error) {
-      console.error('Error getDiagnosticoPresuntivo:', error);
+      // console.error('Error getDiagnosticoPresuntivo:', error);
       throw error;
     }
   }
@@ -619,7 +619,7 @@ export class HcModel {
       ]);
       return true;
     } catch (error) {
-      console.error('Error updateDiagnosticoPresuntivo:', error);
+      // console.error('Error updateDiagnosticoPresuntivo:', error);
       throw error;
     }
   }
@@ -644,7 +644,7 @@ export class HcModel {
         docente: data.docente,
       };
     } catch (error) {
-      console.error('Error getDerivacion:', error);
+      // console.error('Error getDerivacion:', error);
       throw error;
     }
   }
@@ -668,7 +668,7 @@ export class HcModel {
       ]);
       return true;
     } catch (error) {
-      console.error('Error updateDerivacion:', error);
+      // console.error('Error updateDerivacion:', error);
       throw error;
     }
   }
@@ -697,7 +697,7 @@ export class HcModel {
       // Si no existe registro, devolvemos objeto vacío para evitar errores en frontend
       return result.rows[0] || {};
     } catch (error) {
-      console.error('Error getDiagnosticoClinicas:', error);
+      // console.error('Error getDiagnosticoClinicas:', error);
       throw error;
     }
   }
@@ -732,7 +732,7 @@ export class HcModel {
       );
       return true;
     } catch (error) {
-      console.error('Error updateDiagnosticoClinicasCompleto:', error);
+      // console.error('Error updateDiagnosticoClinicasCompleto:', error);
       throw error;
     }
   }
@@ -748,7 +748,7 @@ export class HcModel {
       // Devolvemos el array completo (puede estar vacío)
       return result.rows;
     } catch (error) {
-      console.error('Error getEvolucion:', error);
+      // console.error('Error getEvolucion:', error);
       throw error;
     }
   }
@@ -770,7 +770,7 @@ export class HcModel {
       ]);
       return true;
     } catch (error) {
-      console.error('Error addEvolucion:', error);
+      // console.error('Error addEvolucion:', error);
       throw error;
     }
   }

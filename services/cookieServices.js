@@ -6,8 +6,10 @@ export class CookieService {
       secure: process.env.NODE_ENV === 'production',
       path: '/',
     };
-    console.log('🍪 Setting cookies with options:', cookieOptions);
-    console.log('🌐 Request origin:', res.req.headers.origin);
+
+    // console.log('🍪 Setting cookies with options:', cookieOptions);
+
+    // console.log('🌐 Request origin:', res.req.headers.origin);
 
     res.cookie('accessToken', accessToken, {
       ...cookieOptions,

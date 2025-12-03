@@ -6,7 +6,7 @@ export const getAllStudentUsers = async (req, res) => {
       "SELECT * FROM usuario WHERE rol = 'estudiante'"
     );
     res.status(200).json(result.rows);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Error al obtener estudiantes' });
   }
 };

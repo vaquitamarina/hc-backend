@@ -1,5 +1,4 @@
 import argon2 from 'argon2';
-
 import pool from '../../db/db.js';
 
 export class UserModel {
@@ -32,8 +31,8 @@ export class UserModel {
         email,
         role,
       };
-    } catch (error) {
-      console.error('Error al registrar usuario:', error.message);
+    } catch {
+      // console.error('Error al registrar usuario');
       return null;
     }
   }
@@ -59,10 +58,11 @@ export class UserModel {
     const user = result.rows[0];
     const isPasswordValid = await argon2.verify(user.contrasena_hash, password);
     if (!isPasswordValid) {
-      console.log('Invalid password');
+      // console.log('Invalid password');
       return null;
     }
-    console.log('Sesion iniciada, usuario:', user.nombre);
+
+    // console.log('Sesion iniciada, usuario:', user.nombre);
     return {
       id: user.id_usuario,
       userCode: userCode,

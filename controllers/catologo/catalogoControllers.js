@@ -13,7 +13,6 @@ export const getCatalogoController = async (req, res) => {
       data: result,
     });
   } catch (err) {
-    console.error('Error in getCatalogoController:', err);
     return res
       .status(400)
       .json({ error: err.message || 'Error retrieving catalog data' });
@@ -36,7 +35,6 @@ export const getCatalogoNombrePorIdController = async (req, res) => {
       nombre: nombreCatalogo,
     });
   } catch (err) {
-    console.error('Error in getCatalogoNombrePorIdController:', err);
     return res
       .status(400)
       .json({ error: err.message || 'Error retrieving catalog name' });

@@ -2,7 +2,8 @@ import { TokenService } from '../services/tokenService.js';
 const authMiddleware = async (req, res, next) => {
   try {
     const accessToken = req.cookies.accessToken;
-    console.log(req.cookies);
+
+    // console.log(req.cookies);
     if (!accessToken) {
       return res.status(401).json({ error: 'No token provided' });
     }
@@ -16,8 +17,8 @@ const authMiddleware = async (req, res, next) => {
       role: decoded.role,
     };
     next();
-  } catch (error) {
-    console.error('Auth middleware error:', error);
+  } catch {
+    // console.error('Auth middleware error');
     return res.status(500).json({ error: 'Internal server error' });
   }
 };

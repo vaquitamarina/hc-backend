@@ -27,8 +27,8 @@ export class HcController {
       const { id } = req.params;
       const historias = await this.HcModel.getAllByStudentId(id);
       res.status(200).json(historias);
-    } catch (error) {
-      console.error('Error al obtener historias clínicas:', error);
+    } catch {
+      // console.error('Error al obtener historias clínicas:', error);
       res.status(500).json({ error: 'Error al obtener historias clínicas' });
     }
   };
@@ -63,8 +63,8 @@ export class HcController {
       return res.status(200).json({
         id_historia: result.id_historia,
       });
-    } catch (error) {
-      console.error('Error al crear/obtener borrador:', error);
+    } catch {
+      // console.error('Error al crear/obtener borrador:', error);
       return res.status(500).json({
         error: 'Error al crear historia clinica en borrador',
       });
@@ -80,19 +80,8 @@ export class HcController {
       return res.status(200).json({
         message: 'Paciente asignado a la historia clinica',
       });
-    } catch (error) {
-      console.error('Error al asignar paciente:', error);
-
-      // Errores específicos de validación del procedure
-      if (
-        error.message.includes('no encontrada') ||
-        error.message.includes('no está en estado borrador')
-      ) {
-        return res.status(400).json({
-          error: error.message,
-        });
-      }
-
+    } catch {
+      // console.error('Error al asignar paciente:', error);
       return res.status(500).json({
         error: 'Error al asignar paciente a la historia',
       });
@@ -111,8 +100,8 @@ export class HcController {
       }
 
       return res.status(200).json(patient);
-    } catch (error) {
-      console.error('Error al obtener paciente:', error);
+    } catch {
+      // console.error('Error al obtener paciente:', error);
       return res.status(500).json({
         error: 'Error al obtener datos del paciente',
       });
@@ -130,7 +119,7 @@ export class HcController {
       });
 
       res.status(200).json({ message: 'Filiación guardada correctamente' });
-    } catch (error) {
+    } catch {
       if (error.message.includes('no encontrado')) {
         return res.status(400).json({ error: error.message });
       }
@@ -144,7 +133,7 @@ export class HcController {
     try {
       const exam = await this.HcModel.getGeneralExam(id);
       res.status(200).json(exam || {});
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al obtener el examen general' });
     }
   };
@@ -161,7 +150,7 @@ export class HcController {
       res
         .status(200)
         .json({ message: 'Examen general guardado correctamente' });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al guardar el examen general' });
     }
   };
@@ -173,7 +162,7 @@ export class HcController {
     try {
       const exam = await this.HcModel.getRegionalExam(id);
       res.status(200).json(exam || {});
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al obtener el examen regional' });
     }
   };
@@ -190,7 +179,7 @@ export class HcController {
       res
         .status(200)
         .json({ message: 'Examen regional guardado correctamente' });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al guardar el examen regional' });
     }
   };
@@ -202,7 +191,7 @@ export class HcController {
     try {
       const exam = await this.HcModel.getExamBoca(id);
       res.status(200).json(exam || {});
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al obtener el examen de boca' });
     }
   };
@@ -215,7 +204,7 @@ export class HcController {
       res
         .status(200)
         .json({ message: 'Examen de boca guardado correctamente' });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al guardar el examen de boca' });
     }
   };
@@ -228,7 +217,7 @@ export class HcController {
       const result = await this.HcModel.getHigieneOral(id);
       // Si no hay datos, devolvemos un objeto vacío para que el frontend no falle
       res.status(200).json(result || {});
-    } catch (error) {
+    } catch {
       res
         .status(500)
         .json({ error: 'Error al obtener el examen de higiene oral' });
@@ -249,7 +238,7 @@ export class HcController {
         idUsuario,
       });
       res.status(200).json({ message: 'Higiene bucal guardada correctamente' });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al guardar la higiene bucal' });
     }
   };
@@ -260,7 +249,7 @@ export class HcController {
     try {
       const data = await this.HcModel.getDiagnosticoPresuntivo(id);
       res.status(200).json(data);
-    } catch (error) {
+    } catch {
       res
         .status(500)
         .json({ error: 'Error al obtener diagnóstico presuntivo' });
@@ -277,7 +266,7 @@ export class HcController {
         idUsuario: req.user.id,
       });
       res.status(200).json({ message: 'Diagnóstico presuntivo guardado' });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al guardar diagnóstico' });
     }
   };
@@ -288,7 +277,7 @@ export class HcController {
     try {
       const data = await this.HcModel.getDerivacion(id);
       res.status(200).json(data || {});
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al obtener derivaciones' });
     }
   };
@@ -306,7 +295,7 @@ export class HcController {
         idUsuario: req.user.id,
       });
       res.status(200).json({ message: 'Derivación guardada correctamente' });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al guardar derivación' });
     }
   };
@@ -317,7 +306,7 @@ export class HcController {
     try {
       const data = await this.HcModel.getDiagnosticoClinicas(id);
       res.status(200).json(data || {});
-    } catch (error) {
+    } catch {
       res
         .status(500)
         .json({ error: 'Error al obtener diagnóstico de clínicas' });
@@ -335,8 +324,8 @@ export class HcController {
       res
         .status(200)
         .json({ message: 'Información clínica guardada correctamente' });
-    } catch (error) {
-      console.error(error);
+    } catch {
+      // console.error(error);
       res.status(500).json({ error: 'Error al guardar información clínica' });
     }
   };
@@ -348,7 +337,7 @@ export class HcController {
     try {
       const list = await this.HcModel.getEvolucion(id);
       res.status(200).json(list);
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al obtener evoluciones' });
     }
   };
@@ -373,7 +362,7 @@ export class HcController {
         idUsuario: req.user.id,
       });
       res.status(201).json({ message: 'Evolución registrada correctamente' });
-    } catch (error) {
+    } catch {
       res.status(500).json({ error: 'Error al registrar evolución' });
     }
   };

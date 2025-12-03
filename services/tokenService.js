@@ -30,13 +30,13 @@ export class TokenService {
   static verifyAccessToken(token) {
     try {
       return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (error) {
-      console.error('Access token verification error:', error);
+    } catch {
+      // console.error('Access token verification error');
       return null;
     }
   }
 
-  static saveRefreshToken(idUser, refreshToken) {
+  static saveRefreshToken(refreshToken) {
     return true;
   }
 }

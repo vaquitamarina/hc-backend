@@ -40,14 +40,15 @@ class AntecedentePersonal {
           data.otros_elementos_higiene,
         ]
       );
-      console.log('Antecedente personal creado exitosamente');
+
+      // console.log('Antecedente personal creado exitosamente');
       return true;
     } catch (error) {
-      console.error(
-        'Error al crear antecedente personal:',
-        error.message,
-        error.detail
-      );
+      // console.error(
+      //   'Error al crear antecedente personal:',
+      //   error.message,
+      //   error.detail
+      // );
       throw new Error(error.message || 'Error al crear antecedente personal');
     }
   }
@@ -63,7 +64,7 @@ class AntecedentePersonal {
       }
       return result.rows[0];
     } catch (error) {
-      console.error('Error al obtener antecedente personal:', error.message);
+      // console.error('Error al obtener antecedente personal:', error.message);
       throw error;
     }
   }
@@ -79,10 +80,10 @@ class AntecedentePersonal {
       }
       return result.rows[0];
     } catch (error) {
-      console.error(
-        'Error al obtener antecedente personal por historia:',
-        error.message
-      );
+      // console.error(
+      //   'Error al obtener antecedente personal por historia:',
+      //   error.message
+      // );
       throw error;
     }
   }
@@ -126,14 +127,15 @@ class AntecedentePersonal {
           data.otros_elementos_higiene,
         ]
       );
-      console.log('Antecedente personal actualizado exitosamente');
+
+      // console.log('Antecedente personal actualizado exitosamente');
       return true;
     } catch (error) {
-      console.error(
-        'Error al actualizar antecedente personal:',
-        error.message,
-        error.detail
-      );
+      // console.error(
+      //   'Error al actualizar antecedente personal:',
+      //   error.message,
+      //   error.detail
+      // );
       throw new Error(
         error.message || 'Error al actualizar antecedente personal'
       );
@@ -175,7 +177,7 @@ class AntecedenteMedico {
       );
       return true;
     } catch (error) {
-      console.error('Error al crear antecedente médico:', error.message);
+      // console.error('Error al crear antecedente médico:', error.message);
       throw error;
     }
   }
@@ -191,7 +193,7 @@ class AntecedenteMedico {
       }
       return result.rows[0];
     } catch (error) {
-      console.error('Error al obtener antecedente médico:', error.message);
+      // console.error('Error al obtener antecedente médico:', error.message);
       throw error;
     }
   }
@@ -229,7 +231,7 @@ class AntecedenteMedico {
       );
       return true;
     } catch (error) {
-      console.error('Error al actualizar antecedente médico:', error.message);
+      // console.error('Error al actualizar antecedente médico:', error.message);
       throw error;
     }
   }
@@ -244,7 +246,7 @@ class AntecedenteFamiliar {
       ]);
       return true;
     } catch (error) {
-      console.error('Error al crear antecedente familiar:', error.message);
+      // console.error('Error al crear antecedente familiar:', error.message);
       throw error;
     }
   }
@@ -260,7 +262,7 @@ class AntecedenteFamiliar {
       }
       return result.rows[0];
     } catch (error) {
-      console.error('Error al obtener antecedente familiar:', error.message);
+      // console.error('Error al obtener antecedente familiar:', error.message);
       throw error;
     }
   }
@@ -273,7 +275,7 @@ class AntecedenteFamiliar {
       ]);
       return true;
     } catch (error) {
-      console.error('Error al actualizar antecedente familiar:', error.message);
+      // console.error('Error al actualizar antecedente familiar:', error.message);
       throw error;
     }
   }
@@ -302,7 +304,7 @@ class AntecedenteCumplimiento {
       );
       return true;
     } catch (error) {
-      console.error('Error al crear antecedente cumplimiento:', error.message);
+      // console.error('Error al crear antecedente cumplimiento:', error.message);
       throw error;
     }
   }
@@ -318,10 +320,10 @@ class AntecedenteCumplimiento {
       }
       return result.rows[0];
     } catch (error) {
-      console.error(
-        'Error al obtener antecedente cumplimiento:',
-        error.message
-      );
+      // console.error(
+      //   'Error al obtener antecedente cumplimiento:',
+      //   error.message
+      // );
       throw error;
     }
   }
@@ -348,10 +350,10 @@ class AntecedenteCumplimiento {
       );
       return true;
     } catch (error) {
-      console.error(
-        'Error al actualizar antecedente cumplimiento:',
-        error.message
-      );
+      // console.error(
+      //   'Error al actualizar antecedente cumplimiento:',
+      //   error.message
+      // );
       throw error;
     }
   }

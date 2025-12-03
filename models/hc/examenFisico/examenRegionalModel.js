@@ -15,8 +15,8 @@ class ExamenRegional {
         return null;
       }
       return rows[0];
-    } catch (error) {
-      console.error('Error al crear examen regional:', error.message);
+    } catch {
+      // console.error('Error al crear examen regional');
       return null;
     }
   }
@@ -29,11 +29,8 @@ class ExamenRegional {
         return null;
       }
       return rows[0];
-    } catch (error) {
-      console.error(
-        'Error al obtener examen regional por historia:',
-        error.message
-      );
+    } catch {
+      // console.error('Error al obtener examen regional por historia');
       return null;
     }
   }
@@ -49,8 +46,8 @@ class ExamenRegional {
         return null;
       }
       return rows[0];
-    } catch (error) {
-      console.error('Error al actualizar examen regional:', error.message);
+    } catch {
+      // console.error('Error al actualizar examen regional');
       return null;
     }
   }

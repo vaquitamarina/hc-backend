@@ -1,7 +1,7 @@
 import BaseService from '../../../services/baseService.js';
 import ExamenGeneral from '../../../models/hc/examenFisico/examenGeneralModel.js';
 
-const examenGeneralService = new BaseService(ExamenGeneral);
+export const examenGeneralService = new BaseService(ExamenGeneral);
 
 export const createExamenGeneral = async (req, res) => {
   try {

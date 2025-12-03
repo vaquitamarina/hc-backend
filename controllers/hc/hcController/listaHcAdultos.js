@@ -12,7 +12,7 @@ export const listaHcAdultos = async (req, res) => {
     }
     return res.status(200).json(historias);
   } catch (error) {
-    console.error('Error en listaHcAdultos:', error);
+    // console.error('Error en listaHcAdultos:', error);
     return res.status(500).json({
       error: error.message || 'Error al obtener historias clínicas adultas.',
     });

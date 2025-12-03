@@ -16,8 +16,8 @@ class EnfermedadActual {
       await pool.query(query, values);
       // Opcional: podrías retornar un mensaje o buscar el registro recién creado si lo necesitas
       return true;
-    } catch (error) {
-      console.error('Error al crear enfermedad actual:', error.message);
+    } catch {
+      // console.error('Error al crear enfermedad actual');
       return null;
     }
   }
@@ -31,8 +31,8 @@ class EnfermedadActual {
         return null;
       }
       return result.rows[0];
-    } catch (error) {
-      console.error('Error al obtener enfermedad actual:', error.message);
+    } catch {
+      // console.error('Error al obtener enfermedad actual');
       return null;
     }
   }
@@ -52,8 +52,8 @@ class EnfermedadActual {
       await pool.query(query, values);
       // Opcional: podrías retornar un mensaje o buscar el registro actualizado si lo necesitas
       return true;
-    } catch (error) {
-      console.error('Error al actualizar enfermedad actual:', error.message);
+    } catch {
+      // console.error('Error al actualizar enfermedad actual');
       return null;
     }
   }
