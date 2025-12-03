@@ -9,7 +9,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://vaquitamarina.github.io'],
+    origin: [
+      'http://localhost:5173',
+      'https://vaquitamarina.github.io',
+      'http://161.132.4.46',
+    ],
     credentials: true,
   })
 );
