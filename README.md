@@ -4,7 +4,7 @@ Este repositorio contiene el **backend** del sistema de gestión de historias cl
 Está construido con **Node.js + Express** bajo una arquitectura organizada en capas.
 
 
-
+---
 
 
 ---
