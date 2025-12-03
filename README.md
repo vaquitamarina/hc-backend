@@ -3,6 +3,10 @@
 Este repositorio contiene el **backend** del sistema de gestión de historias clínicas.  
 Está construido con **Node.js + Express** bajo una arquitectura organizada en capas.
 
+
+
+
+
 ---
 
 ## 🚀 Requisitos previos
