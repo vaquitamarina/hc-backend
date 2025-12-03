@@ -326,19 +326,18 @@ export class HcController {
 
   updateDiagnosticoClinicas = async (req, res) => {
     const { id } = req.params;
-    const { fecha, clinicaRespuesta } = req.body;
     try {
       await this.HcModel.updateDiagnosticoClinicas({
         idHistory: id,
-        fecha,
-        clinicaRespuesta,
+        data: req.body,
         idUsuario: req.user.id,
       });
-      res.status(200).json({ message: 'Diagnóstico en clínicas guardado' });
-    } catch (error) {
       res
-        .status(500)
-        .json({ error: 'Error al guardar diagnóstico en clínicas' });
+        .status(200)
+        .json({ message: 'Información clínica guardada correctamente' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al guardar información clínica' });
     }
   };
 

@@ -1,8 +1,5 @@
 # Documentación de Endpoints - HC Backend
 
-
-
-
 ## Usuarios (`/api/users`)
 
 ### 1. POST `/api/users/register`
