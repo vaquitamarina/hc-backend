@@ -5,11 +5,6 @@ export const listaHcAdultos = async (req, res) => {
   try {
     const { id } = req.params;
     const historias = await getAdultHistoriasByStudent(id);
-    if (!historias || historias.length === 0) {
-      return res
-        .status(404)
-        .json({ error: 'No se encontraron historias clínicas adultas.' });
-    }
     return res.status(200).json(historias);
   } catch (error) {
     // console.error('Error en listaHcAdultos:', error);

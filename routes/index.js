@@ -14,17 +14,3 @@ router.use('/hc', hcRoutes);
 router.use('/students', studentRoutes);
 router.use('/student-users', studentUsersRoutes);
 router.use('/catalogo', catalogoRoutes);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
