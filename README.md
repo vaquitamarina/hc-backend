@@ -6,7 +6,7 @@ Está construido con **Node.js + Express** bajo una arquitectura organizada en c
 
 ---
 
-
+------
 ---
 
 ## 🚀 Requisitos previos
