@@ -10,9 +10,9 @@ export class StudentModel {
 
       // Devolver los datos directamente en español como vienen de la BD
       return result.rows;
-    } catch {
+    } catch (error) {
       // console.error('Error al obtener pacientes adultos');
-      throw new Error('Error al obtener pacientes adultos');
+      throw new Error(error.message || 'Error al obtener pacientes adultos');
     }
   }
 }

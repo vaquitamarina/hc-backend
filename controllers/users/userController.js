@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { validatePasswd } from '../../schemas/passwdSchema.js';
 
 export class UserController {
@@ -40,7 +41,8 @@ export class UserController {
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    res.status(200).json(user);
+    const token = jwt.sign({ id: user.id }, 'secret'); // Usa tu clave real en producción
+    res.status(200).json({ ...user, token });
   };
 
   getUserById = async (req, res) => {

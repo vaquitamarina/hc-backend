@@ -13,7 +13,7 @@ export const createMotivoConsulta = async (req, res) => {
     return res
       .status(400)
       .json({ error: 'No se pudo registrar el motivo de consulta' });
-  } catch {
+  } catch (err) {
     // console.error('Error en createMotivoConsulta:', err);
     return res.status(400).json({
       error: err.message || 'Error al registrar el motivo de consulta',

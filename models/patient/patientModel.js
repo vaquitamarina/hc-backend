@@ -33,9 +33,9 @@ export class PatientModel {
       return {
         id: idPaciente,
       };
-    } catch {
+    } catch (error) {
       // console.error('Error al crear paciente');
-      throw new Error('Error al crear paciente');
+      throw new Error(error.message || 'Error al crear paciente');
     }
   }
 
@@ -51,9 +51,9 @@ export class PatientModel {
       ]);
 
       return true;
-    } catch {
+    } catch (error) {
       // console.error('Error al actualizar paciente');
-      throw new Error('Error al actualizar paciente');
+      throw new Error(error.message || 'Error al actualizar paciente');
     }
   }
 }

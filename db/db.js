@@ -10,12 +10,12 @@ const pool = new Pool({
 });
 
 // Probar conexión
-async function testConnection() {
+async function testConnection(log = console.log, errorLog = console.error) {
   try {
     await pool.query('SELECT NOW()');
-    // console.log('Conectado a Postgres');
+    log('Conectado a Postgres');
   } catch {
-    // console.error('Error al conectar');
+    errorLog('Error al conectar');
   }
 }
 

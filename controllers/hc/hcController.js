@@ -80,8 +80,13 @@ export class HcController {
       return res.status(200).json({
         message: 'Paciente asignado a la historia clinica',
       });
-    } catch {
+    } catch (error) {
       // console.error('Error al asignar paciente:', error);
+      if (error.message && error.message.includes('no encontrada')) {
+        return res.status(400).json({
+          error: error.message,
+        });
+      }
       return res.status(500).json({
         error: 'Error al asignar paciente a la historia',
       });
@@ -119,8 +124,8 @@ export class HcController {
       });
 
       res.status(200).json({ message: 'Filiación guardada correctamente' });
-    } catch {
-      if (error.message.includes('no encontrado')) {
+    } catch (error) {
+      if (error.message && error.message.includes('no encontrado')) {
         return res.status(400).json({ error: error.message });
       }
       return res.status(500).json({ error: 'Error al guardar la filiación' });

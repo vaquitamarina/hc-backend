@@ -7,9 +7,9 @@ class MotivoConsulta {
       const values = [id_historia, motivo];
       await pool.query(query, values);
       return true;
-    } catch {
+    } catch (error) {
       // console.error('Error al crear motivo de consulta');
-      throw new Error('Error al crear motivo de consulta');
+      throw new Error(error.message || 'Error al crear motivo de consulta');
     }
   }
 
@@ -47,9 +47,11 @@ class MotivoConsulta {
       const values = [id_historia, motivo];
       await pool.query(query, values);
       return true;
-    } catch {
+    } catch (error) {
       // console.error('Error al actualizar motivo de consulta');
-      throw new Error('Error al actualizar motivo de consulta');
+      throw new Error(
+        error.message || 'Error al actualizar motivo de consulta'
+      );
     }
   }
 }
