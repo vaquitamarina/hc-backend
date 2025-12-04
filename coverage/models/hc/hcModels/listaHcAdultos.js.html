@@ -29,9 +29,9 @@
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">100% </span>
+            <span class="strong">50% </span>
             <span class="quiet">Branches</span>
-            <span class="fraction">0/0</span>
+            <span class="fraction">1/2</span>
           </div>
 
           <div class="fl pad1y space-right2">
@@ -92,9 +92,9 @@ export async function getAdultHistoriasByStudent(idEstudiante) {
   try {
     const query = `SELECT * FROM fn_listar_historias_clinicas_adultos_por_estudiante($1)`;
     const { rows } = await pool.query(query, [idEstudiante]);
-    return rows;
-  } catch {
-    // console.error('Error al obtener historias clínicas de adultos');
+    return rows || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+  } catch (error) {
+    // console.error('Error al obtener historias clínicas de adultos:', error);
     return [];
   }
 }
@@ -112,7 +112,7 @@ export async function getAdultHistoriasByStudent(idEstudiante) {
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-12-03T22:16:38.269Z
+      at 2025-12-04T00:49:30.573Z
     </div>
     <script src="../../../prettify.js"></script>
     <script>

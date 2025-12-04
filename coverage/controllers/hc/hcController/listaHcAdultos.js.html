@@ -109,9 +109,9 @@ export const listaHcAdultos = async (req, res) =&gt; {
     const { id } = req.params;
     const historias = await getAdultHistoriasByStudent(id);
     if (!historias || historias.length === 0) {
-      return res
-        .status(404)
-        .json({ error: 'No se encontraron historias clínicas adultas.' });
+      return res.status(404).json({
+        error: 'No se encontraron historias clínicas adultas.',
+      });
     }
     return res.status(200).json(historias);
   } catch (error) {
@@ -135,7 +135,7 @@ export const listaHcAdultos = async (req, res) =&gt; {
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-12-03T22:16:38.269Z
+      at 2025-12-04T00:49:30.573Z
     </div>
     <script src="../../../prettify.js"></script>
     <script>
