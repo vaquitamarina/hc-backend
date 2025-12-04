@@ -20,6 +20,7 @@ app.use(
       'https://vaquitamarina.github.io',
       'http://161.132.4.46',
       'http://unjbghc.duckdns.org',
+      'https://unjbghc.duckdns.org',
     ],
     credentials: true,
   })
