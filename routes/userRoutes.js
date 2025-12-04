@@ -12,6 +12,7 @@ const authController = new AuthController(UserModel);
 userRoutes.post('/register', userController.register);
 userRoutes.post('/login', authController.login);
 userRoutes.use(authMiddleware);
+userRoutes.post('/logout', authController.logout);
 
 userRoutes.get('/me', authController.getCurrentUser);
 userRoutes.get('/:id', userController.getUserById);
