@@ -5,6 +5,7 @@ export class CookieService {
       sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       secure: process.env.NODE_ENV === 'production',
       path: '/',
+      domain: '.duckdns.org', // Importante si usas subdominio
     };
 
     // console.log('🍪 Setting cookies with options:', cookieOptions);
