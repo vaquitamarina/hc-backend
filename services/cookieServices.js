@@ -13,7 +13,7 @@ export class CookieService {
 
     res.cookie('accessToken', accessToken, {
       ...cookieOptions,
-      maxAge: 300 * 60 * 1000, // 15 minutes
+      maxAge: 2 * 60 * 60 * 1000, // 2 hours
     });
 
     res.cookie('refreshToken', refreshToken, {
