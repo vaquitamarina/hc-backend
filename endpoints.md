@@ -1,7 +1,9 @@
 # Documentación de Endpoints - HC Backend
 
 ## Usuarios (`/api/users`)
+
 .....
+
 ### 1. POST `/api/users/register`
 
 **Descripción:** Registra un nuevo usuario en el sistema.

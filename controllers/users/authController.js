@@ -40,4 +40,10 @@ export class AuthController {
   getCurrentUser = async (req, res) => {
     res.status(200).json(req.user);
   };
+
+  logout = (req, res) => {
+    res.clearCookie('accessToken', { path: '/' });
+    res.clearCookie('refreshToken', { path: '/' });
+    res.status(200).json({ message: 'Logout exitoso' });
+  };
 }
