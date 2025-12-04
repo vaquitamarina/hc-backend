@@ -1,3 +1,5 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -6,6 +8,10 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import { router } from './routes/index.js';
 
 const app = express();
+
+// Para __dirname en ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(
   cors({
@@ -46,7 +52,11 @@ const swaggerOptions = {
   ], // Incluye los archivos de documentación aparte
 };
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
 app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Servir la carpeta coverage como recurso estático en /api/coverage
+app.use('/api/coverage', express.static(path.join(__dirname, 'coverage')));
 
 app.use('/api', router);
 
