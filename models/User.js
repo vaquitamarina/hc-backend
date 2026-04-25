@@ -1,8 +1,8 @@
 // Aggregate Root para Usuario
-import DNI from '../value-objects/DNI.js';
-import Email from '../value-objects/Email.js';
-import FechaNacimiento from '../value-objects/FechaNacimiento.js';
-import Password from '../value-objects/Password.js';
+import DNI from './value-objects/DNI.js';
+import Email from './value-objects/Email.js';
+import FechaNacimiento from './value-objects/FechaNacimiento.js';
+import Password from './value-objects/Password.js';
 
 class User {
   constructor(id, userCode, firstName, lastName, dni, email, fechaNacimiento, password, role) {
