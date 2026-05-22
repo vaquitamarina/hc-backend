@@ -1,3 +1,36 @@
+# Informe de Entregables - Historias de Usuario (HU01, HU02, HU04)
+
+Este README contiene la Tabla de Vinculación Arquitectónica y las instrucciones para reproducir las pruebas BDD.
+
+**Tabla de Vinculación Arquitectónica**
+
+| Historia (HU)                 |                         Archivo .feature | Ruta / Endpoint                | Controlador                  | Método del controlador | Modelo / Función                                         | Step definitions / Tests                   |
+| ----------------------------- | ---------------------------------------: | ------------------------------ | ---------------------------- | ---------------------- | -------------------------------------------------------- | ------------------------------------------ |
+| HU01 - Registro HC            |         `features/HU01_registro.feature` | `POST /api/hc` (ej.)           | `HcController.registerHc`    | `registerHc`           | `HcModel.registerHc`                                     | `step-definitions/historia.steps.js`       |
+| HU02 - Obtener/Crear Borrador |         `features/HU02_borrador.feature` | `POST /api/hc/draft`           | `HcController.createDraft`   | `createDraft`          | `HcModel.createDraft / fn_obtener_o_crear_borrador`      | `step-definitions/historia_extra.steps.js` |
+| HU04 - Asignar Paciente       | `features/HU04_asignar_paciente.feature` | `PATCH /api/hc/assign-patient` | `HcController.assignPatient` | `assignPatient`        | `HcModel.assignPatient / fn_asignar_paciente_a_historia` | `step-definitions/historia_extra.steps.js` |
+
+Notas:
+
+- Las rutas indicadas son referenciales según la arquitectura del proyecto; consulte `controllers/hc/hcController.js` para los métodos reales.
+- Las funciones en la base de datos se mencionan en `FLUJO_BORRADOR.md` y `endpoints.md`.
+
+## Ejecutar pruebas BDD localmente
+
+Instalar dependencias (si no están instaladas):
+
+```bash
+npm install
+```
+
+Ejecutar las pruebas BDD (Cucumber):
+
+```bash
+npm run test:bdd
+```
+
+Generar evidencia: tomar una captura de pantalla de la terminal donde se vea `1 scenario (x passed)` o similar, con al menos 6 escenarios `passed` en total.
+
 # 📌 Proyecto Backend – Sistema de Gestión de Historias Clínicas
 
 Este repositorio contiene el **backend** del sistema de gestión de historias clínicas.  
