@@ -3,7 +3,7 @@ export class PatientController {
     this.PatientModel = PatientModel;
   }
 
-  createPatient = async (req, res) => {
+  registrarPaciente = async (req, res) => {
     const { nombre, apellido, dni, fechaNacimiento, sexo, telefono, email } =
       req.body;
 
@@ -15,7 +15,7 @@ export class PatientController {
     }
 
     try {
-      const result = await this.PatientModel.createPatient(
+      const result = await this.PatientModel.registrarPaciente(
         nombre,
         apellido,
         dni,
@@ -44,7 +44,7 @@ export class PatientController {
     }
   };
 
-  updatePatient = async (req, res) => {
+  actualizarPaciente = async (req, res) => {
     const { id } = req.params;
     const { nombre, apellido, telefono, email } = req.body;
 
@@ -54,7 +54,7 @@ export class PatientController {
     }
 
     try {
-      await this.PatientModel.updatePatient(
+      await this.PatientModel.actualizarPaciente(
         id,
         nombre,
         apellido,
@@ -71,7 +71,7 @@ export class PatientController {
         return res.status(404).json({ error: 'Paciente no encontrado' });
       }
 
-      // console.error('Error en updatePatient:', error);
+      // console.error('Error en actualizarPaciente:', error);
       res.status(500).json({
         error: 'Error interno al actualizar el paciente.',
       });

@@ -1,10 +1,12 @@
-import { getCatalogo } from '../../models/catalogo/catalogoModels.js';
-import { getCatalogoNombrePorId } from '../../models/catalogo/catalogoModels.js';
+import {
+  listarOpcionesCatalogoClinico,
+  obtenerNombreOpcionCatalogoClinico,
+} from '../../models/catalogo/catalogoModels.js';
 
-export const getCatalogoController = async (req, res) => {
+export const listarOpcionesCatalogoClinicoController = async (req, res) => {
   try {
     const { nombre } = req.params;
-    const result = await getCatalogo(nombre);
+    const result = await listarOpcionesCatalogoClinico(nombre);
     if (!result || result.length === 0) {
       return res.status(404).json({ error: 'No data found for this catalog' });
     }
@@ -20,10 +22,13 @@ export const getCatalogoController = async (req, res) => {
 };
 
 // Nuevo controlador para obtener el nombre por id
-export const getCatalogoNombrePorIdController = async (req, res) => {
+export const obtenerNombreOpcionCatalogoClinicoController = async (
+  req,
+  res
+) => {
   try {
     const { nombre, id } = req.params;
-    const nombreCatalogo = await getCatalogoNombrePorId(nombre, id);
+    const nombreCatalogo = await obtenerNombreOpcionCatalogoClinico(nombre, id);
     if (!nombreCatalogo) {
       return res
         .status(404)

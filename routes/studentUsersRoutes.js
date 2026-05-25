@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getAllStudentUsers } from '../controllers/users/studentUsersController.js';
+import { listarUsuariosEstudiantes } from '../controllers/users/studentUsersController.js';
 
 export const studentUsersRoutes = Router();
 
-studentUsersRoutes.get('/', getAllStudentUsers);
+studentUsersRoutes.get('/', listarUsuariosEstudiantes);

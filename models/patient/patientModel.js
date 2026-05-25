@@ -5,7 +5,7 @@ export class PatientModel {
    * Crear un nuevo paciente usando la función fn_crear_paciente
    * @returns {Object} { id: UUID del paciente creado }
    */
-  static async createPatient(
+  static async registrarPaciente(
     nombre,
     apellido,
     dni,
@@ -39,7 +39,7 @@ export class PatientModel {
     }
   }
 
-  static async updatePatient(id, nombre, apellido, telefono, email) {
+  static async actualizarPaciente(id, nombre, apellido, telefono, email) {
     try {
       await pool.query('CALL u_paciente($1, $2, $3, $4, $5, $6)', [
         id,
@@ -55,5 +55,13 @@ export class PatientModel {
       // console.error('Error al actualizar paciente');
       throw new Error(error.message || 'Error al actualizar paciente');
     }
+  }
+
+  static async createPatient(...args) {
+    return this.registrarPaciente(...args);
+  }
+
+  static async updatePatient(...args) {
+    return this.actualizarPaciente(...args);
   }
 }

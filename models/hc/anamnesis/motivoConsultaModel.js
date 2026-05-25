@@ -1,7 +1,7 @@
 import pool from '../../../db/db.js';
 
 class MotivoConsulta {
-  static async create({ id_historia, motivo }) {
+  static async registrar({ id_historia, motivo }) {
     try {
       const query = `CALL i_motivo_consulta($1, $2)`;
       const values = [id_historia, motivo];
@@ -13,7 +13,7 @@ class MotivoConsulta {
     }
   }
 
-  static async getById(id_motivo) {
+  static async consultarPorId(id_motivo) {
     try {
       const query = `SELECT * FROM motivo_consulta WHERE id_motivo = $1`;
       const { rows } = await pool.query(query, [id_motivo]);
@@ -27,7 +27,7 @@ class MotivoConsulta {
     }
   }
 
-  static async getByHistoria(id_historia) {
+  static async consultarPorHistoria(id_historia) {
     try {
       const query = `SELECT * FROM motivo_consulta WHERE id_historia = $1`;
       const { rows } = await pool.query(query, [id_historia]);
@@ -41,7 +41,7 @@ class MotivoConsulta {
     }
   }
 
-  static async update(id_historia, { motivo }) {
+  static async actualizarPorHistoria(id_historia, { motivo }) {
     try {
       const query = `CALL u_motivo_consulta($1, $2)`;
       const values = [id_historia, motivo];
@@ -53,6 +53,22 @@ class MotivoConsulta {
         error.message || 'Error al actualizar motivo de consulta'
       );
     }
+  }
+
+  static async create(data) {
+    return this.registrar(data);
+  }
+
+  static async getById(id_motivo) {
+    return this.consultarPorId(id_motivo);
+  }
+
+  static async getByHistoria(id_historia) {
+    return this.consultarPorHistoria(id_historia);
+  }
+
+  static async update(id_historia, data) {
+    return this.actualizarPorHistoria(id_historia, data);
   }
 }
 

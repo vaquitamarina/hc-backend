@@ -2,7 +2,12 @@ import argon2 from 'argon2';
 import pool from '../../db/db.js';
 
 export class UserModel {
-  static async register(
+  static async listarUsuarios() {
+    const result = await pool.query('SELECT * FROM usuario');
+    return result.rows;
+  }
+
+  static async registrarUsuario(
     userCode,
     firstName,
     lastName,
@@ -37,7 +42,7 @@ export class UserModel {
     }
   }
 
-  static async getUserById(id) {
+  static async obtenerUsuarioPorId(id) {
     const result = await pool.query('SELECT * FROM fn_obtener_usuario($1)', [
       id,
     ]);
@@ -47,7 +52,7 @@ export class UserModel {
     return result.rows[0];
   }
 
-  static async login(userCode, password) {
+  static async autenticarUsuario(userCode, password) {
     const result = await pool.query(
       'SELECT * FROM fn_obtener_usuario_login($1)',
       [userCode]
@@ -72,5 +77,21 @@ export class UserModel {
       email: user.email,
       role: user.rol,
     };
+  }
+
+  static async register(...args) {
+    return this.registrarUsuario(...args);
+  }
+
+  static async getAll() {
+    return this.listarUsuarios();
+  }
+
+  static async getUserById(id) {
+    return this.obtenerUsuarioPorId(id);
+  }
+
+  static async login(userCode, password) {
+    return this.autenticarUsuario(userCode, password);
   }
 }

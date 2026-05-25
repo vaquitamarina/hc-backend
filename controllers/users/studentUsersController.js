@@ -1,6 +1,6 @@
 import pool from '../../db/db.js';
 
-export const getAllStudentUsers = async (req, res) => {
+export const listarUsuariosEstudiantes = async (req, res) => {
   try {
     const result = await pool.query(
       "SELECT * FROM usuario WHERE rol = 'estudiante'"

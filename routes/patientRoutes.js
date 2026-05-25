@@ -7,5 +7,5 @@ export const patientRoutes = Router();
 const patientController = new PatientController(PatientModel);
 
 // POST /api/pacientes - Crear nuevo paciente
-patientRoutes.post('/', patientController.createPatient);
-patientRoutes.put('/:id', patientController.updatePatient);
+patientRoutes.post('/', patientController.registrarPaciente);
+patientRoutes.put('/:id', patientController.actualizarPaciente);

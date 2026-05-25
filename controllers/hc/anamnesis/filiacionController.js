@@ -3,7 +3,7 @@ import BaseService from '../../../services/baseService.js';
 
 const filiacionService = new BaseService(Filiacion);
 
-export const createFiliacion = async (req, res) => {
+export const registrarDatosPersonalesPaciente = async (req, res) => {
   try {
     const ok = await filiacionService.create(req.body);
     if (ok) {
@@ -13,17 +13,17 @@ export const createFiliacion = async (req, res) => {
     }
     return res.status(400).json({ error: 'No se pudo registrar la filiación' });
   } catch (err) {
-    // console.error('Error en createFiliacion:', err);
+    // console.error('Error en registrarDatosPersonalesPaciente:', err);
     return res
       .status(400)
       .json({ error: err.message || 'Error al registrar la filiación' });
   }
 };
 
-export const getFiliacion = async (req, res) => {
+export const consultarDatosPersonalesPaciente = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await Filiacion.getByHistoria(id_historia);
+    const result = await Filiacion.consultarPorHistoria(id_historia);
     if (!result) {
       return res.status(404).json({
         error: 'No se encontró filiación para la historia clínica indicada',
@@ -38,11 +38,11 @@ export const getFiliacion = async (req, res) => {
   }
 };
 
-export const updateFiliacion = async (req, res) => {
+export const actualizarDatosPersonalesPaciente = async (req, res) => {
   try {
     const { id_historia } = req.params;
     // Busca la filiación por id_historia
-    const filiacion = await Filiacion.getByHistoria(id_historia);
+    const filiacion = await Filiacion.consultarPorHistoria(id_historia);
     if (!filiacion) {
       return res.status(404).json({
         error: 'No se encontró filiación para la historia clínica indicada',
@@ -59,7 +59,7 @@ export const updateFiliacion = async (req, res) => {
       .status(500)
       .json({ error: 'No se pudo actualizar la filiación' });
   } catch (err) {
-    // console.error('Error en updateFiliacion:', err);
+    // console.error('Error en actualizarDatosPersonalesPaciente:', err);
     res
       .status(500)
       .json({ error: err.message || 'Error al actualizar la filiación' });

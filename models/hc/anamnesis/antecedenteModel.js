@@ -1,7 +1,7 @@
 import pool from '../../../db/db.js';
 
-class AntecedentePersonal {
-  static async create(data) {
+class AntecedentesPersonalesNoPatologicos {
+  static async registrar(data) {
     try {
       await pool.query(
         `CALL i_antecedente_personal($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32)`,
@@ -53,11 +53,11 @@ class AntecedentePersonal {
     }
   }
 
-  static async getById(id_antecedente) {
+  static async consultarPorId(idAntecedente) {
     try {
       const result = await pool.query(
         `SELECT * FROM antecedente_personal WHERE id_antecedente = $1`,
-        [id_antecedente]
+        [idAntecedente]
       );
       if (result.rows.length === 0) {
         return null;
@@ -69,11 +69,11 @@ class AntecedentePersonal {
     }
   }
 
-  static async getByHistoria(id_historia) {
+  static async consultarPorHistoria(idHistoriaClinica) {
     try {
       const result = await pool.query(
         `SELECT * FROM antecedente_personal WHERE id_historia = $1`,
-        [id_historia]
+        [idHistoriaClinica]
       );
       if (result.rows.length === 0) {
         return null;
@@ -88,12 +88,12 @@ class AntecedentePersonal {
     }
   }
 
-  static async update(id_historia, data) {
+  static async actualizarPorHistoria(idHistoriaClinica, data) {
     try {
       await pool.query(
         `CALL u_antecedente_personal($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32)`,
         [
-          id_historia,
+          idHistoriaClinica,
           data.esta_embarazada,
           data.mac,
           data.otros,
@@ -143,8 +143,8 @@ class AntecedentePersonal {
   }
 }
 
-class AntecedenteMedico {
-  static async create(data) {
+class AntecedentesPersonalesPatologicos {
+  static async registrar(data) {
     try {
       await pool.query(
         `CALL i_antecedente_medico($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)`,
@@ -182,11 +182,11 @@ class AntecedenteMedico {
     }
   }
 
-  static async getByHistoria(id_historia) {
+  static async consultarPorHistoria(idHistoriaClinica) {
     try {
       const result = await pool.query(
         `SELECT * FROM antecedente_medico WHERE id_historia = $1`,
-        [id_historia]
+        [idHistoriaClinica]
       );
       if (result.rows.length === 0) {
         return null;
@@ -198,12 +198,12 @@ class AntecedenteMedico {
     }
   }
 
-  static async update(id_historia, data) {
+  static async actualizarPorHistoria(idHistoriaClinica, data) {
     try {
       await pool.query(
         `CALL u_antecedente_medico($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)`,
         [
-          id_historia,
+          idHistoriaClinica,
           data.salud_general,
           data.bajo_tratamiento,
           data.tipo_tratamiento,
@@ -237,8 +237,8 @@ class AntecedenteMedico {
   }
 }
 
-class AntecedenteFamiliar {
-  static async create(data) {
+class AntecedentesHeredoFamiliares {
+  static async registrar(data) {
     try {
       await pool.query(`CALL i_antecedente_familiar($1,$2)`, [
         data.id_historia,
@@ -251,11 +251,11 @@ class AntecedenteFamiliar {
     }
   }
 
-  static async getByHistoria(id_historia) {
+  static async consultarPorHistoria(idHistoriaClinica) {
     try {
       const result = await pool.query(
         `SELECT * FROM antecedente_familiar WHERE id_historia = $1`,
-        [id_historia]
+        [idHistoriaClinica]
       );
       if (result.rows.length === 0) {
         return null;
@@ -267,10 +267,10 @@ class AntecedenteFamiliar {
     }
   }
 
-  static async update(id_historia, data) {
+  static async actualizarPorHistoria(idHistoriaClinica, data) {
     try {
       await pool.query(`CALL u_antecedente_familiar($1,$2)`, [
-        id_historia,
+        idHistoriaClinica,
         data.descripcion,
       ]);
       return true;
@@ -281,8 +281,8 @@ class AntecedenteFamiliar {
   }
 }
 
-class AntecedenteCumplimiento {
-  static async create(data) {
+class SeguimientoDelTratamiento {
+  static async registrar(data) {
     try {
       await pool.query(
         `CALL i_antecedente_cumplimiento($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
@@ -309,11 +309,11 @@ class AntecedenteCumplimiento {
     }
   }
 
-  static async getByHistoria(id_historia) {
+  static async consultarPorHistoria(idHistoriaClinica) {
     try {
       const result = await pool.query(
         `SELECT * FROM antecedente_cumplimiento WHERE id_historia = $1`,
-        [id_historia]
+        [idHistoriaClinica]
       );
       if (result.rows.length === 0) {
         return null;
@@ -328,12 +328,12 @@ class AntecedenteCumplimiento {
     }
   }
 
-  static async update(id_historia, data) {
+  static async actualizarPorHistoria(idHistoriaClinica, data) {
     try {
       await pool.query(
         `CALL u_antecedente_cumplimiento($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
         [
-          id_historia,
+          idHistoriaClinica,
           data.motivo_dolor,
           data.motivo_control,
           data.frecuencia_control_meses,
@@ -360,8 +360,8 @@ class AntecedenteCumplimiento {
 }
 
 export {
-  AntecedentePersonal,
-  AntecedenteMedico,
-  AntecedenteFamiliar,
-  AntecedenteCumplimiento,
+  AntecedentesPersonalesNoPatologicos,
+  AntecedentesPersonalesPatologicos,
+  AntecedentesHeredoFamiliares,
+  SeguimientoDelTratamiento,
 };

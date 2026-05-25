@@ -5,7 +5,7 @@ export class AuthController {
     this.UserModel = UserModel;
   }
 
-  login = async (req, res) => {
+  iniciarSesion = async (req, res) => {
     try {
       const { userCode, password } = req.body;
 
@@ -14,7 +14,7 @@ export class AuthController {
       }
 
       // console.log('Attempting login for userCode:', userCode);
-      const user = await this.UserModel.login(userCode, password);
+      const user = await this.UserModel.autenticarUsuario(userCode, password);
       if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
@@ -37,11 +37,11 @@ export class AuthController {
     }
   };
 
-  getCurrentUser = async (req, res) => {
+  obtenerSesionActual = async (req, res) => {
     res.status(200).json(req.user);
   };
 
-  logout = (req, res) => {
+  cerrarSesion = (req, res) => {
     res.clearCookie('accessToken', { path: '/' });
     res.status(200).json({ message: 'Logout exitoso' });
   };

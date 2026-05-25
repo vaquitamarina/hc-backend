@@ -3,9 +3,9 @@ export class HcController {
     this.HcModel = HcModel;
   }
 
-  createReview = async (req, res) => {
+  registrarRevisionHistoriaClinica = async (req, res) => {
     const { idHistory, idTeacher, state, observations } = req.body;
-    const result = await this.HcModel.createReview({
+    const result = await this.HcModel.registrarRevisionHistoriaClinica({
       idHistory,
       idTeacher,
       state,
@@ -22,10 +22,11 @@ export class HcController {
     }
   };
 
-  getAllByStudentId = async (req, res) => {
+  listarHistoriasClinicasPorEstudiante = async (req, res) => {
     try {
       const { id } = req.params;
-      const historias = await this.HcModel.getAllByStudentId(id);
+      const historias =
+        await this.HcModel.listarHistoriasClinicasPorEstudiante(id);
       res.status(200).json(historias);
     } catch {
       // console.error('Error al obtener historias clínicas:', error);
@@ -33,9 +34,10 @@ export class HcController {
     }
   };
 
-  getFiliationByIdHistory = async (req, res) => {
+  consultarDatosPersonalesPorHistoriaClinica = async (req, res) => {
     const { id } = req.params;
-    const filiation = await this.HcModel.getFiliationByIdHistory(id);
+    const filiation =
+      await this.HcModel.consultarDatosPersonalesPorHistoriaClinica(id);
     if (!filiation) {
       return res.status(404).json({
         error: 'Filiación no encontrada',
@@ -44,9 +46,9 @@ export class HcController {
     res.status(200).json(filiation);
   };
 
-  registerHc = async (req, res) => {
+  registrarHistoriaClinica = async (req, res) => {
     const { idStudent } = req.body;
-    const hc = await this.HcModel.registerHc(idStudent);
+    const hc = await this.HcModel.registrarHistoriaClinica(idStudent);
     if (!hc) {
       return res.status(500).json({
         error: 'Error al registrar la historia clinica',
@@ -55,10 +57,12 @@ export class HcController {
     res.status(201).json(hc);
   };
 
-  createDraft = async (req, res) => {
+  obtenerBorradorHistoriaClinica = async (req, res) => {
     try {
       // El idStudent viene del token JWT (req.user.id)
-      const result = await this.HcModel.createDraft(req.user.id);
+      const result = await this.HcModel.obtenerBorradorHistoriaClinica(
+        req.user.id
+      );
 
       return res.status(200).json({
         id_historia: result.id_historia,
@@ -71,11 +75,11 @@ export class HcController {
     }
   };
 
-  assignPatient = async (req, res) => {
+  asignarPacienteAHistoriaClinica = async (req, res) => {
     try {
       const { idHistory, idPatient } = req.body;
 
-      await this.HcModel.assignPatient(idHistory, idPatient);
+      await this.HcModel.asignarPacienteAHistoriaClinica(idHistory, idPatient);
 
       return res.status(200).json({
         message: 'Paciente asignado a la historia clinica',
@@ -93,10 +97,11 @@ export class HcController {
     }
   };
 
-  getPatientByHistory = async (req, res) => {
+  consultarPacientePorHistoriaClinica = async (req, res) => {
     try {
       const { id } = req.params;
-      const patient = await this.HcModel.getPatientByHistory(id);
+      const patient =
+        await this.HcModel.consultarPacientePorHistoriaClinica(id);
 
       if (!patient) {
         return res.status(404).json({
@@ -113,12 +118,12 @@ export class HcController {
     }
   };
 
-  updateFiliation = async (req, res) => {
+  actualizarDatosPersonalesHistoriaClinica = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
     try {
-      await this.HcModel.updateFiliation({
+      await this.HcModel.actualizarDatosPersonalesHistoriaClinica({
         idHistory: id,
         ...data,
       });
@@ -133,22 +138,23 @@ export class HcController {
   };
 
   // --- MÉTODOS EXAMEN GENERAL ---
-  getGeneralExam = async (req, res) => {
+  consultarExamenFisicoGeneralPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      const exam = await this.HcModel.getGeneralExam(id);
+      const exam =
+        await this.HcModel.consultarExamenFisicoGeneralPorHistoria(id);
       res.status(200).json(exam || {});
     } catch {
       res.status(500).json({ error: 'Error al obtener el examen general' });
     }
   };
 
-  updateGeneralExam = async (req, res) => {
+  actualizarExamenFisicoGeneralPorHistoria = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
     try {
-      await this.HcModel.updateGeneralExam({
+      await this.HcModel.actualizarExamenFisicoGeneralPorHistoria({
         idHistory: id,
         ...data,
       });
@@ -162,22 +168,23 @@ export class HcController {
 
   // --- MÉTODOS EXAMEN REGIONAL ---
 
-  getRegionalExam = async (req, res) => {
+  consultarExamenFisicoRegionalPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      const exam = await this.HcModel.getRegionalExam(id);
+      const exam =
+        await this.HcModel.consultarExamenFisicoRegionalPorHistoria(id);
       res.status(200).json(exam || {});
     } catch {
       res.status(500).json({ error: 'Error al obtener el examen regional' });
     }
   };
 
-  updateRegionalExam = async (req, res) => {
+  actualizarExamenFisicoRegionalPorHistoria = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
     try {
-      await this.HcModel.updateRegionalExam({
+      await this.HcModel.actualizarExamenFisicoRegionalPorHistoria({
         idHistory: id,
         ...data,
       });
@@ -191,21 +198,24 @@ export class HcController {
 
   // --- MÉTODOS EXAMEN BOCA ---
 
-  getExamBoca = async (req, res) => {
+  consultarExamenBucalPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      const exam = await this.HcModel.getExamBoca(id);
+      const exam = await this.HcModel.consultarExamenBucalPorHistoria(id);
       res.status(200).json(exam || {});
     } catch {
       res.status(500).json({ error: 'Error al obtener el examen de boca' });
     }
   };
 
-  updateExamBoca = async (req, res) => {
+  actualizarExamenBucalPorHistoria = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
     try {
-      await this.HcModel.updateExamBoca({ idHistory: id, ...data });
+      await this.HcModel.actualizarExamenBucalPorHistoria({
+        idHistory: id,
+        ...data,
+      });
       res
         .status(200)
         .json({ message: 'Examen de boca guardado correctamente' });
@@ -216,10 +226,10 @@ export class HcController {
 
   // --- CONTROLADORES HIGIENE BUCAL ---
 
-  getHigieneOral = async (req, res) => {
+  consultarHigieneBucalPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      const result = await this.HcModel.getHigieneOral(id);
+      const result = await this.HcModel.consultarHigieneBucalPorHistoria(id);
       // Si no hay datos, devolvemos un objeto vacío para que el frontend no falle
       res.status(200).json(result || {});
     } catch {
@@ -229,7 +239,7 @@ export class HcController {
     }
   };
 
-  updateHigieneOral = async (req, res) => {
+  actualizarHigieneBucal = async (req, res) => {
     const { id } = req.params; // ID de la Historia
     const { estadoHigiene } = req.body;
 
@@ -237,7 +247,7 @@ export class HcController {
     const idUsuario = req.user.id;
 
     try {
-      await this.HcModel.updateHigieneOral({
+      await this.HcModel.actualizarHigieneBucal({
         idHistory: id,
         estadoHigiene,
         idUsuario,
@@ -249,10 +259,11 @@ export class HcController {
   };
 
   // --- CONTROLADORES SECCIÓN III (PRESUNTIVO) ---
-  getDiagnosticoPresuntivo = async (req, res) => {
+  consultarDiagnosticoPresuntivoPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      const data = await this.HcModel.getDiagnosticoPresuntivo(id);
+      const data =
+        await this.HcModel.consultarDiagnosticoPresuntivoPorHistoria(id);
       res.status(200).json(data);
     } catch {
       res
@@ -261,11 +272,11 @@ export class HcController {
     }
   };
 
-  updateDiagnosticoPresuntivo = async (req, res) => {
+  actualizarDiagnosticoPresuntivoPorHistoria = async (req, res) => {
     const { id } = req.params;
     const { descripcion } = req.body;
     try {
-      await this.HcModel.updateDiagnosticoPresuntivo({
+      await this.HcModel.actualizarDiagnosticoPresuntivoPorHistoria({
         idHistory: id,
         descripcion,
         idUsuario: req.user.id,
@@ -277,21 +288,21 @@ export class HcController {
   };
 
   // --- CONTROLADORES SECCIÓN IV (DERIVACIÓN) ---
-  getDerivacion = async (req, res) => {
+  consultarDerivacionPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      const data = await this.HcModel.getDerivacion(id);
+      const data = await this.HcModel.consultarDerivacionPorHistoria(id);
       res.status(200).json(data || {});
     } catch {
       res.status(500).json({ error: 'Error al obtener derivaciones' });
     }
   };
 
-  updateDerivacion = async (req, res) => {
+  actualizarDerivacionPorHistoria = async (req, res) => {
     const { id } = req.params;
     const { destinos, observaciones, alumno, docente } = req.body;
     try {
-      await this.HcModel.updateDerivacion({
+      await this.HcModel.actualizarDerivacionPorHistoria({
         idHistory: id,
         destinos,
         observaciones,
@@ -306,10 +317,11 @@ export class HcController {
   };
 
   // --- CONTROLADORES SECCIÓN V (CLÍNICAS) ---
-  getDiagnosticoClinicas = async (req, res) => {
+  consultarDiagnosticoClinicoPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      const data = await this.HcModel.getDiagnosticoClinicas(id);
+      const data =
+        await this.HcModel.consultarDiagnosticoClinicoPorHistoria(id);
       res.status(200).json(data || {});
     } catch {
       res
@@ -318,10 +330,10 @@ export class HcController {
     }
   };
 
-  updateDiagnosticoClinicas = async (req, res) => {
+  actualizarDiagnosticoClinicoPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      await this.HcModel.updateDiagnosticoClinicas({
+      await this.HcModel.actualizarDiagnosticoClinicoPorHistoria({
         idHistory: id,
         data: req.body,
         idUsuario: req.user.id,
@@ -337,17 +349,17 @@ export class HcController {
 
   // --- CONTROLADORES SECCIÓN VI (EVOLUCIÓN) ---
 
-  getEvolucion = async (req, res) => {
+  consultarEvolucionesPorHistoria = async (req, res) => {
     const { id } = req.params;
     try {
-      const list = await this.HcModel.getEvolucion(id);
+      const list = await this.HcModel.consultarEvolucionesPorHistoria(id);
       res.status(200).json(list);
     } catch {
       res.status(500).json({ error: 'Error al obtener evoluciones' });
     }
   };
 
-  addEvolucion = async (req, res) => {
+  registrarEvolucionClinica = async (req, res) => {
     const { id } = req.params;
     const { fecha, actividad, alumno } = req.body;
 
@@ -359,7 +371,7 @@ export class HcController {
     }
 
     try {
-      await this.HcModel.addEvolucion({
+      await this.HcModel.registrarEvolucionClinica({
         idHistory: id,
         fecha,
         actividad,

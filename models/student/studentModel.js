@@ -1,7 +1,7 @@
 import pool from '../../db/db.js';
 
 export class StudentModel {
-  static async getAdultPatientsByStudentId(studentId) {
+  static async consultarPacientesAdultosPorEstudiante(studentId) {
     try {
       const result = await pool.query(
         'SELECT * FROM fn_obtener_pacientes_adultos($1)',
@@ -14,5 +14,9 @@ export class StudentModel {
       // console.error('Error al obtener pacientes adultos');
       throw new Error(error.message || 'Error al obtener pacientes adultos');
     }
+  }
+
+  static async getAdultPatientsByStudentId(studentId) {
+    return this.consultarPacientesAdultosPorEstudiante(studentId);
   }
 }

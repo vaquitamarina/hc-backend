@@ -1,7 +1,7 @@
 import pool from '../../../db/db.js';
 
 class EnfermedadActual {
-  static async create(data) {
+  static async registrar(data) {
     try {
       const query = 'CALL i_enfermedad_actual($1,$2,$3,$4,$5,$6,$7)';
       const values = [
@@ -22,7 +22,7 @@ class EnfermedadActual {
     }
   }
 
-  static async getByHistoria(id_historia) {
+  static async consultarPorHistoria(id_historia) {
     try {
       const query = 'SELECT * FROM enfermedad_actual WHERE id_historia = $1';
       const values = [id_historia];
@@ -37,7 +37,7 @@ class EnfermedadActual {
     }
   }
 
-  static async update(id_historia, data) {
+  static async actualizarPorHistoria(id_historia, data) {
     try {
       const query = 'CALL u_enfermedad_actual($1,$2,$3,$4,$5,$6,$7)';
       const values = [
@@ -56,6 +56,18 @@ class EnfermedadActual {
       // console.error('Error al actualizar enfermedad actual');
       return null;
     }
+  }
+
+  static async create(data) {
+    return this.registrar(data);
+  }
+
+  static async getByHistoria(id_historia) {
+    return this.consultarPorHistoria(id_historia);
+  }
+
+  static async update(id_historia, data) {
+    return this.actualizarPorHistoria(id_historia, data);
   }
 }
 

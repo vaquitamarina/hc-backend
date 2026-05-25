@@ -1,7 +1,7 @@
 import pool from '../../../db/db.js';
 
-const Filiacion = {
-  async create(data) {
+const DatosPersonalesPaciente = {
+  async registrar(data) {
     const query = `CALL i_filiacion($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)`;
     const values = [
       data.id_historia,
@@ -29,19 +29,19 @@ const Filiacion = {
     return { success: true, id_historia: data.id_historia };
   },
 
-  async getById(id_filiacion) {
+  async consultarPorId(id_filiacion) {
     const query = `SELECT * FROM filiacion WHERE id_filiacion = $1`;
     const { rows } = await pool.query(query, [id_filiacion]);
     return rows[0];
   },
 
-  async getByHistoria(id_historia) {
+  async consultarPorHistoria(id_historia) {
     const query = `SELECT * FROM filiacion WHERE id_historia = $1`;
     const { rows } = await pool.query(query, [id_historia]);
     return rows[0];
   },
 
-  async update(id_historia, data) {
+  async actualizarPorHistoria(id_historia, data) {
     const query = `CALL u_filiacion($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)`;
     const values = [
       id_historia,
@@ -68,6 +68,22 @@ const Filiacion = {
     await pool.query(query, values);
     return { success: true, id_historia };
   },
+
+  async create(data) {
+    return this.registrar(data);
+  },
+
+  async getById(id_filiacion) {
+    return this.consultarPorId(id_filiacion);
+  },
+
+  async getByHistoria(id_historia) {
+    return this.consultarPorHistoria(id_historia);
+  },
+
+  async update(id_historia, data) {
+    return this.actualizarPorHistoria(id_historia, data);
+  },
 };
 
-export default Filiacion;
+export default DatosPersonalesPaciente;

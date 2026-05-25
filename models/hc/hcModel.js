@@ -774,4 +774,100 @@ export class HcModel {
       throw error;
     }
   }
+
+  static async registrarRevisionHistoriaClinica(reviewData) {
+    return this.createReview(reviewData);
+  }
+
+  static async consultarDatosPersonalesPorHistoriaClinica(idHistory) {
+    return this.getFiliationByIdHistory(idHistory);
+  }
+
+  static async registrarHistoriaClinica(idStudent) {
+    return this.registerHc(idStudent);
+  }
+
+  static async listarHistoriasClinicasPorEstudiante(studentId) {
+    return this.getAllByStudentId(studentId);
+  }
+
+  static async obtenerBorradorHistoriaClinica(idStudent) {
+    return this.createDraft(idStudent);
+  }
+
+  static async asignarPacienteAHistoriaClinica(idHistory, idPatient) {
+    return this.assignPatient(idHistory, idPatient);
+  }
+
+  static async consultarPacientePorHistoriaClinica(idHistory) {
+    return this.getPatientByHistory(idHistory);
+  }
+
+  static async actualizarDatosPersonalesHistoriaClinica(filiationData) {
+    return this.updateFiliation(filiationData);
+  }
+
+  static async consultarExamenFisicoGeneralPorHistoria(idHistory) {
+    return this.getGeneralExam(idHistory);
+  }
+
+  static async actualizarExamenFisicoGeneralPorHistoria(examData) {
+    return this.updateGeneralExam(examData);
+  }
+
+  static async consultarExamenFisicoRegionalPorHistoria(idHistory) {
+    return this.getRegionalExam(idHistory);
+  }
+
+  static async actualizarExamenFisicoRegionalPorHistoria(data) {
+    return this.updateRegionalExam(data);
+  }
+
+  static async consultarExamenBucalPorHistoria(idHistory) {
+    return this.getExamBoca(idHistory);
+  }
+
+  static async actualizarExamenBucalPorHistoria(data) {
+    return this.updateExamBoca(data);
+  }
+
+  static async consultarHigieneBucalPorHistoria(idHistory) {
+    return this.getHigieneOral(idHistory);
+  }
+
+  static async actualizarHigieneBucal(data) {
+    return this.updateHigieneOral(data);
+  }
+
+  static async consultarDiagnosticoPresuntivoPorHistoria(idHistory) {
+    return this.getDiagnosticoPresuntivo(idHistory);
+  }
+
+  static async actualizarDiagnosticoPresuntivoPorHistoria(data) {
+    return this.updateDiagnosticoPresuntivo(data);
+  }
+
+  static async consultarDerivacionPorHistoria(idHistory) {
+    return this.getDerivacion(idHistory);
+  }
+
+  static async actualizarDerivacionPorHistoria(data) {
+    return this.updateDerivacion(data);
+  }
+
+  static async consultarDiagnosticoClinicoPorHistoria(idHistory) {
+    return this.getDiagnosticoClinicas(idHistory);
+  }
+
+  static async actualizarDiagnosticoClinicoPorHistoria(data) {
+    return this.updateDiagnosticoClinicas(data);
+  }
+
+  static async consultarEvolucionesPorHistoria(idHistory) {
+    return this.getEvolucion(idHistory);
+  }
+
+  static async registrarEvolucionClinica(data) {
+    return this.addEvolucion(data);
+  }
 }

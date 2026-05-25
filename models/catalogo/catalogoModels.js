@@ -18,7 +18,7 @@ const allowedCatalogs = [
   'catalogo_movimiento_mandibular',
 ];
 
-export async function getCatalogo(nombre) {
+export async function listarOpcionesCatalogoClinico(nombre) {
   if (!allowedCatalogs.includes(nombre)) {
     throw new Error('Catalog not allowed');
   }
@@ -27,7 +27,7 @@ export async function getCatalogo(nombre) {
 }
 
 // Obtener el registro por id y devolver el nombre
-export async function getCatalogoNombrePorId(nombre, id) {
+export async function obtenerNombreOpcionCatalogoClinico(nombre, id) {
   if (!allowedCatalogs.includes(nombre)) {
     throw new Error('Catalog not allowed');
   }
@@ -43,4 +43,4 @@ export async function getCatalogoNombrePorId(nombre, id) {
   return row.nombre || row.descripcion || null;
 }
 
-export default getCatalogo;
+export default listarOpcionesCatalogoClinico;

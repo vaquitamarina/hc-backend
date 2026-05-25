@@ -3,7 +3,7 @@ import BaseService from '../../../services/baseService.js';
 
 const enfermedadActualService = new BaseService(EnfermedadActual);
 
-export const createEnfermedadActual = async (req, res) => {
+export const registrarEnfermedadActual = async (req, res) => {
   try {
     const result = await enfermedadActualService.create(req.body);
     if (!result) {
@@ -20,10 +20,10 @@ export const createEnfermedadActual = async (req, res) => {
   }
 };
 
-export const getEnfermedadActual = async (req, res) => {
+export const consultarEnfermedadActual = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await EnfermedadActual.getByHistoria(id_historia);
+    const result = await EnfermedadActual.consultarPorHistoria(id_historia);
     if (!result) {
       return res.status(404).json({
         error:
@@ -39,11 +39,11 @@ export const getEnfermedadActual = async (req, res) => {
   }
 };
 
-export const updateEnfermedadActual = async (req, res) => {
+export const actualizarEnfermedadActual = async (req, res) => {
   try {
     const { id_historia } = req.params;
     // Busca la enfermedad actual por id_historia
-    const enfermedad = await EnfermedadActual.getByHistoria(id_historia);
+    const enfermedad = await EnfermedadActual.consultarPorHistoria(id_historia);
     if (!enfermedad) {
       return res.status(404).json({
         error:

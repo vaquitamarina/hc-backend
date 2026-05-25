@@ -1,21 +1,21 @@
 import BaseService from '../../../services/baseService.js';
-import ExamenGeneral from '../../../models/hc/examenFisico/examenGeneralModel.js';
+import ExamenFisicoGeneral from '../../../models/hc/examenFisico/examenGeneralModel.js';
 
-export const examenGeneralService = new BaseService(ExamenGeneral);
+export const servicioExamenFisicoGeneral = new BaseService(ExamenFisicoGeneral);
 
-export const createExamenGeneral = async (req, res) => {
+export const registrarExamenFisicoGeneral = async (req, res) => {
   try {
-    const result = await examenGeneralService.create(req.body);
+    const result = await servicioExamenFisicoGeneral.create(req.body);
     res.status(201).json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const getExamenGeneral = async (req, res) => {
+export const consultarExamenFisicoGeneral = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await ExamenGeneral.getByHistoria(id_historia);
+    const result = await ExamenFisicoGeneral.consultarPorHistoria(id_historia);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
@@ -25,14 +25,14 @@ export const getExamenGeneral = async (req, res) => {
   }
 };
 
-export const updateExamenGeneral = async (req, res) => {
+export const actualizarExamenFisicoGeneral = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const examen = await ExamenGeneral.getByHistoria(id_historia);
+    const examen = await ExamenFisicoGeneral.consultarPorHistoria(id_historia);
     if (!examen) {
       return res.status(404).json({ error: 'No encontrado' });
     }
-    const result = await examenGeneralService.update(
+    const result = await servicioExamenFisicoGeneral.update(
       examen.id_examen,
       req.body
     );

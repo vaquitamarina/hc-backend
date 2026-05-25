@@ -12,5 +12,5 @@ const studentController = new StudentController(StudentModel);
 studentRoutes.use(authMiddleware);
 studentRoutes.get(
   '/:id/patients/adult',
-  studentController.getAdultPatientsByStudentId
+  studentController.consultarPacientesAdultosPorEstudiante
 );

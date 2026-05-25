@@ -6,12 +6,12 @@ export class UserController {
     this.UserModel = UserModel;
   }
 
-  getAll = async (req, res) => {
-    const users = await this.UserModel.getAll();
+  listarUsuarios = async (req, res) => {
+    const users = await this.UserModel.listarUsuarios();
     res.json(users);
   };
 
-  register = async (req, res) => {
+  registrarUsuario = async (req, res) => {
     const { userCode, firstName, lastName, dni, email, role, password } =
       req.body;
     const result = validatePasswd(password);
@@ -20,7 +20,7 @@ export class UserController {
         error: JSON.parse(result.error.message).map((e) => e.message),
       });
     }
-    const newUser = await this.UserModel.register(
+    const newUser = await this.UserModel.registrarUsuario(
       userCode,
       firstName,
       lastName,
@@ -35,9 +35,9 @@ export class UserController {
     res.status(201).json(newUser);
   };
 
-  login = async (req, res) => {
+  iniciarSesion = async (req, res) => {
     const { userCode, password } = req.body;
-    const user = await this.UserModel.login(userCode, password);
+    const user = await this.UserModel.autenticarUsuario(userCode, password);
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -45,9 +45,9 @@ export class UserController {
     res.status(200).json({ ...user, token });
   };
 
-  getUserById = async (req, res) => {
+  obtenerUsuarioPorId = async (req, res) => {
     const { id } = req.params;
-    const user = await this.UserModel.getUserById(id);
+    const user = await this.UserModel.obtenerUsuarioPorId(id);
     if (!user) {
       return res.status(404).json({
         success: false,

@@ -9,13 +9,13 @@ export const userRoutes = Router();
 const userController = new UserController(UserModel);
 const authController = new AuthController(UserModel);
 
-userRoutes.post('/register', userController.register);
-userRoutes.post('/login', authController.login);
+userRoutes.post('/register', userController.registrarUsuario);
+userRoutes.post('/login', authController.iniciarSesion);
 userRoutes.use(authMiddleware);
-userRoutes.post('/logout', authController.logout);
+userRoutes.post('/logout', authController.cerrarSesion);
 
-userRoutes.get('/me', authController.getCurrentUser);
-userRoutes.get('/:id', userController.getUserById);
+userRoutes.get('/me', authController.obtenerSesionActual);
+userRoutes.get('/:id', userController.obtenerUsuarioPorId);
 
 //midddlware de admins(a futuro)
-userRoutes.get('/', userController.getAll);
+userRoutes.get('/', userController.listarUsuarios);

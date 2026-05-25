@@ -3,7 +3,7 @@ export class StudentController {
     this.StudentModel = StudentModel;
   }
 
-  getAdultPatientsByStudentId = async (req, res) => {
+  consultarPacientesAdultosPorEstudiante = async (req, res) => {
     const { id } = req.params;
 
     // Simple validation: UUID should have 36 characters
@@ -14,13 +14,14 @@ export class StudentController {
     }
 
     // Call the model to get adult patients
-    const patients = await this.StudentModel.getAdultPatientsByStudentId(id);
+    const patients =
+      await this.StudentModel.consultarPacientesAdultosPorEstudiante(id);
 
     // Return the patients array (could be empty)
     res.status(200).json(patients);
   };
 
-  registerPatient = async (req, res) => {
+  registrarPacienteParaEstudiante = async (req, res) => {
     const { studentId } = req.params;
     const { nombreCompleto, edad, idSexo, telefono, email } = req.body;
 
@@ -39,7 +40,7 @@ export class StudentController {
     }
 
     // Call the model to register the patient
-    const newPatient = await this.StudentModel.registerPatient(
+    const newPatient = await this.StudentModel.registrarPacienteParaEstudiante(
       studentId,
       nombreCompleto,
       edad,

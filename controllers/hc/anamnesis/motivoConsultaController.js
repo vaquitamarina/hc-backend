@@ -2,7 +2,7 @@ import MotivoConsulta from '../../../models/hc/anamnesis/motivoConsultaModel.js'
 import BaseService from '../../../services/baseService.js';
 
 const motivoConsultaService = new BaseService(MotivoConsulta);
-export const createMotivoConsulta = async (req, res) => {
+export const registrarMotivoConsulta = async (req, res) => {
   try {
     const ok = await motivoConsultaService.create(req.body);
     if (ok) {
@@ -14,17 +14,17 @@ export const createMotivoConsulta = async (req, res) => {
       .status(400)
       .json({ error: 'No se pudo registrar el motivo de consulta' });
   } catch (err) {
-    // console.error('Error en createMotivoConsulta:', err);
+    // console.error('Error en registrarMotivoConsulta:', err);
     return res.status(400).json({
       error: err.message || 'Error al registrar el motivo de consulta',
     });
   }
 };
 
-export const getMotivoConsulta = async (req, res) => {
+export const consultarMotivoConsulta = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await MotivoConsulta.getByHistoria(id_historia);
+    const result = await MotivoConsulta.consultarPorHistoria(id_historia);
     if (!result) {
       return res.status(404).json({
         error:
@@ -40,11 +40,11 @@ export const getMotivoConsulta = async (req, res) => {
   }
 };
 
-export const updateMotivoConsulta = async (req, res) => {
+export const actualizarMotivoConsulta = async (req, res) => {
   try {
     const { id_historia } = req.params;
     // Busca el motivo por id_historia
-    const motivo = await MotivoConsulta.getByHistoria(id_historia);
+    const motivo = await MotivoConsulta.consultarPorHistoria(id_historia);
     if (!motivo) {
       return res.status(404).json({
         error:

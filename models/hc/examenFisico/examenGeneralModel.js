@@ -2,8 +2,8 @@ import pool from '../../../db/db.js';
 
 const TABLE = 'examen_general';
 
-class ExamenGeneral {
-  static async create(data) {
+class ExamenFisicoGeneral {
+  static async registrar(data) {
     try {
       const keys = Object.keys(data);
       const values = Object.values(data);
@@ -21,7 +21,7 @@ class ExamenGeneral {
     }
   }
 
-  static async getByHistoria(id_historia) {
+  static async consultarPorHistoria(id_historia) {
     try {
       const query = `SELECT * FROM ${TABLE} WHERE id_historia = $1 LIMIT 1`;
       const { rows } = await pool.query(query, [id_historia]);
@@ -35,7 +35,7 @@ class ExamenGeneral {
     }
   }
 
-  static async update(id_examen, data) {
+  static async actualizarPorId(id_examen, data) {
     try {
       const keys = Object.keys(data);
       const values = Object.values(data);
@@ -51,6 +51,18 @@ class ExamenGeneral {
       return null;
     }
   }
+
+  static async create(data) {
+    return this.registrar(data);
+  }
+
+  static async getByHistoria(id_historia) {
+    return this.consultarPorHistoria(id_historia);
+  }
+
+  static async update(id_examen, data) {
+    return this.actualizarPorId(id_examen, data);
+  }
 }
 
-export default ExamenGeneral;
+export default ExamenFisicoGeneral;

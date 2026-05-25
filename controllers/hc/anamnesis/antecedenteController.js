@@ -1,30 +1,31 @@
 import {
-  AntecedentePersonal,
-  AntecedenteMedico,
-  AntecedenteFamiliar,
-  AntecedenteCumplimiento,
+  AntecedentesPersonalesNoPatologicos,
+  AntecedentesPersonalesPatologicos,
+  AntecedentesHeredoFamiliares,
+  SeguimientoDelTratamiento,
 } from '../../../models/hc/anamnesis/antecedenteModel.js';
 // --- Antecedente Cumplimiento ---
-export const createAntecedenteCumplimiento = async (req, res) => {
+export const registrarSeguimientoDelTratamiento = async (req, res) => {
   try {
-    const ok = await AntecedenteCumplimiento.create(req.body);
+    const ok = await SeguimientoDelTratamiento.registrar(req.body);
     if (ok) {
       return res.status(201).json({
-        message: 'Antecedente de cumplimiento registrado correctamente',
+        message: 'Seguimiento del tratamiento registrado correctamente',
       });
     }
     return res
       .status(500)
-      .json({ error: 'No se pudo registrar el antecedente de cumplimiento' });
+      .json({ error: 'No se pudo registrar el seguimiento del tratamiento' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const getAntecedenteCumplimiento = async (req, res) => {
+export const consultarSeguimientoDelTratamiento = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await AntecedenteCumplimiento.getByHistoria(id_historia);
+    const result =
+      await SeguimientoDelTratamiento.consultarPorHistoria(id_historia);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
@@ -34,43 +35,47 @@ export const getAntecedenteCumplimiento = async (req, res) => {
   }
 };
 
-export const updateAntecedenteCumplimiento = async (req, res) => {
+export const actualizarSeguimientoDelTratamiento = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const ok = await AntecedenteCumplimiento.update(id_historia, req.body);
+    const ok = await SeguimientoDelTratamiento.actualizarPorHistoria(
+      id_historia,
+      req.body
+    );
     if (ok) {
       return res.status(200).json({
-        message: 'Antecedente de cumplimiento actualizado correctamente',
+        message: 'Seguimiento del tratamiento actualizado correctamente',
       });
     }
     return res
       .status(500)
-      .json({ error: 'No se pudo actualizar el antecedente de cumplimiento' });
+      .json({ error: 'No se pudo actualizar el seguimiento del tratamiento' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 // --- Antecedente Familiar ---
-export const createAntecedenteFamiliar = async (req, res) => {
+export const registrarAntecedentesHeredoFamiliares = async (req, res) => {
   try {
-    const ok = await AntecedenteFamiliar.create(req.body);
+    const ok = await AntecedentesHeredoFamiliares.registrar(req.body);
     if (ok) {
-      return res
-        .status(201)
-        .json({ message: 'Antecedente familiar registrado correctamente' });
+      return res.status(201).json({
+        message: 'Antecedentes heredo familiares registrados correctamente',
+      });
     }
-    return res
-      .status(500)
-      .json({ error: 'No se pudo registrar el antecedente familiar' });
+    return res.status(500).json({
+      error: 'No se pudieron registrar los antecedentes heredo familiares',
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const getAntecedenteFamiliar = async (req, res) => {
+export const consultarAntecedentesHeredoFamiliares = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await AntecedenteFamiliar.getByHistoria(id_historia);
+    const result =
+      await AntecedentesHeredoFamiliares.consultarPorHistoria(id_historia);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
@@ -80,47 +85,63 @@ export const getAntecedenteFamiliar = async (req, res) => {
   }
 };
 
-export const updateAntecedenteFamiliar = async (req, res) => {
+export const actualizarAntecedentesHeredoFamiliares = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const ok = await AntecedenteFamiliar.update(id_historia, req.body);
+    const ok = await AntecedentesHeredoFamiliares.actualizarPorHistoria(
+      id_historia,
+      req.body
+    );
     if (ok) {
-      return res
-        .status(200)
-        .json({ message: 'Antecedente familiar actualizado correctamente' });
+      return res.status(200).json({
+        message: 'Antecedentes heredo familiares actualizados correctamente',
+      });
     }
-    return res
-      .status(500)
-      .json({ error: 'No se pudo actualizar el antecedente familiar' });
+    return res.status(500).json({
+      error: 'No se pudieron actualizar los antecedentes heredo familiares',
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 // --- Antecedente Personal ---
-export const createAntecedentePersonal = async (req, res) => {
+export const registrarAntecedentesPersonalesNoPatologicos = async (
+  req,
+  res
+) => {
   try {
-    const ok = await AntecedentePersonal.create(req.body);
+    const ok = await AntecedentesPersonalesNoPatologicos.registrar(req.body);
     if (ok) {
-      return res
-        .status(201)
-        .json({ message: 'Antecedente personal registrado correctamente' });
+      return res.status(201).json({
+        message:
+          'Antecedentes personales no patológicos registrados correctamente',
+      });
     }
-    return res
-      .status(500)
-      .json({ error: 'No se pudo registrar el antecedente personal' });
+    return res.status(500).json({
+      error:
+        'No se pudieron registrar los antecedentes personales no patológicos',
+    });
   } catch (err) {
-    // console.error('Error en createAntecedentePersonal:', err);
+    // console.error('Error en registrarAntecedentesPersonalesNoPatologicos:', err);
     return res.status(400).json({
-      error: err.message || 'Error al registrar el antecedente personal',
+      error:
+        err.message ||
+        'Error al registrar los antecedentes personales no patológicos',
     });
   }
 };
 
-export const getAntecedentePersonal = async (req, res) => {
+export const consultarAntecedentesPersonalesNoPatologicos = async (
+  req,
+  res
+) => {
   try {
     const { id_historia } = req.params;
-    const result = await AntecedentePersonal.getByHistoria(id_historia);
+    const result =
+      await AntecedentesPersonalesNoPatologicos.consultarPorHistoria(
+        id_historia
+      );
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
@@ -130,47 +151,59 @@ export const getAntecedentePersonal = async (req, res) => {
   }
 };
 
-export const updateAntecedentePersonal = async (req, res) => {
+export const actualizarAntecedentesPersonalesNoPatologicos = async (
+  req,
+  res
+) => {
   try {
     const { id_historia } = req.params;
-    const ok = await AntecedentePersonal.update(id_historia, req.body);
+    const ok = await AntecedentesPersonalesNoPatologicos.actualizarPorHistoria(
+      id_historia,
+      req.body
+    );
     if (ok) {
-      return res
-        .status(200)
-        .json({ message: 'Antecedente personal actualizado correctamente' });
+      return res.status(200).json({
+        message:
+          'Antecedentes personales no patológicos actualizados correctamente',
+      });
     }
-    return res
-      .status(500)
-      .json({ error: 'No se pudo actualizar el antecedente personal' });
+    return res.status(500).json({
+      error:
+        'No se pudieron actualizar los antecedentes personales no patológicos',
+    });
   } catch (err) {
-    // console.error('Error en updateAntecedentePersonal:', err);
+    // console.error('Error en actualizarAntecedentesPersonalesNoPatologicos:', err);
     return res.status(400).json({
-      error: err.message || 'Error al actualizar el antecedente personal',
+      error:
+        err.message ||
+        'Error al actualizar los antecedentes personales no patológicos',
     });
   }
 };
 
 // --- Antecedente Médico ---
-export const createAntecedenteMedico = async (req, res) => {
+export const registrarAntecedentesPersonalesPatologicos = async (req, res) => {
   try {
-    const ok = await AntecedenteMedico.create(req.body);
+    const ok = await AntecedentesPersonalesPatologicos.registrar(req.body);
     if (ok) {
-      return res
-        .status(201)
-        .json({ message: 'Antecedente médico registrado correctamente' });
+      return res.status(201).json({
+        message:
+          'Antecedentes personales patológicos registrados correctamente',
+      });
     }
-    return res
-      .status(500)
-      .json({ error: 'No se pudo registrar el antecedente médico' });
+    return res.status(500).json({
+      error: 'No se pudieron registrar los antecedentes personales patológicos',
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-export const getAntecedenteMedico = async (req, res) => {
+export const consultarAntecedentesPersonalesPatologicos = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await AntecedenteMedico.getByHistoria(id_historia);
+    const result =
+      await AntecedentesPersonalesPatologicos.consultarPorHistoria(id_historia);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
@@ -180,18 +213,23 @@ export const getAntecedenteMedico = async (req, res) => {
   }
 };
 
-export const updateAntecedenteMedico = async (req, res) => {
+export const actualizarAntecedentesPersonalesPatologicos = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const ok = await AntecedenteMedico.update(id_historia, req.body);
+    const ok = await AntecedentesPersonalesPatologicos.actualizarPorHistoria(
+      id_historia,
+      req.body
+    );
     if (ok) {
-      return res
-        .status(200)
-        .json({ message: 'Antecedente médico actualizado correctamente' });
+      return res.status(200).json({
+        message:
+          'Antecedentes personales patológicos actualizados correctamente',
+      });
     }
-    return res
-      .status(500)
-      .json({ error: 'No se pudo actualizar el antecedente médico' });
+    return res.status(500).json({
+      error:
+        'No se pudieron actualizar los antecedentes personales patológicos',
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
