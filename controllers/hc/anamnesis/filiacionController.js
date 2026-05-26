@@ -1,11 +1,25 @@
-import Filiacion from '../../../models/hc/anamnesis/filiacionModel.js';
-import BaseService from '../../../services/baseService.js';
+import Filiacion, {
+  FiliacionAggregate,
+} from '../../../models/hc/anamnesis/filiacionModel.js';
 
-const filiacionService = new BaseService(Filiacion);
+const construirAgregado = (req) =>
+  new FiliacionAggregate({
+    ...req.body,
+    id_historia: req.params.id_historia ?? req.body.id_historia,
+  });
 
 export const registrarDatosPersonalesPaciente = async (req, res) => {
+  let agregado;
   try {
-    const ok = await filiacionService.create(req.body);
+    agregado = construirAgregado(req);
+  } catch (err) {
+    return res
+      .status(400)
+      .json({ error: err.message || 'Error al registrar la filiación' });
+  }
+
+  try {
+    const ok = await Filiacion.create(agregado);
     if (ok) {
       return res
         .status(201)
@@ -13,9 +27,8 @@ export const registrarDatosPersonalesPaciente = async (req, res) => {
     }
     return res.status(400).json({ error: 'No se pudo registrar la filiación' });
   } catch (err) {
-    // console.error('Error en registrarDatosPersonalesPaciente:', err);
     return res
-      .status(400)
+      .status(500)
       .json({ error: err.message || 'Error al registrar la filiación' });
   }
 };
@@ -23,33 +36,40 @@ export const registrarDatosPersonalesPaciente = async (req, res) => {
 export const consultarDatosPersonalesPaciente = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await Filiacion.consultarPorHistoria(id_historia);
+    const result = await Filiacion.getByHistoria(id_historia);
     if (!result) {
       return res.status(404).json({
         error: 'No se encontró filiación para la historia clínica indicada',
       });
     }
-    res.status(200).json({
+    return res.status(200).json({
       message: 'Filiación obtenida correctamente',
       data: result,
     });
   } catch {
-    res.status(500).json({ error: 'Error al obtener la filiación' });
+    return res.status(500).json({ error: 'Error al obtener la filiación' });
   }
 };
 
 export const actualizarDatosPersonalesPaciente = async (req, res) => {
+  let filiacion;
   try {
     const { id_historia } = req.params;
-    // Busca la filiación por id_historia
-    const filiacion = await Filiacion.consultarPorHistoria(id_historia);
+    filiacion = await Filiacion.getByHistoria(id_historia);
     if (!filiacion) {
       return res.status(404).json({
         error: 'No se encontró filiación para la historia clínica indicada',
       });
     }
-    // Actualiza usando el id_historia directamente
-    const ok = await filiacionService.update(id_historia, req.body);
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: err.message || 'Error al actualizar la filiación' });
+  }
+
+  try {
+    const agregado = construirAgregado(req);
+    const ok = await Filiacion.update(agregado);
     if (ok) {
       return res
         .status(200)
@@ -59,9 +79,12 @@ export const actualizarDatosPersonalesPaciente = async (req, res) => {
       .status(500)
       .json({ error: 'No se pudo actualizar la filiación' });
   } catch (err) {
-    // console.error('Error en actualizarDatosPersonalesPaciente:', err);
-    res
-      .status(500)
+    return res
+      .status(400)
       .json({ error: err.message || 'Error al actualizar la filiación' });
   }
 };
+
+export const createFiliacion = registrarDatosPersonalesPaciente;
+export const getFiliacion = consultarDatosPersonalesPaciente;
+export const updateFiliacion = actualizarDatosPersonalesPaciente;

@@ -12,7 +12,7 @@ describe('MotivoConsulta', () => {
   it('create: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
     const result = await MotivoConsulta.create({
-      id_historia: 1,
+      id_historia: '550e8400-e29b-41d4-a716-446655440000',
       motivo: 'dolor',
     });
     expect(result).toBe(true);
@@ -21,7 +21,10 @@ describe('MotivoConsulta', () => {
   it('create: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      MotivoConsulta.create({ id_historia: 1, motivo: 'dolor' })
+      MotivoConsulta.create({
+        id_historia: '550e8400-e29b-41d4-a716-446655440000',
+        motivo: 'dolor',
+      })
     ).rejects.toThrow('fail');
   });
 
@@ -45,32 +48,43 @@ describe('MotivoConsulta', () => {
 
   it('getByHistoria: con resultado', async () => {
     pool.query = vi.fn().mockResolvedValue({ rows: [{ id_historia: 1 }] });
-    const result = await MotivoConsulta.getByHistoria(1);
+    const result = await MotivoConsulta.getByHistoria(
+      '550e8400-e29b-41d4-a716-446655440000'
+    );
     expect(result).toEqual({ id_historia: 1 });
   });
 
   it('getByHistoria: sin resultado', async () => {
     pool.query = vi.fn().mockResolvedValue({ rows: [] });
-    const result = await MotivoConsulta.getByHistoria(1);
+    const result = await MotivoConsulta.getByHistoria(
+      '550e8400-e29b-41d4-a716-446655440000'
+    );
     expect(result).toBeNull();
   });
 
   it('getByHistoria: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
-    const result = await MotivoConsulta.getByHistoria(1);
+    const result = await MotivoConsulta.getByHistoria(
+      '550e8400-e29b-41d4-a716-446655440000'
+    );
     expect(result).toBeNull();
   });
 
   it('update: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await MotivoConsulta.update(1, { motivo: 'dolor' });
+    const result = await MotivoConsulta.update(
+      '550e8400-e29b-41d4-a716-446655440000',
+      { motivo: 'dolor' }
+    );
     expect(result).toBe(true);
   });
 
   it('update: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
-    await expect(MotivoConsulta.update(1, { motivo: 'dolor' })).rejects.toThrow(
-      'fail'
-    );
+    await expect(
+      MotivoConsulta.update('550e8400-e29b-41d4-a716-446655440000', {
+        motivo: 'dolor',
+      })
+    ).rejects.toThrow('fail');
   });
 });

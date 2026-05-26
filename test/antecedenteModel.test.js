@@ -9,9 +9,13 @@ afterEach(() => {
 });
 
 describe('AntecedentePersonal', () => {
+  const historiaId = '550e8400-e29b-41d4-a716-446655440000';
+
   it('create: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await AntecedenteModel.AntecedentePersonal.create({});
+    const result = await AntecedenteModel.AntecedentePersonal.create({
+      id_historia: historiaId,
+    });
     expect(result).toBe(true);
   });
 
@@ -20,25 +24,32 @@ describe('AntecedentePersonal', () => {
       .fn()
       .mockRejectedValue({ message: 'fail', detail: 'detalle' });
     await expect(
-      AntecedenteModel.AntecedentePersonal.create({})
+      AntecedenteModel.AntecedentePersonal.create({ id_historia: historiaId })
     ).rejects.toThrow('fail');
   });
 
   it('getById: sin resultados', async () => {
     pool.query = vi.fn().mockResolvedValue({ rows: [] });
-    const result = await AntecedenteModel.AntecedentePersonal.getById(1);
+    const result =
+      await AntecedenteModel.AntecedentePersonal.getById(historiaId);
     expect(result).toBeNull();
   });
 
   it('getById: con resultado', async () => {
-    pool.query = vi.fn().mockResolvedValue({ rows: [{ id_antecedente: 1 }] });
-    const result = await AntecedenteModel.AntecedentePersonal.getById(1);
-    expect(result).toEqual({ id_antecedente: 1 });
+    pool.query = vi
+      .fn()
+      .mockResolvedValue({ rows: [{ id_antecedente: historiaId }] });
+    const result =
+      await AntecedenteModel.AntecedentePersonal.getById(historiaId);
+    expect(result).toEqual({ id_antecedente: historiaId });
   });
 
   it('update: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await AntecedenteModel.AntecedentePersonal.update(1, {});
+    const result = await AntecedenteModel.AntecedentePersonal.update(
+      historiaId,
+      { id_historia: historiaId }
+    );
     expect(result).toBe(true);
   });
 
@@ -47,14 +58,18 @@ describe('AntecedentePersonal', () => {
       .fn()
       .mockRejectedValue({ message: 'fail', detail: 'detalle' });
     await expect(
-      AntecedenteModel.AntecedentePersonal.update(1, {})
+      AntecedenteModel.AntecedentePersonal.update(historiaId, {
+        id_historia: historiaId,
+      })
     ).rejects.toThrow('fail');
   });
 
   it('update: error sin message', async () => {
     pool.query = vi.fn().mockRejectedValue({});
     await expect(
-      AntecedenteModel.AntecedentePersonal.update(1, {})
+      AntecedenteModel.AntecedentePersonal.update(historiaId, {
+        id_historia: historiaId,
+      })
     ).rejects.toThrow('Error al actualizar antecedente personal');
   });
 
@@ -62,48 +77,60 @@ describe('AntecedentePersonal', () => {
 });
 
 describe('AntecedenteMedico', () => {
+  const historiaId = '550e8400-e29b-41d4-a716-446655440000';
+
   it('create: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await AntecedenteModel.AntecedenteMedico.create({});
+    const result = await AntecedenteModel.AntecedenteMedico.create({
+      id_historia: historiaId,
+    });
     expect(result).toBe(true);
   });
 
   it('create: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteMedico.create({})
+      AntecedenteModel.AntecedenteMedico.create({ id_historia: historiaId })
     ).rejects.toThrow();
   });
 
   it('getByHistoria: sin resultados', async () => {
     pool.query = vi.fn().mockResolvedValue({ rows: [] });
-    const result = await AntecedenteModel.AntecedenteMedico.getByHistoria(1);
+    const result =
+      await AntecedenteModel.AntecedenteMedico.getByHistoria(historiaId);
     expect(result).toBeNull();
   });
 
   it('getByHistoria: con resultado', async () => {
-    pool.query = vi.fn().mockResolvedValue({ rows: [{ id_historia: 1 }] });
-    const result = await AntecedenteModel.AntecedenteMedico.getByHistoria(1);
-    expect(result).toEqual({ id_historia: 1 });
+    pool.query = vi
+      .fn()
+      .mockResolvedValue({ rows: [{ id_historia: historiaId }] });
+    const result =
+      await AntecedenteModel.AntecedenteMedico.getByHistoria(historiaId);
+    expect(result).toEqual({ id_historia: historiaId });
   });
 
   it('getByHistoria: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteMedico.getByHistoria(1)
+      AntecedenteModel.AntecedenteMedico.getByHistoria(historiaId)
     ).rejects.toThrow();
   });
 
   it('update: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await AntecedenteModel.AntecedenteMedico.update(1, {});
+    const result = await AntecedenteModel.AntecedenteMedico.update(historiaId, {
+      id_historia: historiaId,
+    });
     expect(result).toBe(true);
   });
 
   it('update: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteMedico.update(1, {})
+      AntecedenteModel.AntecedenteMedico.update(historiaId, {
+        id_historia: historiaId,
+      })
     ).rejects.toThrow();
   });
   it('update: error con detail', async () => {
@@ -111,53 +138,68 @@ describe('AntecedenteMedico', () => {
       .fn()
       .mockRejectedValue({ message: 'fail', detail: 'detalle' });
     await expect(
-      AntecedenteModel.AntecedenteMedico.update(1, {})
+      AntecedenteModel.AntecedenteMedico.update(historiaId, {
+        id_historia: historiaId,
+      })
     ).rejects.toThrow();
   });
 });
 
 describe('AntecedenteFamiliar', () => {
+  const historiaId = '550e8400-e29b-41d4-a716-446655440000';
+
   it('create: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await AntecedenteModel.AntecedenteFamiliar.create({});
+    const result = await AntecedenteModel.AntecedenteFamiliar.create({
+      id_historia: historiaId,
+    });
     expect(result).toBe(true);
   });
 
   it('create: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteFamiliar.create({})
+      AntecedenteModel.AntecedenteFamiliar.create({ id_historia: historiaId })
     ).rejects.toThrow();
   });
 
   it('getByHistoria: sin resultados', async () => {
     pool.query = vi.fn().mockResolvedValue({ rows: [] });
-    const result = await AntecedenteModel.AntecedenteFamiliar.getByHistoria(1);
+    const result =
+      await AntecedenteModel.AntecedenteFamiliar.getByHistoria(historiaId);
     expect(result).toBeNull();
   });
 
   it('getByHistoria: con resultado', async () => {
-    pool.query = vi.fn().mockResolvedValue({ rows: [{ id_historia: 1 }] });
-    const result = await AntecedenteModel.AntecedenteFamiliar.getByHistoria(1);
-    expect(result).toEqual({ id_historia: 1 });
+    pool.query = vi
+      .fn()
+      .mockResolvedValue({ rows: [{ id_historia: historiaId }] });
+    const result =
+      await AntecedenteModel.AntecedenteFamiliar.getByHistoria(historiaId);
+    expect(result).toEqual({ id_historia: historiaId });
   });
   it('getByHistoria: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteFamiliar.getByHistoria(1)
+      AntecedenteModel.AntecedenteFamiliar.getByHistoria(historiaId)
     ).rejects.toThrow();
   });
 
   it('update: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await AntecedenteModel.AntecedenteFamiliar.update(1, {});
+    const result = await AntecedenteModel.AntecedenteFamiliar.update(
+      historiaId,
+      { id_historia: historiaId }
+    );
     expect(result).toBe(true);
   });
 
   it('update: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteFamiliar.update(1, {})
+      AntecedenteModel.AntecedenteFamiliar.update(historiaId, {
+        id_historia: historiaId,
+      })
     ).rejects.toThrow();
   });
   it('update: error con detail', async () => {
@@ -165,55 +207,70 @@ describe('AntecedenteFamiliar', () => {
       .fn()
       .mockRejectedValue({ message: 'fail', detail: 'detalle' });
     await expect(
-      AntecedenteModel.AntecedenteFamiliar.update(1, {})
+      AntecedenteModel.AntecedenteFamiliar.update(historiaId, {
+        id_historia: historiaId,
+      })
     ).rejects.toThrow();
   });
 });
 
 describe('AntecedenteCumplimiento', () => {
+  const historiaId = '550e8400-e29b-41d4-a716-446655440000';
+
   it('create: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await AntecedenteModel.AntecedenteCumplimiento.create({});
+    const result = await AntecedenteModel.AntecedenteCumplimiento.create({
+      id_historia: historiaId,
+    });
     expect(result).toBe(true);
   });
 
   it('create: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteCumplimiento.create({})
+      AntecedenteModel.AntecedenteCumplimiento.create({
+        id_historia: historiaId,
+      })
     ).rejects.toThrow();
   });
 
   it('getByHistoria: sin resultados', async () => {
     pool.query = vi.fn().mockResolvedValue({ rows: [] });
     const result =
-      await AntecedenteModel.AntecedenteCumplimiento.getByHistoria(1);
+      await AntecedenteModel.AntecedenteCumplimiento.getByHistoria(historiaId);
     expect(result).toBeNull();
   });
 
   it('getByHistoria: con resultado', async () => {
-    pool.query = vi.fn().mockResolvedValue({ rows: [{ id_historia: 1 }] });
+    pool.query = vi
+      .fn()
+      .mockResolvedValue({ rows: [{ id_historia: historiaId }] });
     const result =
-      await AntecedenteModel.AntecedenteCumplimiento.getByHistoria(1);
-    expect(result).toEqual({ id_historia: 1 });
+      await AntecedenteModel.AntecedenteCumplimiento.getByHistoria(historiaId);
+    expect(result).toEqual({ id_historia: historiaId });
   });
   it('getByHistoria: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteCumplimiento.getByHistoria(1)
+      AntecedenteModel.AntecedenteCumplimiento.getByHistoria(historiaId)
     ).rejects.toThrow();
   });
 
   it('update: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await AntecedenteModel.AntecedenteCumplimiento.update(1, {});
+    const result = await AntecedenteModel.AntecedenteCumplimiento.update(
+      historiaId,
+      { id_historia: historiaId }
+    );
     expect(result).toBe(true);
   });
 
   it('update: error', async () => {
     pool.query = vi.fn().mockRejectedValue({ message: 'fail' });
     await expect(
-      AntecedenteModel.AntecedenteCumplimiento.update(1, {})
+      AntecedenteModel.AntecedenteCumplimiento.update(historiaId, {
+        id_historia: historiaId,
+      })
     ).rejects.toThrow();
   });
   it('update: error con detail', async () => {
@@ -221,7 +278,9 @@ describe('AntecedenteCumplimiento', () => {
       .fn()
       .mockRejectedValue({ message: 'fail', detail: 'detalle' });
     await expect(
-      AntecedenteModel.AntecedenteCumplimiento.update(1, {})
+      AntecedenteModel.AntecedenteCumplimiento.update(historiaId, {
+        id_historia: historiaId,
+      })
     ).rejects.toThrow();
   });
 });

@@ -7,40 +7,46 @@ export class PatientController {
     const { nombre, apellido, dni, fechaNacimiento, sexo, telefono, email } =
       req.body;
 
-    // Validar campos requeridos (solo nombre y apellido)
-    if (!nombre || !apellido) {
-      return res.status(400).json({
-        error: 'Los campos nombre y apellido son requeridos.',
-      });
-    }
-
     try {
-      const result = await this.PatientModel.registrarPaciente(
-        nombre,
-        apellido,
+      // Build Value Objects and Aggregate in controller (no data bag)
+      const {
+        NombreValueObject,
+        ApellidoValueObject,
+        FechaNacimientoValueObject,
+        PatientAggregate,
+      } = this.PatientModel;
+      const nombreVO = new NombreValueObject(nombre);
+      const apellidoVO = new ApellidoValueObject(apellido);
+      const fechaVO = new FechaNacimientoValueObject(fechaNacimiento);
+      const agg = new PatientAggregate({
+        nombreVO,
+        apellidoVO,
         dni,
-        fechaNacimiento,
+        fechaNacimientoVO: fechaVO,
         sexo,
         telefono,
-        email
-      );
-
-      res.status(201).json({
-        id: result.id,
+        email,
       });
+
+      const params = agg.obtenerParametrosParaCrear();
+      const result = await this.PatientModel.registrarPaciente(...params);
+
+      res.status(201).json({ id: result.id });
     } catch (error) {
-      // console.error('Error al crear paciente:', error.message);
-
-      // Manejo de errores específicos
-      if (error.message.includes('Ya existe un paciente')) {
-        return res.status(409).json({
-          error: 'Ya existe un paciente con ese DNI.',
-        });
+      if (
+        error.message &&
+        (error.message.includes('nombre') ||
+          error.message.includes('apellido') ||
+          error.message.includes('fechaNacimiento'))
+      ) {
+        return res.status(400).json({ error: error.message });
       }
-
-      res.status(500).json({
-        error: 'Error al crear paciente.',
-      });
+      if (error.message.includes('Ya existe un paciente')) {
+        return res
+          .status(409)
+          .json({ error: 'Ya existe un paciente con ese DNI.' });
+      }
+      res.status(500).json({ error: 'Error al crear paciente.' });
     }
   };
 
@@ -48,33 +54,48 @@ export class PatientController {
     const { id } = req.params;
     const { nombre, apellido, telefono, email } = req.body;
 
-    // Validación básica de UUID
-    if (!id || id.length !== 36) {
-      return res.status(400).json({ error: 'ID de paciente inválido' });
-    }
-
     try {
-      await this.PatientModel.actualizarPaciente(
-        id,
-        nombre,
-        apellido,
+      const {
+        IdUuidValueObject,
+        NombreValueObject,
+        ApellidoValueObject,
+        PatientAggregate,
+      } = this.PatientModel;
+      const idVO = new IdUuidValueObject(id);
+      const nombreVO = nombre ? new NombreValueObject(nombre) : null;
+      const apellidoVO = apellido ? new ApellidoValueObject(apellido) : null;
+      const agg = new PatientAggregate({
+        nombreVO,
+        apellidoVO,
+        dni: null,
+        fechaNacimientoVO: null,
+        sexo: null,
         telefono,
-        email
-      );
-
-      res.status(200).json({
-        message: 'Datos del paciente actualizados correctamente',
+        email,
       });
+
+      const paramsUpdate = agg.obtenerParametrosParaActualizar();
+      await this.PatientModel.actualizarPaciente(idVO.value, ...paramsUpdate);
+
+      res
+        .status(200)
+        .json({ message: 'Datos del paciente actualizados correctamente' });
     } catch (error) {
-      // Si el procedure lanza una excepción (ej. ID no existe), la capturamos aquí
+      if (
+        error.message &&
+        (error.message.includes('ID de paciente') ||
+          error.message.includes('apellido') ||
+          error.message.includes('nombre') ||
+          error.message.includes('fechaNacimiento'))
+      ) {
+        return res.status(400).json({ error: error.message });
+      }
       if (error.message.includes('No existe un paciente')) {
         return res.status(404).json({ error: 'Paciente no encontrado' });
       }
-
-      // console.error('Error en actualizarPaciente:', error);
-      res.status(500).json({
-        error: 'Error interno al actualizar el paciente.',
-      });
+      res
+        .status(500)
+        .json({ error: 'Error interno al actualizar el paciente.' });
     }
   };
 }

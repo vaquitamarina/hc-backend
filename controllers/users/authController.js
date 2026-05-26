@@ -13,7 +13,13 @@ export class AuthController {
         return res.status(400).json({ error: 'Missing credentials' });
       }
 
-      // console.log('Attempting login for userCode:', userCode);
+      const { UserCodeValueObject } = this.UserModel;
+      try {
+        new UserCodeValueObject(userCode);
+      } catch (err) {
+        return res.status(400).json({ error: err.message });
+      }
+
       const user = await this.UserModel.autenticarUsuario(userCode, password);
       if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });

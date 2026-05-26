@@ -9,10 +9,12 @@ afterEach(() => {
 });
 
 describe('Filiacion', () => {
+  const historiaId = '550e8400-e29b-41d4-a716-446655440000';
+
   it('create: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await Filiacion.create({ id_historia: 1 });
-    expect(result).toEqual({ success: true, id_historia: 1 });
+    const result = await Filiacion.create({ id_historia: historiaId });
+    expect(result).toEqual({ success: true, id_historia: historiaId });
   });
 
   it('getById: con resultado', async () => {
@@ -29,7 +31,7 @@ describe('Filiacion', () => {
 
   it('getByHistoria: con resultado', async () => {
     pool.query = vi.fn().mockResolvedValue({ rows: [{ id_historia: 1 }] });
-    const result = await Filiacion.getByHistoria(1);
+    const result = await Filiacion.getByHistoria(historiaId);
     expect(result).toEqual({ id_historia: 1 });
   });
 
@@ -41,7 +43,7 @@ describe('Filiacion', () => {
 
   it('update: éxito', async () => {
     pool.query = vi.fn().mockResolvedValue({});
-    const result = await Filiacion.update(1, {});
-    expect(result).toEqual({ success: true, id_historia: 1 });
+    const result = await Filiacion.update({ id_historia: historiaId });
+    expect(result).toEqual({ success: true, id_historia: historiaId });
   });
 });

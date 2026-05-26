@@ -1,12 +1,18 @@
 import {
   listarOpcionesCatalogoClinico,
   obtenerNombreOpcionCatalogoClinico,
+  CatalogNameValueObject,
+  IdPositiveValueObject,
+  CatalogoAggregate,
 } from '../../models/catalogo/catalogoModels.js';
 
 export const listarOpcionesCatalogoClinicoController = async (req, res) => {
   try {
     const { nombre } = req.params;
-    const result = await listarOpcionesCatalogoClinico(nombre);
+    // Build aggregate and validate in memory
+    const nameVO = new CatalogNameValueObject(nombre);
+    const agg = new CatalogoAggregate({ catalogNameVO: nameVO });
+    const result = await listarOpcionesCatalogoClinico(agg._catalogName.value);
     if (!result || result.length === 0) {
       return res.status(404).json({ error: 'No data found for this catalog' });
     }
@@ -15,6 +21,7 @@ export const listarOpcionesCatalogoClinicoController = async (req, res) => {
       data: result,
     });
   } catch (err) {
+    // ValueObject errors and validation errors map to 400
     return res
       .status(400)
       .json({ error: err.message || 'Error retrieving catalog data' });
@@ -28,7 +35,14 @@ export const obtenerNombreOpcionCatalogoClinicoController = async (
 ) => {
   try {
     const { nombre, id } = req.params;
-    const nombreCatalogo = await obtenerNombreOpcionCatalogoClinico(nombre, id);
+    // Validate in memory using Value Objects and Aggregate
+    const nameVO = new CatalogNameValueObject(nombre);
+    const idVO = new IdPositiveValueObject(id);
+    const agg = new CatalogoAggregate({ catalogNameVO: nameVO });
+    const nombreCatalogo = await obtenerNombreOpcionCatalogoClinico(
+      agg._catalogName.value,
+      idVO.value
+    );
     if (!nombreCatalogo) {
       return res
         .status(404)

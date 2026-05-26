@@ -12,27 +12,40 @@ export class UserController {
   };
 
   registrarUsuario = async (req, res) => {
-    const { userCode, firstName, lastName, dni, email, role, password } =
-      req.body;
-    const result = validatePasswd(password);
-    if (!result.success) {
-      return res.status(400).json({
-        error: JSON.parse(result.error.message).map((e) => e.message),
-      });
+    try {
+      const { userCode, firstName, lastName, dni, email, role, password } =
+        req.body;
+      const result = validatePasswd(password);
+      if (!result.success) {
+        return res.status(400).json({
+          error: JSON.parse(result.error.message).map((e) => e.message),
+        });
+      }
+      const { UserCodeValueObject, EmailValueObject } = this.UserModel;
+      const userCodeVO = new UserCodeValueObject(userCode);
+      const emailVO = new EmailValueObject(email);
+      const newUser = await this.UserModel.registrarUsuario(
+        userCodeVO.value,
+        firstName,
+        lastName,
+        dni,
+        emailVO.value,
+        role,
+        password
+      );
+      if (!newUser) {
+        return res.status(400).json({ error: 'Error registering user' });
+      }
+      return res.status(201).json(newUser);
+    } catch (error) {
+      if (
+        error.message &&
+        (error.message.includes('userCode') || error.message.includes('email'))
+      ) {
+        return res.status(400).json({ error: error.message });
+      }
+      return res.status(500).json({ error: 'Error registering user' });
     }
-    const newUser = await this.UserModel.registrarUsuario(
-      userCode,
-      firstName,
-      lastName,
-      dni,
-      email,
-      role,
-      password
-    );
-    if (!newUser) {
-      return res.status(400).json({ error: 'Error registering user' });
-    }
-    res.status(201).json(newUser);
   };
 
   iniciarSesion = async (req, res) => {

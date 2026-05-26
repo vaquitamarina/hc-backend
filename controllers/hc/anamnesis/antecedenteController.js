@@ -1,13 +1,42 @@
 import {
-  AntecedentesPersonalesNoPatologicos,
-  AntecedentesPersonalesPatologicos,
-  AntecedentesHeredoFamiliares,
-  SeguimientoDelTratamiento,
+  DomainError,
+  IdentificadorUuidValueObject,
+  AntecedentePersonalAggregate,
+  AntecedenteMedicoAggregate,
+  AntecedenteFamiliarAggregate,
+  SeguimientoDelTratamientoAggregate,
+  AntecedentePersonal,
+  AntecedenteMedico,
+  AntecedenteFamiliar,
+  AntecedenteCumplimiento,
 } from '../../../models/hc/anamnesis/antecedenteModel.js';
+
+const construirAgregado = (req) => ({
+  ...req.body,
+  id_historia: req.params.id_historia ?? req.body.id_historia,
+});
+
+const esErrorDominio = (error) =>
+  error instanceof DomainError || error?.name === 'DomainError';
+
+const obtenerHistoriaId = (req) =>
+  new IdentificadorUuidValueObject(
+    req.params.id_historia ?? req.body.id_historia
+  ).value;
 // --- Antecedente Cumplimiento ---
 export const registrarSeguimientoDelTratamiento = async (req, res) => {
+  let agregado;
   try {
-    const ok = await SeguimientoDelTratamiento.registrar(req.body);
+    agregado = new SeguimientoDelTratamientoAggregate(construirAgregado(req));
+  } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const ok = await AntecedenteCumplimiento.create(agregado);
     if (ok) {
       return res.status(201).json({
         message: 'Seguimiento del tratamiento registrado correctamente',
@@ -17,31 +46,42 @@ export const registrarSeguimientoDelTratamiento = async (req, res) => {
       .status(500)
       .json({ error: 'No se pudo registrar el seguimiento del tratamiento' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const consultarSeguimientoDelTratamiento = async (req, res) => {
   try {
-    const { id_historia } = req.params;
-    const result =
-      await SeguimientoDelTratamiento.consultarPorHistoria(id_historia);
+    const idHistoria = obtenerHistoriaId(req);
+    const result = await AntecedenteCumplimiento.getByHistoria(idHistoria);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const actualizarSeguimientoDelTratamiento = async (req, res) => {
+  let idHistoria;
   try {
-    const { id_historia } = req.params;
-    const ok = await SeguimientoDelTratamiento.actualizarPorHistoria(
-      id_historia,
-      req.body
+    idHistoria = obtenerHistoriaId(req);
+  } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const agregado = new SeguimientoDelTratamientoAggregate(
+      construirAgregado(req)
     );
+    const ok = await AntecedenteCumplimiento.update(idHistoria, agregado);
     if (ok) {
       return res.status(200).json({
         message: 'Seguimiento del tratamiento actualizado correctamente',
@@ -51,13 +91,26 @@ export const actualizarSeguimientoDelTratamiento = async (req, res) => {
       .status(500)
       .json({ error: 'No se pudo actualizar el seguimiento del tratamiento' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 // --- Antecedente Familiar ---
 export const registrarAntecedentesHeredoFamiliares = async (req, res) => {
+  let agregado;
   try {
-    const ok = await AntecedentesHeredoFamiliares.registrar(req.body);
+    agregado = new AntecedenteFamiliarAggregate(construirAgregado(req));
+  } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const ok = await AntecedenteFamiliar.create(agregado);
     if (ok) {
       return res.status(201).json({
         message: 'Antecedentes heredo familiares registrados correctamente',
@@ -67,31 +120,40 @@ export const registrarAntecedentesHeredoFamiliares = async (req, res) => {
       error: 'No se pudieron registrar los antecedentes heredo familiares',
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const consultarAntecedentesHeredoFamiliares = async (req, res) => {
   try {
-    const { id_historia } = req.params;
-    const result =
-      await AntecedentesHeredoFamiliares.consultarPorHistoria(id_historia);
+    const idHistoria = obtenerHistoriaId(req);
+    const result = await AntecedenteFamiliar.getByHistoria(idHistoria);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const actualizarAntecedentesHeredoFamiliares = async (req, res) => {
+  let idHistoria;
   try {
-    const { id_historia } = req.params;
-    const ok = await AntecedentesHeredoFamiliares.actualizarPorHistoria(
-      id_historia,
-      req.body
-    );
+    idHistoria = obtenerHistoriaId(req);
+  } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const agregado = new AntecedenteFamiliarAggregate(construirAgregado(req));
+    const ok = await AntecedenteFamiliar.update(idHistoria, agregado);
     if (ok) {
       return res.status(200).json({
         message: 'Antecedentes heredo familiares actualizados correctamente',
@@ -101,7 +163,10 @@ export const actualizarAntecedentesHeredoFamiliares = async (req, res) => {
       error: 'No se pudieron actualizar los antecedentes heredo familiares',
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -110,8 +175,22 @@ export const registrarAntecedentesPersonalesNoPatologicos = async (
   req,
   res
 ) => {
+  let agregado;
   try {
-    const ok = await AntecedentesPersonalesNoPatologicos.registrar(req.body);
+    agregado = new AntecedentePersonalAggregate(construirAgregado(req));
+  } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({
+        error:
+          err.message ||
+          'Error al registrar los antecedentes personales no patológicos',
+      });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const ok = await AntecedentePersonal.create(agregado);
     if (ok) {
       return res.status(201).json({
         message:
@@ -123,8 +202,14 @@ export const registrarAntecedentesPersonalesNoPatologicos = async (
         'No se pudieron registrar los antecedentes personales no patológicos',
     });
   } catch (err) {
-    // console.error('Error en registrarAntecedentesPersonalesNoPatologicos:', err);
-    return res.status(400).json({
+    if (esErrorDominio(err)) {
+      return res.status(400).json({
+        error:
+          err.message ||
+          'Error al registrar los antecedentes personales no patológicos',
+      });
+    }
+    return res.status(500).json({
       error:
         err.message ||
         'Error al registrar los antecedentes personales no patológicos',
@@ -137,17 +222,17 @@ export const consultarAntecedentesPersonalesNoPatologicos = async (
   res
 ) => {
   try {
-    const { id_historia } = req.params;
-    const result =
-      await AntecedentesPersonalesNoPatologicos.consultarPorHistoria(
-        id_historia
-      );
+    const idHistoria = obtenerHistoriaId(req);
+    const result = await AntecedentePersonal.getByHistoria(idHistoria);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -155,12 +240,23 @@ export const actualizarAntecedentesPersonalesNoPatologicos = async (
   req,
   res
 ) => {
+  let idHistoria;
   try {
-    const { id_historia } = req.params;
-    const ok = await AntecedentesPersonalesNoPatologicos.actualizarPorHistoria(
-      id_historia,
-      req.body
-    );
+    idHistoria = obtenerHistoriaId(req);
+  } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({
+        error:
+          err.message ||
+          'Error al actualizar los antecedentes personales no patológicos',
+      });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const agregado = new AntecedentePersonalAggregate(construirAgregado(req));
+    const ok = await AntecedentePersonal.update(idHistoria, agregado);
     if (ok) {
       return res.status(200).json({
         message:
@@ -172,7 +268,13 @@ export const actualizarAntecedentesPersonalesNoPatologicos = async (
         'No se pudieron actualizar los antecedentes personales no patológicos',
     });
   } catch (err) {
-    // console.error('Error en actualizarAntecedentesPersonalesNoPatologicos:', err);
+    if (esErrorDominio(err)) {
+      return res.status(400).json({
+        error:
+          err.message ||
+          'Error al actualizar los antecedentes personales no patológicos',
+      });
+    }
     return res.status(400).json({
       error:
         err.message ||
@@ -183,8 +285,22 @@ export const actualizarAntecedentesPersonalesNoPatologicos = async (
 
 // --- Antecedente Médico ---
 export const registrarAntecedentesPersonalesPatologicos = async (req, res) => {
+  let agregado;
   try {
-    const ok = await AntecedentesPersonalesPatologicos.registrar(req.body);
+    agregado = new AntecedenteMedicoAggregate(construirAgregado(req));
+  } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({
+        error:
+          err.message ||
+          'Error al registrar los antecedentes personales patológicos',
+      });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const ok = await AntecedenteMedico.create(agregado);
     if (ok) {
       return res.status(201).json({
         message:
@@ -195,31 +311,51 @@ export const registrarAntecedentesPersonalesPatologicos = async (req, res) => {
       error: 'No se pudieron registrar los antecedentes personales patológicos',
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({
+        error:
+          err.message ||
+          'Error al registrar los antecedentes personales patológicos',
+      });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const consultarAntecedentesPersonalesPatologicos = async (req, res) => {
   try {
-    const { id_historia } = req.params;
-    const result =
-      await AntecedentesPersonalesPatologicos.consultarPorHistoria(id_historia);
+    const idHistoria = obtenerHistoriaId(req);
+    const result = await AntecedenteMedico.getByHistoria(idHistoria);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const actualizarAntecedentesPersonalesPatologicos = async (req, res) => {
+  let idHistoria;
   try {
-    const { id_historia } = req.params;
-    const ok = await AntecedentesPersonalesPatologicos.actualizarPorHistoria(
-      id_historia,
-      req.body
-    );
+    idHistoria = obtenerHistoriaId(req);
+  } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({
+        error:
+          err.message ||
+          'Error al actualizar los antecedentes personales patológicos',
+      });
+    }
+    return res.status(500).json({ error: err.message });
+  }
+
+  try {
+    const agregado = new AntecedenteMedicoAggregate(construirAgregado(req));
+    const ok = await AntecedenteMedico.update(idHistoria, agregado);
     if (ok) {
       return res.status(200).json({
         message:
@@ -231,6 +367,35 @@ export const actualizarAntecedentesPersonalesPatologicos = async (req, res) => {
         'No se pudieron actualizar los antecedentes personales patológicos',
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({
+        error:
+          err.message ||
+          'Error al actualizar los antecedentes personales patológicos',
+      });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
+
+export const createAntecedenteCumplimiento = registrarSeguimientoDelTratamiento;
+export const getAntecedenteCumplimiento = consultarSeguimientoDelTratamiento;
+export const updateAntecedenteCumplimiento =
+  actualizarSeguimientoDelTratamiento;
+
+export const createAntecedenteFamiliar = registrarAntecedentesHeredoFamiliares;
+export const getAntecedenteFamiliar = consultarAntecedentesHeredoFamiliares;
+export const updateAntecedenteFamiliar = actualizarAntecedentesHeredoFamiliares;
+
+export const createAntecedentePersonal =
+  registrarAntecedentesPersonalesNoPatologicos;
+export const getAntecedentePersonal =
+  consultarAntecedentesPersonalesNoPatologicos;
+export const updateAntecedentePersonal =
+  actualizarAntecedentesPersonalesNoPatologicos;
+
+export const createAntecedenteMedico =
+  registrarAntecedentesPersonalesPatologicos;
+export const getAntecedenteMedico = consultarAntecedentesPersonalesPatologicos;
+export const updateAntecedenteMedico =
+  actualizarAntecedentesPersonalesPatologicos;

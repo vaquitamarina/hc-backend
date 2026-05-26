@@ -53,7 +53,7 @@ describe('MotivoConsulta Controller', () => {
 
   describe('getMotivoConsulta', () => {
     it('should return 200 and data if found', async () => {
-      req.params.id_historia = '1';
+      req.params.id_historia = '550e8400-e29b-41d4-a716-446655440000';
       const mockData = { id: 1, motivo: 'Test' };
       vi.mocked(MotivoConsulta.getByHistoria).mockResolvedValue(mockData);
       await controller.getMotivoConsulta(req, res);
@@ -64,7 +64,7 @@ describe('MotivoConsulta Controller', () => {
       });
     });
     it('should return 404 if not found', async () => {
-      req.params.id_historia = '1';
+      req.params.id_historia = '550e8400-e29b-41d4-a716-446655440000';
       vi.mocked(MotivoConsulta.getByHistoria).mockResolvedValue(null);
       await controller.getMotivoConsulta(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
@@ -74,7 +74,7 @@ describe('MotivoConsulta Controller', () => {
       });
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
+      req.params.id_historia = '550e8400-e29b-41d4-a716-446655440000';
       vi.mocked(MotivoConsulta.getByHistoria).mockRejectedValue(
         new Error('fail')
       );
@@ -88,7 +88,7 @@ describe('MotivoConsulta Controller', () => {
 
   describe('updateMotivoConsulta', () => {
     it('should return 200 on success', async () => {
-      req.params.id_historia = '1';
+      req.params.id_historia = '550e8400-e29b-41d4-a716-446655440000';
       vi.mocked(MotivoConsulta.getByHistoria).mockResolvedValue({ id: 1 });
       vi.mocked(BaseService.prototype.update).mockResolvedValue(true);
       await controller.updateMotivoConsulta(req, res);
@@ -98,7 +98,7 @@ describe('MotivoConsulta Controller', () => {
       });
     });
     it('should return 404 if motivo not found', async () => {
-      req.params.id_historia = '1';
+      req.params.id_historia = '550e8400-e29b-41d4-a716-446655440000';
       vi.mocked(MotivoConsulta.getByHistoria).mockResolvedValue(null);
       await controller.updateMotivoConsulta(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
@@ -108,7 +108,7 @@ describe('MotivoConsulta Controller', () => {
       });
     });
     it('should return 500 if not updated', async () => {
-      req.params.id_historia = '1';
+      req.params.id_historia = '550e8400-e29b-41d4-a716-446655440000';
       vi.mocked(MotivoConsulta.getByHistoria).mockResolvedValue({ id: 1 });
       vi.mocked(BaseService.prototype.update).mockResolvedValue(false);
       await controller.updateMotivoConsulta(req, res);
@@ -118,7 +118,7 @@ describe('MotivoConsulta Controller', () => {
       });
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
+      req.params.id_historia = '550e8400-e29b-41d4-a716-446655440000';
       vi.mocked(MotivoConsulta.getByHistoria).mockRejectedValue(
         new Error('fail')
       );

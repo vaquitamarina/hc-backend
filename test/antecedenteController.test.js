@@ -4,9 +4,13 @@ import * as controller from '../controllers/hc/anamnesis/antecedenteController.j
 describe('Antecedente Controller', () => {
   let req, res;
   let models;
+  const historiaId = '550e8400-e29b-41d4-a716-446655440000';
 
   beforeEach(async () => {
-    req = { params: {}, body: {} };
+    req = {
+      params: { id_historia: historiaId },
+      body: { id_historia: historiaId },
+    };
     res = {
       status: vi.fn().mockReturnThis(),
       json: vi.fn(),
@@ -46,7 +50,6 @@ describe('Antecedente Controller', () => {
 
   describe('getAntecedenteCumplimiento', () => {
     it('should return 200 if found', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(
         models.AntecedenteCumplimiento,
         'getByHistoria'
@@ -55,7 +58,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return 404 if not found', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(
         models.AntecedenteCumplimiento,
         'getByHistoria'
@@ -64,7 +66,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(404);
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(
         models.AntecedenteCumplimiento,
         'getByHistoria'
@@ -77,7 +78,6 @@ describe('Antecedente Controller', () => {
 
   describe('updateAntecedenteCumplimiento', () => {
     it('should return 200 on success', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteCumplimiento, 'update').mockResolvedValue(
         true
       );
@@ -85,7 +85,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return 500 on failure', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteCumplimiento, 'update').mockResolvedValue(
         false
       );
@@ -93,7 +92,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(500);
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteCumplimiento, 'update').mockRejectedValue(
         new Error('fail')
       );
@@ -127,7 +125,6 @@ describe('Antecedente Controller', () => {
 
   describe('getAntecedenteFamiliar', () => {
     it('should return 200 if found', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteFamiliar, 'getByHistoria').mockResolvedValue(
         {}
       );
@@ -135,7 +132,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return 404 if not found', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteFamiliar, 'getByHistoria').mockResolvedValue(
         null
       );
@@ -143,7 +139,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(404);
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteFamiliar, 'getByHistoria').mockRejectedValue(
         new Error('fail')
       );
@@ -155,19 +150,16 @@ describe('Antecedente Controller', () => {
 
   describe('updateAntecedenteFamiliar', () => {
     it('should return 200 on success', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteFamiliar, 'update').mockResolvedValue(true);
       await controller.updateAntecedenteFamiliar(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return 500 on failure', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteFamiliar, 'update').mockResolvedValue(false);
       await controller.updateAntecedenteFamiliar(req, res);
       expect(res.status).toHaveBeenCalledWith(500);
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteFamiliar, 'update').mockRejectedValue(
         new Error('fail')
       );
@@ -194,14 +186,13 @@ describe('Antecedente Controller', () => {
         new Error('fail')
       );
       await controller.createAntecedentePersonal(req, res);
-      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({ error: 'fail' });
     });
   });
 
   describe('getAntecedentePersonal', () => {
     it('should return 200 if found', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedentePersonal, 'getByHistoria').mockResolvedValue(
         {}
       );
@@ -209,7 +200,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return 404 if not found', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedentePersonal, 'getByHistoria').mockResolvedValue(
         null
       );
@@ -217,7 +207,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(404);
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedentePersonal, 'getByHistoria').mockRejectedValue(
         new Error('fail')
       );
@@ -229,19 +218,16 @@ describe('Antecedente Controller', () => {
 
   describe('updateAntecedentePersonal', () => {
     it('should return 200 on success', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedentePersonal, 'update').mockResolvedValue(true);
       await controller.updateAntecedentePersonal(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return 500 on failure', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedentePersonal, 'update').mockResolvedValue(false);
       await controller.updateAntecedentePersonal(req, res);
       expect(res.status).toHaveBeenCalledWith(500);
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedentePersonal, 'update').mockRejectedValue(
         new Error('fail')
       );
@@ -275,13 +261,11 @@ describe('Antecedente Controller', () => {
 
   describe('getAntecedenteMedico', () => {
     it('should return 200 if found', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteMedico, 'getByHistoria').mockResolvedValue({});
       await controller.getAntecedenteMedico(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return 404 if not found', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteMedico, 'getByHistoria').mockResolvedValue(
         null
       );
@@ -289,7 +273,6 @@ describe('Antecedente Controller', () => {
       expect(res.status).toHaveBeenCalledWith(404);
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteMedico, 'getByHistoria').mockRejectedValue(
         new Error('fail')
       );
@@ -301,19 +284,16 @@ describe('Antecedente Controller', () => {
 
   describe('updateAntecedenteMedico', () => {
     it('should return 200 on success', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteMedico, 'update').mockResolvedValue(true);
       await controller.updateAntecedenteMedico(req, res);
       expect(res.status).toHaveBeenCalledWith(200);
     });
     it('should return 500 on failure', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteMedico, 'update').mockResolvedValue(false);
       await controller.updateAntecedenteMedico(req, res);
       expect(res.status).toHaveBeenCalledWith(500);
     });
     it('should handle errors', async () => {
-      req.params.id_historia = '1';
       vi.spyOn(models.AntecedenteMedico, 'update').mockRejectedValue(
         new Error('fail')
       );
