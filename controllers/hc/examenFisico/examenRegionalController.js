@@ -1,13 +1,12 @@
-import BaseService from '../../../services/baseService.js';
-import ExamenFisicoRegional from '../../../models/hc/examenFisico/examenRegionalModel.js';
-
-export const servicioExamenFisicoRegional = new BaseService(
-  ExamenFisicoRegional
-);
+import {
+  registrarExamenFisicoRegional as modelRegistrar,
+  consultarExamenFisicoRegional as modelConsultar,
+  actualizarExamenFisicoRegional as modelActualizar,
+} from '../../../models/hc/examenFisico/examenRegionalModel.js';
 
 export const registrarExamenFisicoRegional = async (req, res) => {
   try {
-    const result = await servicioExamenFisicoRegional.create(req.body);
+    const result = await modelRegistrar(req.body);
     res.status(201).json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -17,7 +16,7 @@ export const registrarExamenFisicoRegional = async (req, res) => {
 export const consultarExamenFisicoRegional = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const result = await ExamenFisicoRegional.consultarPorHistoria(id_historia);
+    const result = await modelConsultar(id_historia);
     if (!result) {
       return res.status(404).json({ error: 'No encontrado' });
     }
@@ -30,15 +29,12 @@ export const consultarExamenFisicoRegional = async (req, res) => {
 export const actualizarExamenFisicoRegional = async (req, res) => {
   try {
     const { id_historia } = req.params;
-    const examen = await ExamenFisicoRegional.consultarPorHistoria(id_historia);
-    if (!examen) {
+    const existing = await modelConsultar(id_historia);
+    if (!existing) {
       return res.status(404).json({ error: 'No encontrado' });
     }
-    const result = await servicioExamenFisicoRegional.update(
-      examen.id_regional,
-      req.body
-    );
-    res.json(result);
+    await modelActualizar({ idHistory: id_historia, ...req.body });
+    res.json({ message: 'Actualizado' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
