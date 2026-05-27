@@ -15,12 +15,9 @@ export const registrarExamenFisicoGeneral = async (req, res) => {
 
 export const consultarExamenFisicoGeneral = async (req, res) => {
   try {
-    const { id_historia } = req.params;
-    const result = await modelConsultar(id_historia);
-    if (!result) {
-      return res.status(404).json({ error: 'No encontrado' });
-    }
-    res.json(result);
+    const id = req.params.id_historia || req.params.id;
+    const result = await modelConsultar(id);
+    res.status(200).json(result || {});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -28,12 +25,8 @@ export const consultarExamenFisicoGeneral = async (req, res) => {
 
 export const actualizarExamenFisicoGeneral = async (req, res) => {
   try {
-    const { id_historia } = req.params;
-    const existing = await modelConsultar(id_historia);
-    if (!existing) {
-      return res.status(404).json({ error: 'No encontrado' });
-    }
-    await modelActualizar({ idHistory: id_historia, ...req.body });
+    const id = req.params.id_historia || req.params.id;
+    await modelActualizar({ idHistory: id, ...req.body });
     res.json({ message: 'Actualizado' });
   } catch (err) {
     res.status(500).json({ error: err.message });

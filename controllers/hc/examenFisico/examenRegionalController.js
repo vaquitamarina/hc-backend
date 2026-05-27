@@ -15,12 +15,9 @@ export const registrarExamenFisicoRegional = async (req, res) => {
 
 export const consultarExamenFisicoRegional = async (req, res) => {
   try {
-    const { id_historia } = req.params;
-    const result = await modelConsultar(id_historia);
-    if (!result) {
-      return res.status(404).json({ error: 'No encontrado' });
-    }
-    res.json(result);
+    const idHistory = req.params.id_historia || req.params.id;
+    const result = await modelConsultar(idHistory);
+    res.json(result || {});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -28,12 +25,8 @@ export const consultarExamenFisicoRegional = async (req, res) => {
 
 export const actualizarExamenFisicoRegional = async (req, res) => {
   try {
-    const { id_historia } = req.params;
-    const existing = await modelConsultar(id_historia);
-    if (!existing) {
-      return res.status(404).json({ error: 'No encontrado' });
-    }
-    await modelActualizar({ idHistory: id_historia, ...req.body });
+    const idHistory = req.params.id_historia || req.params.id;
+    await modelActualizar({ idHistory, ...req.body });
     res.json({ message: 'Actualizado' });
   } catch (err) {
     res.status(500).json({ error: err.message });

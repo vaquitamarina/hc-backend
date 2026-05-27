@@ -8,6 +8,7 @@ import * as examenBocaController from '../controllers/hc/examenFisico/examenBoca
 import * as higieneBocalController from '../controllers/hc/examenFisico/higieneBocalController.js';
 import * as derivacionClinicasController from '../controllers/hc/derivacionClinicasController.js';
 import * as diagnosticoClinicasController from '../controllers/hc/diagnosticoClinicasController.js';
+import * as diagnosticoPresuntivoController from '../controllers/hc/diagnosticoPresuntivoController.js';
 import * as evolucionController from '../controllers/hc/evolucionController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import * as motivoConsultaController from '../controllers/hc/anamnesis/motivoConsultaController.js';
@@ -188,11 +189,11 @@ hcRoutes.put('/:id/higiene', higieneBocalController.actualizarHigieneBucal);
 // SECCIÓN III
 hcRoutes.get(
   '/:id/diagnostico-presuntivo',
-  hcController.consultarDiagnosticoPresuntivoPorHistoria
+  diagnosticoPresuntivoController.consultarDiagnosticoPresuntivo
 );
 hcRoutes.put(
   '/:id/diagnostico-presuntivo',
-  hcController.actualizarDiagnosticoPresuntivoPorHistoria
+  diagnosticoPresuntivoController.actualizarDiagnosticoPresuntivo
 );
 
 // SECCIÓN IV
