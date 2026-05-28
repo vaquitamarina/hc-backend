@@ -2,19 +2,19 @@ import { Router } from 'express';
 import { HcController } from '../controllers/hc/hcController.js';
 import { HcModel } from '../models/hc/hcModel.js';
 import { listarHistoriasClinicasAdultasDeEstudiante } from '../controllers/hc/hcController/listaHcAdultos.js';
-import * as examenGeneralController from '../controllers/hc/examenFisico/examenGeneralController.js';
-import * as examenRegionalController from '../controllers/hc/examenFisico/examenRegionalController.js';
-import * as examenBocaController from '../controllers/hc/examenFisico/examenBocaController.js';
-import * as higieneBocalController from '../controllers/hc/examenFisico/higieneBocalController.js';
+import { ExamenGeneralController } from '../examenGeneral/application/examenGeneralController.js';
+import { ExamenRegionalController } from '../examenRegional/application/examenRegionalController.js';
+import { ExamenBocaController } from '../examenBoca/application/examenBocaController.js';
+import { HigieneBocalController } from '../higieneBocal/application/higieneBocalController.js';
 import * as derivacionClinicasController from '../controllers/hc/derivacionClinicasController.js';
 import * as diagnosticoClinicasController from '../controllers/hc/diagnosticoClinicasController.js';
 import * as diagnosticoPresuntivoController from '../controllers/hc/diagnosticoPresuntivoController.js';
 import * as evolucionController from '../controllers/hc/evolucionController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
-import * as motivoConsultaController from '../controllers/hc/anamnesis/motivoConsultaController.js';
-import * as antecedentePersonalController from '../controllers/hc/anamnesis/antecedenteController.js';
-import * as enfermedadActualController from '../controllers/hc/anamnesis/enfermedadActualController.js';
-import * as filiacionController from '../controllers/hc/anamnesis/filiacionController.js';
+import { MotivoConsultaController } from '../motivoConsulta/application/motivoConsultaController.js';
+import { AntecedenteController } from '../antecedente/application/antecedenteController.js';
+import { EnfermedadActualController } from '../enfermedadActual/application/enfermedadActualController.js';
+import { ModuloController } from '../filiacion/application/filiacionController.js';
 
 export const hcRoutes = Router();
 
@@ -25,96 +25,93 @@ hcRoutes.use(authMiddleware);
 // Endpoints motivo_consulta
 hcRoutes.post(
   '/motivo-consulta',
-  motivoConsultaController.registrarMotivoConsulta
+  MotivoConsultaController.registrarMotivoConsulta
 );
 hcRoutes.get(
   '/motivo-consulta/historia/:id_historia',
-  motivoConsultaController.consultarMotivoConsulta
+  MotivoConsultaController.consultarMotivoConsulta
 );
 hcRoutes.put(
   '/motivo-consulta/historia/:id_historia',
-  motivoConsultaController.actualizarMotivoConsulta
+  MotivoConsultaController.actualizarMotivoConsulta
 );
 
 // Endpoints antecedente_personal
 hcRoutes.post(
   '/antecedente-personal',
-  antecedentePersonalController.registrarAntecedentesPersonalesNoPatologicos
+  AntecedenteController.registrarAntecedentesPersonalesNoPatologicos
 );
 hcRoutes.get(
   '/antecedente-personal/historia/:id_historia',
-  antecedentePersonalController.consultarAntecedentesPersonalesNoPatologicos
+  AntecedenteController.consultarAntecedentesPersonalesNoPatologicos
 );
 hcRoutes.put(
   '/antecedente-personal/historia/:id_historia',
-  antecedentePersonalController.actualizarAntecedentesPersonalesNoPatologicos
+  AntecedenteController.actualizarAntecedentesPersonalesNoPatologicos
 );
 // Endpoints antecedente_medico
 hcRoutes.post(
   '/antecedente-medico',
-  antecedentePersonalController.registrarAntecedentesPersonalesPatologicos
+  AntecedenteController.registrarAntecedentesPersonalesPatologicos
 );
 hcRoutes.get(
   '/antecedente-medico/historia/:id_historia',
-  antecedentePersonalController.consultarAntecedentesPersonalesPatologicos
+  AntecedenteController.consultarAntecedentesPersonalesPatologicos
 );
 hcRoutes.put(
   '/antecedente-medico/historia/:id_historia',
-  antecedentePersonalController.actualizarAntecedentesPersonalesPatologicos
+  AntecedenteController.actualizarAntecedentesPersonalesPatologicos
 );
 // Endpoints antecedente_familiar
 hcRoutes.post(
   '/antecedente-familiar',
-  antecedentePersonalController.registrarAntecedentesHeredoFamiliares
+  AntecedenteController.registrarAntecedentesHeredoFamiliares
 );
 hcRoutes.get(
   '/antecedente-familiar/historia/:id_historia',
-  antecedentePersonalController.consultarAntecedentesHeredoFamiliares
+  AntecedenteController.consultarAntecedentesHeredoFamiliares
 );
 hcRoutes.put(
   '/antecedente-familiar/historia/:id_historia',
-  antecedentePersonalController.actualizarAntecedentesHeredoFamiliares
+  AntecedenteController.actualizarAntecedentesHeredoFamiliares
 );
 // Endpoints antecedente_cumplimiento
 hcRoutes.post(
   '/antecedente-cumplimiento',
-  antecedentePersonalController.registrarSeguimientoDelTratamiento
+  AntecedenteController.registrarSeguimientoDelTratamiento
 );
 hcRoutes.get(
   '/antecedente-cumplimiento/historia/:id_historia',
-  antecedentePersonalController.consultarSeguimientoDelTratamiento
+  AntecedenteController.consultarSeguimientoDelTratamiento
 );
 hcRoutes.put(
   '/antecedente-cumplimiento/historia/:id_historia',
-  antecedentePersonalController.actualizarSeguimientoDelTratamiento
+  AntecedenteController.actualizarSeguimientoDelTratamiento
 );
 
 // Endpoints enfermedad_actual
 hcRoutes.post(
   '/enfermedad-actual',
-  enfermedadActualController.registrarEnfermedadActual
+  EnfermedadActualController.registrarEnfermedadActual
 );
 hcRoutes.get(
   '/enfermedad-actual/historia/:id_historia',
-  enfermedadActualController.consultarEnfermedadActual
+  EnfermedadActualController.consultarEnfermedadActual
 );
 hcRoutes.put(
   '/enfermedad-actual/historia/:id_historia',
-  enfermedadActualController.actualizarEnfermedadActual
+  EnfermedadActualController.actualizarEnfermedadActual
 );
 
 // Endpoints filiacion
-hcRoutes.post(
-  '/filiacion',
-  filiacionController.registrarDatosPersonalesPaciente
-);
+hcRoutes.post('/filiacion', ModuloController.registrarDatosPersonalesPaciente);
 hcRoutes.get(
   '/filiacion/historia/:id_historia',
-  filiacionController.consultarDatosPersonalesPaciente
+  ModuloController.consultarDatosPersonalesPaciente
 );
 hcRoutes.put(
   '/filiacion/historia/:id_historia',
-  filiacionController.actualizarDatosPersonalesPaciente
+  ModuloController.actualizarDatosPersonalesPaciente
 );
 
 hcRoutes.get('/:id/patient', hcController.consultarPacientePorHistoriaClinica);
@@ -133,58 +130,58 @@ hcRoutes.post('/register', hcController.registrarHistoriaClinica);
 // Endpoints examen general
 hcRoutes.post(
   '/examen-general',
-  examenGeneralController.registrarExamenFisicoGeneral
+  ExamenGeneralController.registrarExamenFisicoGeneral
 );
 hcRoutes.get(
   '/examen-general/historia/:id_historia',
-  examenGeneralController.consultarExamenFisicoGeneral
+  ExamenGeneralController.consultarExamenFisicoGeneral
 );
 hcRoutes.put(
   '/examen-general/historia/:id_historia',
-  examenGeneralController.actualizarExamenFisicoGeneral
+  ExamenGeneralController.actualizarExamenFisicoGeneral
 );
 
 // Endpoints examen regional
 hcRoutes.post(
   '/examen-regional',
-  examenRegionalController.registrarExamenFisicoRegional
+  ExamenRegionalController.registrarExamenFisicoRegional
 );
 hcRoutes.get(
   '/examen-regional/historia/:id_historia',
-  examenRegionalController.consultarExamenFisicoRegional
+  ExamenRegionalController.consultarExamenFisicoRegional
 );
 hcRoutes.put(
   '/examen-regional/historia/:id_historia',
-  examenRegionalController.actualizarExamenFisicoRegional
+  ExamenRegionalController.actualizarExamenFisicoRegional
 );
 
 // --- RUTAS DE EXAMEN FÍSICO GENERAL ---
 hcRoutes.get(
   '/:id/examen-general',
-  examenGeneralController.consultarExamenFisicoGeneral
+  ExamenGeneralController.consultarExamenFisicoGeneral
 );
 hcRoutes.put(
   '/:id/examen-general',
-  examenGeneralController.actualizarExamenFisicoGeneral
+  ExamenGeneralController.actualizarExamenFisicoGeneral
 );
 
 // --- RUTAS DE EXAMEN REGIONAL (CABEZA, ATM, CUELLO) ---
 hcRoutes.get(
   '/:id/examen-regional',
-  examenRegionalController.consultarExamenFisicoRegional
+  ExamenRegionalController.consultarExamenFisicoRegional
 );
 hcRoutes.put(
   '/:id/examen-regional',
-  examenRegionalController.actualizarExamenFisicoRegional
+  ExamenRegionalController.actualizarExamenFisicoRegional
 );
 
 // --- RUTAS DE EXAMEN CLÍNICO DE LA BOCA ---
-hcRoutes.get('/:id/examen-boca', examenBocaController.consultarExamenBucal);
-hcRoutes.put('/:id/examen-boca', examenBocaController.actualizarExamenBucal);
+hcRoutes.get('/:id/examen-boca', ExamenBocaController.consultarExamenBucal);
+hcRoutes.put('/:id/examen-boca', ExamenBocaController.actualizarExamenBucal);
 
 // --- RUTAS DE HIGIENE BUCAL ---
-hcRoutes.get('/:id/higiene', higieneBocalController.consultarHigieneBucal);
-hcRoutes.put('/:id/higiene', higieneBocalController.actualizarHigieneBucal);
+hcRoutes.get('/:id/higiene', HigieneBocalController.consultarHigieneBucal);
+hcRoutes.put('/:id/higiene', HigieneBocalController.actualizarHigieneBucal);
 
 // SECCIÓN III
 hcRoutes.get(
