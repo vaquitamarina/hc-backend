@@ -1,20 +1,25 @@
+/**
+ * Adaptador Primario: HcController
+ * Construye agregados desde `req`, maneja validaciones y orquesta repositorio.
+ */
+import { HcRepository } from '../infrastructure/hcRepository.js';
 import {
+  DomainError,
   RevisionHistoriaClinicaAggregate,
   RegistroHistoriaClinicaAggregate,
   AsignacionPacienteAggregate,
   ConsultaPacienteHistoriaClinicaAggregate,
   ConsultaHistoriasEstudianteAggregate,
-  DomainError,
-} from '../../models/hc/hcModel.js';
+} from '../domain/hcDomain.js';
+
+const repo = new HcRepository();
+
+function esErrorDominio(err) {
+  return err && (err instanceof DomainError || err.name === 'DomainError');
+}
 
 export class HcController {
-  constructor(HcModel) {
-    this.HcModel = HcModel;
-  }
-
-  esErrorDominio(err) {
-    return err && err.name === 'DomainError';
-  }
+  constructor() {}
 
   construirAgregadoRevision(req) {
     const payload = {
@@ -27,7 +32,6 @@ export class HcController {
       state: req.body.state ?? req.body.estado ?? req.body.estadoRevision,
       observations: req.body.observations ?? req.body.observaciones,
     };
-
     return new RevisionHistoriaClinicaAggregate(payload);
   }
 
@@ -64,7 +68,7 @@ export class HcController {
   registrarRevisionHistoriaClinica = async (req, res) => {
     try {
       const agregado = this.construirAgregadoRevision(req);
-      const ok = await this.HcModel.registrarRevisionHistoriaClinica(agregado);
+      const ok = await repo.crearRevision(agregado);
       if (ok) {
         return res
           .status(201)
@@ -72,7 +76,7 @@ export class HcController {
       }
       return res.status(500).json({ error: 'Error al registrar la revision' });
     } catch (err) {
-      if (this.esErrorDominio(err)) {
+      if (esErrorDominio(err)) {
         return res.status(400).json({ error: err.message });
       }
       return res
@@ -84,8 +88,7 @@ export class HcController {
   consultarPacientePorHistoriaClinica = async (req, res) => {
     try {
       const agregado = this.construirAgregadoConsultaPaciente(req);
-      const patient =
-        await this.HcModel.consultarPacientePorHistoriaClinica(agregado);
+      const patient = await repo.obtenerPacientePorHistoria(agregado);
       if (!patient) {
         return res.status(404).json({
           error: 'Paciente no encontrado o historia sin paciente asignado',
@@ -93,7 +96,7 @@ export class HcController {
       }
       return res.status(200).json(patient);
     } catch (err) {
-      if (this.esErrorDominio(err)) {
+      if (esErrorDominio(err)) {
         return res.status(400).json({ error: err.message });
       }
       return res
@@ -105,11 +108,10 @@ export class HcController {
   listarHistoriasClinicasPorEstudiante = async (req, res) => {
     try {
       const agregado = this.construirAgregadoConsultaEstudiante(req);
-      const historias =
-        await this.HcModel.listarHistoriasClinicasPorEstudiante(agregado);
+      const historias = await repo.listarHistoriasPorEstudiante(agregado);
       return res.status(200).json(historias);
     } catch (err) {
-      if (this.esErrorDominio(err)) {
+      if (esErrorDominio(err)) {
         return res.status(400).json({ error: err.message });
       }
       return res
@@ -121,7 +123,7 @@ export class HcController {
   registrarHistoriaClinica = async (req, res) => {
     try {
       const agregado = this.construirAgregadoRegistro(req);
-      const hc = await this.HcModel.registrarHistoriaClinica(agregado);
+      const hc = await repo.crearHistoriaClinica(agregado);
       if (!hc) {
         return res
           .status(500)
@@ -129,7 +131,7 @@ export class HcController {
       }
       return res.status(201).json(hc);
     } catch (err) {
-      if (this.esErrorDominio(err)) {
+      if (esErrorDominio(err)) {
         return res.status(400).json({ error: err.message });
       }
       return res
@@ -141,11 +143,10 @@ export class HcController {
   obtenerBorradorHistoriaClinica = async (req, res) => {
     try {
       const agregado = this.construirAgregadoConsultaEstudiante(req);
-      const result =
-        await this.HcModel.obtenerBorradorHistoriaClinica(agregado);
+      const result = await repo.obtenerBorrador(agregado);
       return res.status(200).json({ id_historia: result.id_historia });
     } catch (err) {
-      if (this.esErrorDominio(err)) {
+      if (esErrorDominio(err)) {
         return res.status(400).json({ error: err.message });
       }
       return res.status(500).json({
@@ -157,12 +158,12 @@ export class HcController {
   asignarPacienteAHistoriaClinica = async (req, res) => {
     try {
       const agregado = this.construirAgregadoAsignacion(req);
-      await this.HcModel.asignarPacienteAHistoriaClinica(agregado);
+      await repo.asignarPaciente(agregado);
       return res
         .status(200)
         .json({ message: 'Paciente asignado a la historia clinica' });
     } catch (err) {
-      if (this.esErrorDominio(err)) {
+      if (esErrorDominio(err)) {
         return res.status(400).json({ error: err.message });
       }
       return res.status(500).json({
@@ -170,12 +171,4 @@ export class HcController {
       });
     }
   };
-
-  // Compatibilidad de nombres antiguos que usan las rutas
-  createReview = this.registrarRevisionHistoriaClinica;
-  getPatientByHistory = this.consultarPacientePorHistoriaClinica;
-  getAllByStudentId = this.listarHistoriasClinicasPorEstudiante;
-  registerHc = this.registrarHistoriaClinica;
-  createDraft = this.obtenerBorradorHistoriaClinica;
-  assignPatient = this.asignarPacienteAHistoriaClinica;
 }

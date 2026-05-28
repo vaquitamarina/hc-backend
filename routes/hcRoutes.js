@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { HcController } from '../controllers/hc/hcController.js';
-import { HcModel } from '../models/hc/hcModel.js';
-import { listarHistoriasClinicasAdultasDeEstudiante } from '../controllers/hc/hcController/listaHcAdultos.js';
+import { HcController } from '../hc/application/hcController.js';
+import { ListaHcAdultosController } from '../listaHcAdultos/application/listaHcAdultosController.js';
 import { ExamenGeneralController } from '../examenGeneral/application/examenGeneralController.js';
 import { ExamenRegionalController } from '../examenRegional/application/examenRegionalController.js';
 import { ExamenBocaController } from '../examenBoca/application/examenBocaController.js';
@@ -18,7 +17,7 @@ import { ModuloController } from '../filiacion/application/filiacionController.j
 
 export const hcRoutes = Router();
 
-const hcController = new HcController(HcModel);
+const hcController = new HcController();
 
 hcRoutes.use(authMiddleware);
 
@@ -222,5 +221,5 @@ hcRoutes.get('/student/:id', hcController.listarHistoriasClinicasPorEstudiante);
 // Endpoint para obtener historias clínicas adultas de un estudiante específico
 hcRoutes.get(
   '/student/:id/adult-historias',
-  listarHistoriasClinicasAdultasDeEstudiante
+  ListaHcAdultosController.listarHistoriasClinicasAdultasDeEstudiante
 );
