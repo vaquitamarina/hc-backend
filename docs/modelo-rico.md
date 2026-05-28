@@ -23,6 +23,7 @@ Todo modelo rico del proyecto debe seguir esta estructura:
 - `AntecedentesAggregate` (módulo anamnesis)
 - `EnfermedadActualAggregate`
 - `FiliacionAggregate`
+- `HcModel` núcleo legado mínimo para revisión, registro de historia, borrador, asignación y consulta de paciente
 
 ## Caso Implementado: Antecedentes Anamnesis
 
@@ -211,6 +212,33 @@ Cuando se agregue un nuevo agregado, este documento debe ampliarse con:
 - Mapeo de persistencia.
 - Notas sobre compatibilidad con rutas y contratos existentes.
 
+## Caso Implementado: Diagnóstico Presuntivo
+
+### Módulo: Diagnóstico Presuntivo
+
+Responsabilidad del Agregado:
+
+- Encapsular la lógica del diagnóstico presuntivo asociado a una historia clínica (`id_historia`), validando el identificador, normalizando la `descripcion` y el `idUsuario` en memoria, y exponiendo `obtenerParametros()` para que el repositorio (o `HcModel`) ejecute la persistencia sin romper el contrato SQL existente.
+
+Invariantes Defendidas (Value Objects):
+
+- `IdHistoriaValueObject`: acepta UUIDv4 y normaliza eliminando el prefijo visual `HC-` cuando aplica.
+- `TextoValueObject`: normaliza la `descripcion` (trim + `'' -> null`) para evitar enviar cadenas vacías a la DB.
+- `IdUsuarioValueObject`: valida que `idUsuario` provenga del token y sea UUIDv4 para trazabilidad.
+
+Mapeo de Parámetros a Infraestructura:
+| Posición ($n) | Propiedad privada del Agregado |
+|---:|---|
+| $1 | `_idHistory.value` |
+| $2 | `_descripcion` |
+| $3 | `_idUsuario` |
+
+Notas de compatibilidad:
+
+- El controlador construye `DiagnosticoPresuntivoAggregate` y traduce `DomainError` a HTTP `400` para no romper clientes existentes.
+- El modelo sigue delegando en `HcModel` para mantener la capa de persistencia y las llamadas SQL; los parámetros se envían en el orden posicional `$1,$2,$3`.
+- El controlador acepta `id_historia` con o sin prefijo `HC-` y lo normaliza antes de validar.
+
 ## Caso Implementado: Motivo Consulta
 
 ### Módulo: Motivo Consulta
@@ -372,3 +400,378 @@ Cuando se agregue un nuevo agregado, este documento debe ampliarse con:
 
 - Se mantuvieron las funciones públicas: `registrarUsuario`, `autenticarUsuario`, `obtenerUsuarioPorId` y las rutas no requieren cambios.
 - El hashing de la contraseña sigue realizándose en el modelo antes de llamar al procedure SQL.
+
+## Caso Implementado: Examen Físico General
+
+### Módulo: Examen Físico General
+
+Responsabilidad del Agregado:
+
+- Proteger la integridad del examen físico general asociado a una historia clínica (`id_historia`), validando el identificador como UUIDv4, normalizando los campos primitivos y aplicando validaciones críticas en Value Objects antes de invocar el procedimiento almacenado `u_examen_general`.
+
+Invariantes Defendidas (Value Objects):
+
+- `TemperaturaVO`: convierte a número si es posible; si la entrada no es numérica o está fuera de rango razonable (30-45 °C) se normaliza a `null` para preservación y compatibilidad con la UI.
+- `PesoVO`: convierte a número si es posible; si la entrada no es un número válido o está fuera de rango se normaliza a `null`.
+- `PresionArterialVO`: valida el formato `"sistolica/diastolica"` (ej. `120/80`); si no cumple, se normaliza a `null` para no bloquear el guardado desde la UI.
+- Normalización general de primitivas: `_normalizePrimitive()` hace `trim()` y convierte strings vacíos a `null`.
+
+Comparativa Antes vs Después:
+
+- Antes: el modelo actuaba como una bolsa de datos (se pasaba `req.body` directamente a la consulta/procedimiento), sin Value Objects ni normalización centralizada.
+- Después: el `ExamenFisicoGeneralAggregate` desempaqueta cada campo en propiedades privadas explícitas (`this._posicion`, `this._temperatura`, `this._peso`, etc.), aplica Value Objects para invariantes críticas y expone `obtenerParametros()` que garantiza el orden posicional requerido por la infraestructura. Se mantuvieron las llamadas SQL originales para compatibilidad.
+
+Mapeo de Parámetros a Infraestructura:
+| Posición ($n) | Propiedad privada del Agregado |
+|---:|---|
+| $1 | `this._idHistory` |
+| $2 | `this._posicion` |
+| $3 | `this._actitud` |
+| $4 | `this._deambulacion` |
+| $5 | `this._facies` |
+| $6 | `this._faciesObs` |
+| $7 | `this._conciencia` |
+| $8 | `this._constitucion` |
+| $9 | `this._estadoNutritivo` |
+| $10 | `this._temperatura.value` |
+| $11 | `this._presionArterial.value` |
+| $12 | `this._frecuenciaRespiratoria` |
+| $13 | `this._pulso` |
+| $14 | `this._peso.value` |
+| $15 | `this._talla` |
+| $16 | `this._pielColor` |
+| $17 | `this._pielHumedad` |
+| $18 | `this._pielLesiones` |
+| $19 | `this._pielLesionesObs` |
+| $20 | `this._pielAnexos` |
+| $21 | `this._pielAnexosObs` |
+| $22 | `this._tcsDistribucion` |
+| $23 | `this._tcsDistribucionObs` |
+| $24 | `this._tcsCantidad` |
+| $25 | `this._ganglios` |
+| $26 | `this._gangliosObs` |
+
+Notas de compatibilidad:
+
+- `actualizarExamenFisicoGeneral` acepta ahora un `ExamenFisicoGeneralAggregate` (recomendado) o un objeto plano para compatibilidad con código existente. La llamada final al procedimiento `u_examen_general` utiliza exactamente el mismo número y orden de parámetros que el modelo anterior.
+
+## Caso Implementado: Examen Físico Regional
+
+### Módulo: Examen Físico Regional
+
+Responsabilidad del Agregado:
+
+- Proteger la integridad del examen físico regional asociado a una historia clínica (`id_historia`), validando el identificador como UUIDv4, normalizando todos los campos y aplicando Value Objects para invariantes numéricas críticas (por ejemplo agudeza visual, apertura máxima y grado de dolor muscular) antes de invocar `u_examen_regional`.
+
+Invariantes Defendidas (Value Objects):
+
+- `AgudezaVisualVO`: convierte a número si posible; entradas no numéricas o fuera de rango se normalizan a `null` para mantener compatibilidad con la UI.
+- `AperturaMaximaVO`: valida mm de apertura (si es numérico y plausible); entradas inválidas se normalizan a `null`.
+- `MusculosDolorGradoVO`: normaliza grado de dolor a número válido o `null` si no es parseable.
+- Campos textuales y booleanos: normalizados con `_normalizePrimitive()` (trim + ''→null).
+
+Comparativa Antes vs Después:
+
+- Antes: el modelo pasaba objetos planos sin validación; la UI libre de texto podía provocar errores de tipo en la base.
+- Después: `ExamenFisicoRegionalAggregate` desempaqueta cada campo en propiedades privadas, usa VOs para validar/normalizar valores críticos y expone `obtenerParametros()` que devuelve los 51 parámetros posicionales en el orden requerido por `u_examen_regional`.
+
+Mapeo de Parámetros a Infraestructura:
+| Posición ($n) | Propiedad privada del Agregado |
+|---:|---|
+| $1 | `this._idHistory` |
+| $2 | `this._cabezaPosicion` |
+| $3 | `this._cabezaMovimientos` |
+| $4 | `this._cabezaMovimientosObs` |
+| $5 | `this._craneoTamano` |
+| $6 | `this._craneoForma` |
+| $7 | `this._caraFormaFrente` |
+| $8 | `this._caraFormaPerfil` |
+| $9 | `this._ojosCejasAdecuada` |
+| $10 | `this._ojosImplantacionObs` |
+| $11 | `this._ojosEscleroticas` |
+| $12 | `this._ojosAgudezaVisual.value` |
+| $13 | `this._ojosIrisColor` |
+| $14 | `this._ojosArcoSenil` |
+| $15 | `this._narizForma` |
+| $16 | `this._narizPermeables` |
+| $17 | `this._narizSecreciones` |
+| $18 | `this._narizSenosDolorosos` |
+| $19 | `this._oidosAnomaliasMorfologicas` |
+| $20 | `this._oidosAnomaliasObs` |
+| $21 | `this._oidosSecreciones` |
+| $22 | `this._oidosAudicionConservada` |
+| $23 | `this._atmTrayectoria` |
+| $24 | `this._atmLatIzqDolor` |
+| $25 | `this._atmLatIzqRuido` |
+| $26 | `this._atmLatIzqSalto` |
+| $27 | `this._atmLatDerDolor` |
+| $28 | `this._atmLatDerRuido` |
+| $29 | `this._atmLatDerSalto` |
+| $30 | `this._atmProtDolor` |
+| $31 | `this._atmProtRuido` |
+| $32 | `this._atmProtSalto` |
+| $33 | `this._atmAperDolor` |
+| $34 | `this._atmAperRuido` |
+| $35 | `this._atmAperSalto` |
+| $36 | `this._atmCierreDolor` |
+| $37 | `this._atmCierreRuido` |
+| $38 | `this._atmCierreSalto` |
+| $39 | `this._atmCoordinacionCondilar` |
+| $40 | `this._atmAperturaMaximaMm.value` |
+| $41 | `this._atmObservaciones` |
+| $42 | `this._atmMusculosDolor` |
+| $43 | `this._atmMusculosDolorGrado.value` |
+| $44 | `this._atmMusculosDolorZona` |
+| $45 | `this._cuelloSimetrico` |
+| $46 | `this._cuelloSimetricoObs` |
+| $47 | `this._cuelloMovilidadConservada` |
+| $48 | `this._cuelloMovilidadObs` |
+| $49 | `this._laringeAlineada` |
+| $50 | `this._laringeaAlineadaObs` |
+| $51 | `this._cuelloOtros` |
+
+Notas de compatibilidad:
+
+- `actualizarExamenFisicoRegional` acepta un `ExamenFisicoRegionalAggregate` o un objeto plano por compatibilidad. La interfaz externa de rutas y controladores no cambia; el controlador traduce `DomainError` a HTTP `400`.
+
+## Caso Implementado: Examen Clínico Boca
+
+### Módulo: Examen Clínico Boca
+
+Responsabilidad del Agregado:
+
+- Encapsular y proteger la integridad del examen clínico bucal asociado a una historia clínica, validando `id_historia` como UUIDv4, normalizando campos textuales y aplicando Value Objects para campos codificados/numerales críticos antes de llamar al procedure `u_examen_clinico_boca`.
+
+Invariantes Defendidas (Value Objects):
+
+- `OclusionCodeVO`: preserva la etiqueta clínica tal como la envía la UI (`Clase I`, `Clase II`, `Clase III`, `No registrable`, `Sí`, `No`, etc.) y solo normaliza vacíos a `null`.
+- `OverbiteVO` y `OverjetVO`: preservan el valor ingresado como texto limpio; no fuerzan coerción numérica para no romper el envío desde el formulario.
+- `_normalizePrimitive()` para textos: `trim()` y `'' -> null`.
+
+Comparativa Antes vs Después:
+
+- Antes: el modelo pasaba los valores recibidos directamente al `CALL u_examen_clinico_boca`, lo que podía provocar `invalid input syntax for type numeric` cuando la UI enviaba texto libre.
+- Después: `ExamenBocaAggregate` desempaqueta campos, aplica VOs y normalización, y expone `obtenerParametros()` que garantiza el orden posicional de 39 parámetros requerido por el procedure. Entradas inválidas se envían como `NULL` en lugar de provocar errores.
+
+Mapeo de Parámetros a Infraestructura:
+| Posición ($n) | Propiedad privada del Agregado |
+|---:|---|
+| $1 | `this._idHistory` |
+| $2 | `this._labiosSin` |
+| $3 | `this._labiosCon` |
+| $4 | `this._vestibuloSin` |
+| $5 | `this._vestibuloCon` |
+| $6 | `this._carrillosSin` |
+| $7 | `this._carrillosCon` |
+| $8 | `this._paladarSin` |
+| $9 | `this._paladarCon` |
+| $10 | `this._orofaringeSin` |
+| $11 | `this._orofaringeCon` |
+| $12 | `this._pisoBocaSin` |
+| $13 | `this._pisoBocaCon` |
+| $14 | `this._lenguaSin` |
+| $15 | `this._lenguaCon` |
+| $16 | `this._enciaSin` |
+| $17 | `this._enciaCon` |
+| $18 | `this._oclusionMolarDer.value` |
+| $19 | `this._oclusionMolarIzq.value` |
+| $20 | `this._oclusionCaninaDer.value` |
+| $21 | `this._oclusionCaninaIzq.value` |
+| $22 | `this._oclusionMordidaCruzada` |
+| $23 | `this._oclusionVestibuloclusion` |
+| $24 | `this._oclusionOverbite.value` |
+| $25 | `this._oclusionMordidaAbierta` |
+| $26 | `this._oclusionSobremordida` |
+| $27 | `this._oclusionVerticalOtros` |
+| $28 | `this._oclusionOverjet.value` |
+| $29 | `this._oclusionProtrusion` |
+| $30 | `this._oclusionGuiaIncisiva` |
+| $31 | `this._oclusionContactoPosterior` |
+| $32 | `this._latDerGuiaCanina` |
+| $33 | `this._latDerFuncionGrupo` |
+| $34 | `this._latDerContactoBalance` |
+| $35 | `this._latDerDescriba` |
+| $36 | `this._latIzqGuiaCanina` |
+| $37 | `this._latIzqFuncionGrupo` |
+| $38 | `this._latIzqContactoBalance` |
+| $39 | `this._latIzqDescriba` |
+
+Notas de compatibilidad:
+
+- `actualizarExamenBoca` acepta un `ExamenBocaAggregate` o un objeto plano. La llamada a `u_examen_clinico_boca` usa exactamente los 39 parámetros posicionales esperados.
+
+## Caso Implementado: Higiene Bucal
+
+### Módulo: Higiene Bucal
+
+Responsabilidad del Agregado:
+
+- Proteger la integridad del examen de higiene bucal asociado a una historia clínica, validando `id_historia` como UUIDv4, asegurando que `estadoHigiene` no llegue vacío y que `idUsuario` sea un entero positivo antes de invocar `i_examen_higiene_oral`.
+
+Invariantes Defendidas (Value Objects):
+
+- `IdHistoriaValueObject`: valida que `id_historia` sea una cadena UUIDv4 no vacía.
+- `EstadoHigieneValueObject`: valida que `estadoHigiene` exista y no sea una cadena vacía; preserva el texto limpio enviado por la UI.
+- `idUsuario`: se normaliza y valida como UUIDv4 porque el identificador real del usuario llega desde el token y se persiste como identificador de trazabilidad clínica.
+- El identificador mostrado por la UI puede venir con prefijo visual `HC-`; el agregado lo normaliza y valida contra el UUID limpio antes de persistir.
+
+Comparativa Antes vs Después:
+
+- Antes: el controlador reenviaba `req.body` y `req.user.id` directamente al modelo, sin un agregado explícito ni validación centralizada.
+- Después: `HigieneBocalAggregate` encapsula los tres valores críticos en propiedades privadas, valida en RAM y expone `obtenerParametros()` para llamar a `i_examen_higiene_oral($1, $2, $3)` sin alterar el contrato SQL.
+
+Mapeo de Parámetros a Infraestructura:
+| Posición ($n) | Propiedad privada del Agregado |
+|---:|---|
+| $1 | `this._idHistory.value` |
+| $2 | `this._estadoHigiene.value` |
+| $3 | `this._idUsuario` |
+
+Notas de compatibilidad:
+
+- `actualizarHigieneBocal` acepta un `HigieneBocalAggregate` o un objeto plano con `idHistory`, `estadoHigiene` e `idUsuario` para mantener compatibilidad con el controlador existente.
+
+## Caso Implementado: Derivación Clínicas
+
+### Módulo: Derivación Clínicas
+
+Responsabilidad del Agregado:
+
+- Encapsular la lógica de validación y normalización para las derivaciones clínicas asociadas a una historia (`id_historia`), garantizando que los parámetros que llegan al procedimiento `i_derivacion_clinicas` estén ordenados, normalizados y validados en RAM antes de tocar la base de datos.
+
+Invariantes Defendidas (Value Objects):
+
+- `IdHistoriaValueObject`: acepta UUIDv4; normaliza y elimina el prefijo visual `HC-` si está presente.
+- `IdUsuarioValueObject`: valida que el identificador del usuario sea un UUIDv4 (proviene del token) para trazabilidad.
+- `DestinosValueObject`: acepta objetos o cadenas JSON válidas; normaliza a objeto en memoria y rechaza JSON inválido.
+- `TextoValueObject`: normaliza cadenas vacías a `null` y `trim()` en memoria para `observaciones`, `alumno` y `docente`.
+
+Mapeo de Parámetros a Infraestructura:
+| Posición ($n) | Propiedad privada del Agregado |
+|---:|---|
+| $1 | `_idHistory.value` |
+| $2 | `JSON.stringify(_destinos)` |
+| $3 | `_observaciones` |
+| $4 | `_alumno` |
+| $5 | `_docente` |
+| $6 | `_idUsuario` |
+
+Notas de compatibilidad:
+
+- El controlador construye `DerivacionClinicasAggregate` y traduce `DomainError` a HTTP `400` sin cambiar rutas públicas.
+- Se preserva la llamada SQL original: `CALL i_derivacion_clinicas($1,$2,$3,$4,$5,$6)`; `destinos` se envía como JSON string.
+- El controlador acepta `id_historia` con o sin prefijo `HC-` y normaliza antes de validación.
+
+## Caso Implementado: Diagnóstico Clínicas
+
+### Módulo: Diagnóstico Clínicas
+
+Responsabilidad del Agregado:
+
+- Encapsular y normalizar la información clínica relacionada con diagnósticos definitivos (módulo `clinicas`), validando `id_historia` como UUIDv4, normalizando fechas y textos, y preparando los parámetros posicionales para el procedimiento `i_diagnostico_clinicas`.
+
+Invariantes Defendidas (Value Objects):
+
+- `IdHistoriaValueObject`: valida y normaliza UUIDv4, permite `HC-` prefijo visual y lo elimina antes de persistir.
+- `FechaValueObject`: valida fechas y las normaliza a `YYYY-MM-DD` para llamadas a `date` en Postgres.
+- `TextoValueObject`: normaliza cadenas vacías a `null` y hace `trim()` para todos los campos textuales (p. ej. `clinicaRespuesta`, `descripcionRespuesta`, `diagnosticoDefinitivo`, `tratamiento`, `pronostico`, `alumnoTratante`).
+- `JSONValueObject`: acepta objetos o cadenas JSON válidas para `examenes_auxiliares` y normaliza a objeto en memoria.
+- `IdUsuarioValueObject`: valida `idUsuario` (UUIDv4) proveniente del token.
+
+Mapeo de Parámetros a Infraestructura:
+| Posición ($n) | Propiedad privada del Agregado |
+|---:|---|
+| $1 | `_idHistory.value` |
+| $2 | `_fechaRespuesta.value` (o `null`) |
+| $3 | `_clinicaRespuesta.value` |
+| $4 | `_descripcionRespuesta.value` |
+| $5 | `JSON.stringify(_examenes)` |
+| $6 | `_interconsultaTipo.value` |
+| $7 | `_interconsultaFecha.value` (o `null`) |
+| $8 | `_interconsultaClinica.value` |
+| $9 | `_diagnosticoDefinitivo.value` |
+| $10 | `_tratamiento.value` |
+| $11 | `_pronostico.value` |
+| $12 | `_alumnoTratante.value` |
+| $13 | `_idUsuario.value` |
+
+Notas de compatibilidad:
+
+- El controlador ahora construye `DiagnosticoClinicasAggregate` y traduce `DomainError` a HTTP `400` sin cambiar rutas públicas.
+- El controlador acepta campos del formulario con nombres alternativos como `fecha`, `clinica`, `diagnosticoDefinitivo`, `tratamiento`, `pronostico` y `alumnoTratante`, además de los nombres históricos del backend.
+- Se mantiene la llamada SQL original: `CALL i_diagnostico_clinicas(...)` con los mismos tipos posicionales; `examenes` se envía como `jsonb` stringificado.
+- La función de lectura `consultarDiagnosticoClinicas` devuelve un objeto con las claves crudas de la BD y también alias en camelCase; si no hay fila devuelve `{}` para compatibilidad con GET vacío en la UI.
+- Si el tipo exacto del registro no coincide, el GET usa un fallback por `id_historia` para seguir mostrando datos antiguos en la pantalla.
+
+## Caso Implementado: Evolución
+
+### Módulo: Evolución
+
+Responsabilidad del Agregado:
+
+- Encapsular el registro cronológico de evolución clínica, validando la historia clínica como UUIDv4, normalizando la fecha de la nota y asegurando que `actividad` y `alumno` no lleguen vacíos al procedure `i_evolucion`.
+
+Invariantes Defendidas (Value Objects):
+
+- `IdHistoriaValueObject`: valida UUIDv4 y elimina el prefijo visual `HC-` antes de persistir.
+- `FechaValueObject`: valida la fecha y la normaliza a `YYYY-MM-DD`.
+- `TextoValueObject`: hace `trim()` y convierte cadenas vacías a `null`.
+- `IdUsuarioValueObject`: valida el usuario autenticado como UUIDv4.
+
+Mapeo de Parámetros a Infraestructura:
+| Posición ($n) | Propiedad privada del Agregado |
+|---:|---|
+| $1 | `_idHistory.value` |
+| $2 | `_fecha.value` |
+| $3 | `_actividad.value` |
+| $4 | `_alumno.value` |
+| $5 | `_idUsuario.value` |
+
+Notas de compatibilidad:
+
+- El controlador acepta `id_historia` o `id` y también elimina el prefijo `HC-` si viene desde la UI.
+- `consultarEvoluciones` mantiene el mismo `SELECT ... ORDER BY fecha DESC, id_evolucion DESC` y devuelve un array, aunque esté vacío.
+- `registrarEvolucion` sigue usando `CALL i_evolucion(...)` con los mismos cinco parámetros posicionales.
+
+## Núcleo HC Conservado
+
+### Módulo: Historia Clínica Base
+
+Responsabilidad del bloque conservado:
+
+- Mantener únicamente las operaciones que todavía dependen de `hcRoutes` y que no se han movido a controladores/modelos específicos: revisión de historia, creación de historia, listado por estudiante, borrador, asignación de paciente y consulta de paciente por historia.
+
+Operaciones que permanecen en `HcModel` / `HcController`:
+
+- `registrarRevisionHistoriaClinica`
+- `registrarHistoriaClinica`
+- `listarHistoriasClinicasPorEstudiante`
+- `obtenerBorradorHistoriaClinica`
+- `asignarPacienteAHistoriaClinica`
+- `consultarPacientePorHistoriaClinica`
+
+Operaciones retiradas del bloque núcleo porque ya están modularizadas:
+
+- Filiación
+- Motivo de consulta
+- Antecedentes anamnesis
+- Enfermedad actual
+- Examen físico general
+- Examen físico regional
+- Examen clínico de boca
+- Higiene bucal
+- Diagnóstico presuntivo
+- Derivación clínicas
+- Diagnóstico clínicas
+- Evolución
+
+Notas de compatibilidad:
+
+- El bloque núcleo no aplica el patrón de agregado rico completo; se conserva como superficie de compatibilidad para las rutas que todavía lo usan.
+- Los módulos ya migrados se controlan desde sus propios controladores y modelos, y deben seguir siendo la fuente única de verdad para esas secciones.
+
+## Observación Operativa: Asignación de Paciente a Historia Clínica
+
+- El flujo de asignación de paciente a historia clínica normaliza identificadores visuales con prefijo `HC-` antes de invocar `fn_asignar_paciente_a_historia`.
+- El controlador acepta variantes de payload como `idHistory`, `id_historia`, `idPatient`, `id_paciente` y `pacienteId` para reducir fallos por discrepancia entre frontend y backend.
+- Cuando el procedure rechaza los datos, el controlador devuelve el mensaje real de error para facilitar el diagnóstico en lugar de ocultarlo tras un 500 genérico.

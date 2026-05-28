@@ -1,26 +1,58 @@
 import * as diagnosticoModel from '../../models/hc/diagnosticoPresuntivoModel.js';
+import {
+  DiagnosticoPresuntivoAggregate,
+  DomainError,
+} from '../../models/hc/diagnosticoPresuntivoModel.js';
+
+const stripHCPrefix = (id) => {
+  if (!id) {
+    return id;
+  }
+  return id.startsWith('HC-') ? id.slice(3) : id;
+};
+
+const esErrorDominio = (err) => err && err.name === 'DomainError';
+
+const construirIdHistoria = (req) => {
+  const id = req.params.id_historia || req.params.id;
+  if (!id) {
+    throw new DomainError('id_historia es requerido');
+  }
+  return stripHCPrefix(String(id));
+};
+
+const construirAgregado = (req) => {
+  const idHistory = req.params.id_historia || req.params.id;
+  const { descripcion } = req.body;
+  return new DiagnosticoPresuntivoAggregate({
+    idHistory,
+    descripcion,
+    idUsuario: req.user && req.user.id,
+  });
+};
 
 export const consultarDiagnosticoPresuntivo = async (req, res) => {
   try {
-    const id = req.params.id_historia || req.params.id;
+    const id = construirIdHistoria(req);
     const result = await diagnosticoModel.consultarDiagnosticoPresuntivo(id);
     res.status(200).json(result || {});
   } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
     res.status(500).json({ error: err.message });
   }
 };
 
 export const actualizarDiagnosticoPresuntivo = async (req, res) => {
   try {
-    const id = req.params.id_historia || req.params.id;
-    const { descripcion } = req.body;
-    await diagnosticoModel.actualizarDiagnosticoPresuntivo({
-      idHistory: id,
-      descripcion,
-      idUsuario: req.user.id,
-    });
+    const agregado = construirAgregado(req);
+    await diagnosticoModel.actualizarDiagnosticoPresuntivo(agregado);
     res.status(200).json({ message: 'Diagnóstico presuntivo guardado' });
   } catch (err) {
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
     res.status(500).json({ error: err.message });
   }
 };

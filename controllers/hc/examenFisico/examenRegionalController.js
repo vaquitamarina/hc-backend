@@ -2,33 +2,57 @@ import {
   registrarExamenFisicoRegional as modelRegistrar,
   consultarExamenFisicoRegional as modelConsultar,
   actualizarExamenFisicoRegional as modelActualizar,
+  DomainError,
+  ExamenFisicoRegionalAggregate,
 } from '../../../models/hc/examenFisico/examenRegionalModel.js';
+
+function esErrorDominio(err) {
+  return err && (err instanceof DomainError || err.name === 'DomainError');
+}
+
+function construirIdHistoria(req) {
+  return req.params.id_historia || req.params.id;
+}
+
+function construirAgregado(req) {
+  const idHistory = construirIdHistoria(req);
+  return new ExamenFisicoRegionalAggregate({ idHistory, body: req.body });
+}
 
 export const registrarExamenFisicoRegional = async (req, res) => {
   try {
     const result = await modelRegistrar(req.body);
-    res.status(201).json(result);
+    return res.status(201).json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const consultarExamenFisicoRegional = async (req, res) => {
   try {
-    const idHistory = req.params.id_historia || req.params.id;
+    const idHistory = construirIdHistoria(req);
     const result = await modelConsultar(idHistory);
-    res.json(result || {});
+    return res.json(result || {});
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };
 
 export const actualizarExamenFisicoRegional = async (req, res) => {
   try {
-    const idHistory = req.params.id_historia || req.params.id;
-    await modelActualizar({ idHistory, ...req.body });
-    res.json({ message: 'Actualizado' });
+    const agregado = construirAgregado(req);
+    await modelActualizar(agregado);
+    return res.json({ message: 'Actualizado' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (esErrorDominio(err)) {
+      return res.status(400).json({ error: err.message });
+    }
+    return res.status(500).json({ error: err.message });
   }
 };

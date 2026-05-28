@@ -1,5 +1,321 @@
 import pool from '../../../db/db.js';
 
+class DomainError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'DomainError';
+  }
+}
+
+// Value Objects (for critical numeric/text fields) — forgiving: map invalid inputs to null
+class AgudezaVisualVO {
+  constructor(value) {
+    if (value === null || value === undefined) {
+      this.value = null;
+      return Object.freeze(this);
+    }
+    const num = Number(value);
+    if (Number.isNaN(num) || num <= 0 || num > 10) {
+      this.value = null;
+      return Object.freeze(this);
+    }
+    this.value = num;
+    Object.freeze(this);
+  }
+}
+
+class AperturaMaximaVO {
+  constructor(value) {
+    if (value === null || value === undefined) {
+      this.value = null;
+      return Object.freeze(this);
+    }
+    const num = Number(value);
+    if (Number.isNaN(num) || num < 0 || num > 100) {
+      this.value = null;
+      return Object.freeze(this);
+    }
+    this.value = num;
+    Object.freeze(this);
+  }
+}
+
+class MusculosDolorGradoVO {
+  constructor(value) {
+    if (value === null || value === undefined) {
+      this.value = null;
+      return Object.freeze(this);
+    }
+    const num = Number(value);
+    if (Number.isNaN(num) || num < 0 || num > 10) {
+      this.value = null;
+      return Object.freeze(this);
+    }
+    this.value = num;
+    Object.freeze(this);
+  }
+}
+
+class ExamenFisicoRegionalAggregate {
+  constructor({ idHistory, body = {} } = {}) {
+    this._idHistory = ExamenFisicoRegionalAggregate._validateId(idHistory);
+
+    this._cabezaPosicion = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.cabezaPosicion || body.cabeza_posicion
+    );
+    this._cabezaMovimientos = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.cabezaMovimientos || body.cabeza_movimientos
+    );
+    this._cabezaMovimientosObs =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.cabezaMovimientosObs || body.cabeza_movimientos_obs
+      );
+    this._craneoTamano = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.craneoTamano || body.craneo_tamano
+    );
+    this._craneoForma = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.craneoForma || body.craneo_forma
+    );
+    this._caraFormaFrente = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.caraFormaFrente || body.cara_forma_frente
+    );
+    this._caraFormaPerfil = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.caraFormaPerfil || body.cara_forma_perfil
+    );
+
+    this._ojosCejasAdecuada = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.ojosCejasAdecuada || body.ojos_cejas_adecuada
+    );
+    this._ojosImplantacionObs =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.ojosImplantacionObs || body.ojos_implantacion_obs
+      );
+    this._ojosEscleroticas = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.ojosEscleroticas || body.ojos_escleroticas
+    );
+    this._ojosAgudezaVisual = new AgudezaVisualVO(
+      body.ojosAgudezaVisual || body.ojos_agudeza_visual
+    );
+    this._ojosIrisColor = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.ojosIrisColor || body.ojos_iris_color
+    );
+    this._ojosArcoSenil = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.ojosArcoSenil || body.ojos_arco_senil
+    );
+
+    this._narizForma = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.narizForma || body.nariz_forma
+    );
+    this._narizPermeables = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.narizPermeables || body.nariz_permeables
+    );
+    this._narizSecreciones = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.narizSecreciones || body.nariz_secreciones
+    );
+    this._narizSenosDolorosos =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.narizSenosDolorosos || body.nariz_senos_dolorosos
+      );
+
+    this._oidosAnomaliasMorfologicas =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.oidosAnomaliasMorfologicas || body.oidos_anomalias_morfologicas
+      );
+    this._oidosAnomaliasObs = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.oidosAnomaliasObs || body.oidos_anomalias_obs
+    );
+    this._oidosSecreciones = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.oidosSecreciones || body.oidos_secreciones
+    );
+    this._oidosAudicionConservada =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.oidosAudicionConservada || body.oidos_audicion_conservada
+      );
+
+    this._atmTrayectoria = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmTrayectoria || body.atm_trayectoria
+    );
+
+    this._atmLatIzqDolor = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmLatIzqDolor || body.atm_lat_izq_dolor
+    );
+    this._atmLatIzqRuido = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmLatIzqRuido || body.atm_lat_izq_ruido
+    );
+    this._atmLatIzqSalto = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmLatIzqSalto || body.atm_lat_izq_salto
+    );
+
+    this._atmLatDerDolor = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmLatDerDolor || body.atm_lat_der_dolor
+    );
+    this._atmLatDerRuido = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmLatDerRuido || body.atm_lat_der_ruido
+    );
+    this._atmLatDerSalto = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmLatDerSalto || body.atm_lat_der_salto
+    );
+
+    this._atmProtDolor = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmProtDolor || body.atm_prot_dolor
+    );
+    this._atmProtRuido = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmProtRuido || body.atm_prot_ruido
+    );
+    this._atmProtSalto = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmProtSalto || body.atm_prot_salto
+    );
+
+    this._atmAperDolor = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmAperDolor || body.atm_aper_dolor
+    );
+    this._atmAperRuido = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmAperRuido || body.atm_aper_ruido
+    );
+    this._atmAperSalto = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmAperSalto || body.atm_aper_salto
+    );
+
+    this._atmCierreDolor = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmCierreDolor || body.atm_cierre_dolor
+    );
+    this._atmCierreRuido = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmCierreRuido || body.atm_cierre_ruido
+    );
+    this._atmCierreSalto = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmCierreSalto || body.atm_cierre_salto
+    );
+
+    this._atmCoordinacionCondilar =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.atmCoordinacionCondilar || body.atm_coordinacion_condilar
+      );
+    this._atmAperturaMaximaMm = new AperturaMaximaVO(
+      body.atmAperturaMaximaMm || body.atm_apertura_maxima_mm
+    );
+    this._atmObservaciones = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmObservaciones || body.atm_observaciones
+    );
+    this._atmMusculosDolor = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.atmMusculosDolor || body.atm_musculos_dolor
+    );
+    this._atmMusculosDolorGrado = new MusculosDolorGradoVO(
+      body.atmMusculosDolorGrado || body.atm_musculos_dolor_grado
+    );
+    this._atmMusculosDolorZona =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.atmMusculosDolorZona || body.atm_musculos_dolor_zona
+      );
+
+    this._cuelloSimetrico = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.cuelloSimetrico || body.cuello_simetrico
+    );
+    this._cuelloSimetricoObs =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.cuelloSimetricoObs || body.cuello_simetrico_obs
+      );
+    this._cuelloMovilidadConservada =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.cuelloMovilidadConservada || body.cuello_movilidad_conservada
+      );
+    this._cuelloMovilidadObs =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.cuelloMovilidadObs || body.cuello_movilidad_obs
+      );
+    this._laringeAlineada = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.laringeAlineada || body.laringe_alineada
+    );
+    this._laringeaAlineadaObs =
+      ExamenFisicoRegionalAggregate._normalizePrimitive(
+        body.laringeAlineadaObs || body.laringe_alineada_obs
+      );
+    this._cuelloOtros = ExamenFisicoRegionalAggregate._normalizePrimitive(
+      body.cuelloOtros || body.cuello_otros
+    );
+  }
+
+  static _validateId(id) {
+    if (!id || typeof id !== 'string') {
+      throw new DomainError('id_historia inválido: debe ser UUIDv4');
+    }
+    const re =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!re.test(id)) {
+      throw new DomainError('id_historia inválido: formato UUIDv4 esperado');
+    }
+    return id;
+  }
+
+  static _normalizePrimitive(value) {
+    if (value === undefined || value === null) {
+      return null;
+    }
+    if (typeof value === 'string') {
+      const t = value.trim();
+      return t === '' ? null : t;
+    }
+    return value;
+  }
+
+  obtenerParametros() {
+    return [
+      this._idHistory,
+      this._cabezaPosicion,
+      this._cabezaMovimientos,
+      this._cabezaMovimientosObs,
+      this._craneoTamano,
+      this._craneoForma,
+      this._caraFormaFrente,
+      this._caraFormaPerfil,
+      this._ojosCejasAdecuada,
+      this._ojosImplantacionObs,
+      this._ojosEscleroticas,
+      this._ojosAgudezaVisual.value,
+      this._ojosIrisColor,
+      this._ojosArcoSenil,
+      this._narizForma,
+      this._narizPermeables,
+      this._narizSecreciones,
+      this._narizSenosDolorosos,
+      this._oidosAnomaliasMorfologicas,
+      this._oidosAnomaliasObs,
+      this._oidosSecreciones,
+      this._oidosAudicionConservada,
+      this._atmTrayectoria,
+      this._atmLatIzqDolor,
+      this._atmLatIzqRuido,
+      this._atmLatIzqSalto,
+      this._atmLatDerDolor,
+      this._atmLatDerRuido,
+      this._atmLatDerSalto,
+      this._atmProtDolor,
+      this._atmProtRuido,
+      this._atmProtSalto,
+      this._atmAperDolor,
+      this._atmAperRuido,
+      this._atmAperSalto,
+      this._atmCierreDolor,
+      this._atmCierreRuido,
+      this._atmCierreSalto,
+      this._atmCoordinacionCondilar,
+      this._atmAperturaMaximaMm.value,
+      this._atmObservaciones,
+      this._atmMusculosDolor,
+      this._atmMusculosDolorGrado.value,
+      this._atmMusculosDolorZona,
+      this._cuelloSimetrico,
+      this._cuelloSimetricoObs,
+      this._cuelloMovilidadConservada,
+      this._cuelloMovilidadObs,
+      this._laringeAlineada,
+      this._laringeaAlineadaObs,
+      this._cuelloOtros,
+    ];
+  }
+}
+
+export { DomainError, ExamenFisicoRegionalAggregate };
+
 export async function registrarExamenFisicoRegional(data) {
   try {
     const keys = Object.keys(data);
@@ -13,7 +329,6 @@ export async function registrarExamenFisicoRegional(data) {
     }
     return rows[0];
   } catch (error) {
-    // console.error('Error al crear examen regional');
     throw error;
   }
 }
@@ -24,12 +339,10 @@ export async function consultarExamenFisicoRegional(idHistory) {
       'SELECT * FROM examen_regional WHERE id_historia = $1',
       [idHistory]
     );
-
     const data = result.rows[0];
     if (!data) {
       return null;
     }
-
     return {
       cabezaPosicion: data.cabeza_posicion,
       cabezaMovimientos: data.cabeza_movimientos,
@@ -94,82 +407,91 @@ export async function consultarExamenFisicoRegional(idHistory) {
       cuelloOtros: data.cuello_otros,
     };
   } catch (error) {
-    // console.error('Error al obtener examen regional:', error.message);
     throw error;
   }
 }
 
-export async function actualizarExamenFisicoRegional(data) {
+export async function actualizarExamenFisicoRegional(dataOrAggregate) {
   try {
+    let params;
+    if (
+      dataOrAggregate &&
+      typeof dataOrAggregate.obtenerParametros === 'function'
+    ) {
+      params = dataOrAggregate.obtenerParametros();
+    } else {
+      const d = dataOrAggregate || {};
+      params = [
+        d.idHistory,
+        d.cabezaPosicion || null,
+        d.cabezaMovimientos || null,
+        d.cabezaMovimientosObs || null,
+        d.craneoTamano || null,
+        d.craneoForma || null,
+        d.caraFormaFrente || null,
+        d.caraFormaPerfil || null,
+        d.ojosCejasAdecuada ?? null,
+        d.ojosImplantacionObs || null,
+        d.ojosEscleroticas || null,
+        d.ojosAgudezaVisual ?? null,
+        d.ojosIrisColor || null,
+        d.ojosArcoSenil ?? null,
+        d.narizForma || null,
+        d.narizPermeables ?? null,
+        d.narizSecreciones || null,
+        d.narizSenosDolorosos ?? null,
+        d.oidosAnomaliasMorfologicas ?? null,
+        d.oidosAnomaliasObs || null,
+        d.oidosSecreciones ?? null,
+        d.oidosAudicionConservada ?? null,
+        d.atmTrayectoria || null,
+        d.atmLatIzqDolor ?? null,
+        d.atmLatIzqRuido ?? null,
+        d.atmLatIzqSalto ?? null,
+        d.atmLatDerDolor ?? null,
+        d.atmLatDerRuido ?? null,
+        d.atmLatDerSalto ?? null,
+        d.atmProtDolor ?? null,
+        d.atmProtRuido ?? null,
+        d.atmProtSalto ?? null,
+        d.atmAperDolor ?? null,
+        d.atmAperRuido ?? null,
+        d.atmAperSalto ?? null,
+        d.atmCierreDolor ?? null,
+        d.atmCierreRuido ?? null,
+        d.atmCierreSalto ?? null,
+        d.atmCoordinacionCondilar ?? null,
+        d.atmAperturaMaximaMm || null,
+        d.atmObservaciones || null,
+        d.atmMusculosDolor ?? null,
+        d.atmMusculosDolorGrado || null,
+        d.atmMusculosDolorZona || null,
+        d.cuelloSimetrico ?? null,
+        d.cuelloSimetricoObs || null,
+        d.cuelloMovilidadConservada ?? null,
+        d.cuelloMovilidadObs || null,
+        d.laringeAlineada ?? null,
+        d.laringeAlineadaObs || null,
+        d.cuelloOtros || null,
+      ];
+    }
+
     await pool.query(
       `CALL u_examen_regional(
-          $1, 
-          $2, $3, $4, $5, $6, $7, $8, 
-          $9, $10, $11, $12, $13, $14, 
-          $15, $16, $17, $18, 
-          $19, $20, $21, $22, 
-          $23, 
-          $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, 
-          $39, $40, $41, $42, $43, $44, 
+          $1,
+          $2, $3, $4, $5, $6, $7, $8,
+          $9, $10, $11, $12, $13, $14,
+          $15, $16, $17, $18,
+          $19, $20, $21, $22,
+          $23,
+          $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38,
+          $39, $40, $41, $42, $43, $44,
           $45, $46, $47, $48, $49, $50, $51
         )`,
-      [
-        data.idHistory,
-        data.cabezaPosicion || null,
-        data.cabezaMovimientos || null,
-        data.cabezaMovimientosObs || null,
-        data.craneoTamano || null,
-        data.craneoForma || null,
-        data.caraFormaFrente || null,
-        data.caraFormaPerfil || null,
-        data.ojosCejasAdecuada ?? null,
-        data.ojosImplantacionObs || null,
-        data.ojosEscleroticas || null,
-        data.ojosAgudezaVisual ?? null,
-        data.ojosIrisColor || null,
-        data.ojosArcoSenil ?? null,
-        data.narizForma || null,
-        data.narizPermeables ?? null,
-        data.narizSecreciones ?? null,
-        data.narizSenosDolorosos ?? null,
-        data.oidosAnomaliasMorfologicas ?? null,
-        data.oidosAnomaliasObs || null,
-        data.oidosSecreciones ?? null,
-        data.oidosAudicionConservada ?? null,
-        data.atmTrayectoria || null,
-        data.atmLatIzqDolor ?? null,
-        data.atmLatIzqRuido ?? null,
-        data.atmLatIzqSalto ?? null,
-        data.atmLatDerDolor ?? null,
-        data.atmLatDerRuido ?? null,
-        data.atmLatDerSalto ?? null,
-        data.atmProtDolor ?? null,
-        data.atmProtRuido ?? null,
-        data.atmProtSalto ?? null,
-        data.atmAperDolor ?? null,
-        data.atmAperRuido ?? null,
-        data.atmAperSalto ?? null,
-        data.atmCierreDolor ?? null,
-        data.atmCierreRuido ?? null,
-        data.atmCierreSalto ?? null,
-        data.atmCoordinacionCondilar ?? null,
-        data.atmAperturaMaximaMm || null,
-        data.atmObservaciones || null,
-        data.atmMusculosDolor ?? null,
-        data.atmMusculosDolorGrado || null,
-        data.atmMusculosDolorZona || null,
-        data.cuelloSimetrico ?? null,
-        data.cuelloSimetricoObs || null,
-        data.cuelloMovilidadConservada ?? null,
-        data.cuelloMovilidadObs || null,
-        data.laringeAlineada ?? null,
-        data.laringeAlineadaObs || null,
-        data.cuelloOtros || null,
-      ]
+      params
     );
     return true;
   } catch (error) {
-    // console.error('Error al actualizar examen regional:', error.message);
     throw error;
   }
 }
