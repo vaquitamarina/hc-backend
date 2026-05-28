@@ -1,4 +1,4 @@
-import { HcModel } from './hcModel.js';
+import pool from '../../db/db.js';
 
 class DomainError extends Error {
   constructor(message) {
@@ -92,9 +92,26 @@ export { DomainError, DiagnosticoPresuntivoAggregate };
 export async function consultarDiagnosticoPresuntivo(idHistory) {
   const id = stripHCPrefix(String(idHistory || ''));
   if (!id) {
-    return null;
+    return { descripcion: '' };
   }
-  return HcModel.getDiagnosticoPresuntivo(id);
+
+  const result = await pool.query(
+    `SELECT descripcion
+       FROM diagnostico
+      WHERE id_historia = $1
+        AND tipo = 'presuntivo'
+      ORDER BY fecha DESC NULLS LAST
+      LIMIT 1`,
+    [id]
+  );
+
+  if (!result.rows[0]) {
+    return { descripcion: '' };
+  }
+
+  return {
+    descripcion: result.rows[0].descripcion || '',
+  };
 }
 
 export async function actualizarDiagnosticoPresuntivo(aggregateOrObj) {
@@ -106,11 +123,13 @@ export async function actualizarDiagnosticoPresuntivo(aggregateOrObj) {
       agg = new DiagnosticoPresuntivoAggregate(aggregateOrObj);
     }
 
-    return HcModel.updateDiagnosticoPresuntivo({
-      idHistory: agg._idHistory.toString(),
-      descripcion: agg._descripcion.value,
-      idUsuario: agg._idUsuario.toString(),
-    });
+    await pool.query('CALL i_diagnostico_presuntivo($1, $2, $3)', [
+      agg._idHistory.toString(),
+      agg._descripcion.value,
+      agg._idUsuario.toString(),
+    ]);
+
+    return true;
   } catch (error) {
     throw error;
   }
