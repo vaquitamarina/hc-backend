@@ -1,17 +1,21 @@
 import { Router } from 'express';
-import { UserController } from '../user/application/userController.js';
-import AuthController from '../auth/application/authController.js';
+import { UserController } from '../controllers/users/userController.js';
+import { UserModel } from '../models/user/userModel.js';
+import { AuthController } from '../controllers/users/authController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 
 export const userRoutes = Router();
 
-userRoutes.post('/register', UserController.registrarUsuario);
-userRoutes.post('/login', AuthController.iniciarSesion);
-userRoutes.use(authMiddleware);
-userRoutes.post('/logout', AuthController.cerrarSesion);
+const userController = new UserController(UserModel);
+const authController = new AuthController(UserModel);
 
-userRoutes.get('/me', AuthController.obtenerSesionActual);
-userRoutes.get('/:id', UserController.obtenerUsuarioPorId);
+userRoutes.post('/register', userController.registrarUsuario);
+userRoutes.post('/login', authController.iniciarSesion);
+userRoutes.use(authMiddleware);
+userRoutes.post('/logout', authController.cerrarSesion);
+
+userRoutes.get('/me', authController.obtenerSesionActual);
+userRoutes.get('/:id', userController.obtenerUsuarioPorId);
 
 //midddlware de admins(a futuro)
-userRoutes.get('/', UserController.listarUsuarios);
+userRoutes.get('/', userController.listarUsuarios);
