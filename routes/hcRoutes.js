@@ -6,10 +6,10 @@ import { ExamenGeneralController } from '../examenGeneral/application/examenGene
 import { ExamenRegionalController } from '../examenRegional/application/examenRegionalController.js';
 import { ExamenBocaController } from '../examenBoca/application/examenBocaController.js';
 import { HigieneBocalController } from '../higieneBocal/application/higieneBocalController.js';
-import * as derivacionClinicasController from '../controllers/hc/derivacionClinicasController.js';
-import * as diagnosticoClinicasController from '../controllers/hc/diagnosticoClinicasController.js';
-import * as diagnosticoPresuntivoController from '../controllers/hc/diagnosticoPresuntivoController.js';
-import * as evolucionController from '../controllers/hc/evolucionController.js';
+import { DerivacionClinicasController } from '../derivacionClinicas/application/derivacionClinicasController.js';
+import { DiagnosticoClinicasController } from '../diagnosticoClinicas/application/diagnosticoClinicasController.js';
+import { DiagnosticoPresuntivoController } from '../diagnosticoPresuntivo/application/diagnosticoPresuntivoController.js';
+import { EvolucionController } from '../evolucion/application/evolucionController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 import { MotivoConsultaController } from '../motivoConsulta/application/motivoConsultaController.js';
 import { AntecedenteController } from '../antecedente/application/antecedenteController.js';
@@ -186,36 +186,36 @@ hcRoutes.put('/:id/higiene', HigieneBocalController.actualizarHigieneBucal);
 // SECCIÓN III
 hcRoutes.get(
   '/:id/diagnostico-presuntivo',
-  diagnosticoPresuntivoController.consultarDiagnosticoPresuntivo
+  DiagnosticoPresuntivoController.consultarDiagnosticoPresuntivo
 );
 hcRoutes.put(
   '/:id/diagnostico-presuntivo',
-  diagnosticoPresuntivoController.actualizarDiagnosticoPresuntivo
+  DiagnosticoPresuntivoController.actualizarDiagnosticoPresuntivo
 );
 
 // SECCIÓN IV
 hcRoutes.get(
   '/:id/derivacion',
-  derivacionClinicasController.consultarDerivacionClinicas
+  DerivacionClinicasController.consultarDerivacionClinicas
 );
 hcRoutes.put(
   '/:id/derivacion',
-  derivacionClinicasController.actualizarDerivacionClinicas
+  DerivacionClinicasController.actualizarDerivacionClinicas
 );
 
 // SECCIÓN V
 hcRoutes.get(
   '/:id/diagnostico-clinicas',
-  diagnosticoClinicasController.consultarDiagnosticoClinico
+  DiagnosticoClinicasController.consultarDiagnosticoClinico
 );
 hcRoutes.put(
   '/:id/diagnostico-clinicas',
-  diagnosticoClinicasController.actualizarDiagnosticoClinico
+  DiagnosticoClinicasController.actualizarDiagnosticoClinico
 );
 
 // --- RUTAS DE EVOLUCIÓN ---
-hcRoutes.get('/:id/evolucion', evolucionController.consultarEvoluciones);
-hcRoutes.post('/:id/evolucion', evolucionController.registrarEvolucion);
+hcRoutes.get('/:id/evolucion', EvolucionController.consultarEvoluciones);
+hcRoutes.post('/:id/evolucion', EvolucionController.registrarEvolucion);
 
 // Endpoint para obtener todas las historias clínicas de un estudiante
 hcRoutes.get('/student/:id', hcController.listarHistoriasClinicasPorEstudiante);

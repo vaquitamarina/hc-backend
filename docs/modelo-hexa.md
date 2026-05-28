@@ -47,9 +47,61 @@ Aplicación (Adaptador Primario): El controlador recibe la petición HTTP, const
 
 Infraestructura (Adaptador Secundario): El repositorio aísla las consultas SQL de PostgreSQL mediante `pool.query`, implementando llamadas a procedimientos almacenados o `SELECT` para persistencia y lectura, y utiliza `agregado.obtenerParametros()` para mapear el contrato posicional de persistencia.
 
+Módulo: Derivación Clínicas (Vertical Slice)
+Dominio (Core Pura): Value Objects validan `id_historia` y `id_usuario` como UUID v4, validan y normalizan `destinos` (JSON) y textos opcionales; el agregado `DerivacionClinicasAggregate` expone `obtenerParametros()`.
+
+Aplicación (Adaptador Primario): El controlador orquesta `consultarDerivacionClinicas` y `actualizarDerivacionClinicas`, captura `DomainError` para responder 400 y delega en el repositorio.
+
+Infraestructura (Adaptador Secundario): El repositorio implementa `SELECT` por `id_historia` y `CALL i_derivacion_clinicas(...)` para persistencia usando `pool.query`.
+
+Módulo: Diagnóstico Presuntivo (Vertical Slice)
+Dominio (Core Pura): `DiagnosticoPresuntivoAggregate` valida `id_historia`, `descripcion` y `id_usuario` y expone `obtenerParametros()`.
+
+Aplicación: Controlador expone `consultarDiagnosticoPresuntivo` y `actualizarDiagnosticoPresuntivo` delegando en el repositorio.
+
+Infraestructura: Repositorio encapsula la consulta de `diagnostico` tipo `presuntivo` y llama `CALL i_diagnostico_presuntivo(...)` para actualizaciones.
+
+Módulo: Diagnóstico Clínicas (Vertical Slice)
+Dominio: El agregado `DiagnosticoClinicasAggregate` valida y normaliza fecha, textos y JSON de exámenes auxiliares, exponiendo `obtenerParametros()`.
+
+Aplicación: Controlador administra lectura preferente de `tipo='definitivo_clinicas'` y fallback a la última fila; maneja actualizar via repositorio.
+
+Infraestructura: Repositorio implementa la selección/fallback y `CALL i_diagnostico_clinicas(...)` para persistencia.
+
+Módulo: Evolución (Vertical Slice)
+Dominio: `EvolucionAggregate` valida `id_historia`, `fecha`, `actividad`, `alumno` e `id_usuario`.
+
+Aplicación: Controlador expone `consultarEvoluciones` y `registrarEvolucion`.
+
+Infraestructura: Repositorio ejecuta `SELECT` para listar evoluciones y `CALL i_evolucion(...)` para insertar.
+
 Módulo: Higiene Bucal (Vertical Slice)
 Dominio (Core Pura): Los Value Objects validan `id_historia` como UUID v4 y normalizan el estado de higiene oral (texto obligatorio) y el `id_usuario` que registra la información; el agregado `HigieneBocalAggregate` protege estas invariantes y expone `obtenerParametros()` para persistencia.
 
 Aplicación (Adaptador Primario): El controlador recibe la petición HTTP, construye el agregado con `construirAgregado(req)`, captura `DomainError` para responder 400 y orquesta las operaciones `consultarHigieneBucal` y `actualizarHigieneBucal` delegando en el repositorio.
 
 Infraestructura (Adaptador Secundario): El repositorio implementa las consultas SQL necesarias (`SELECT` por historia y `CALL i_examen_higiene_oral(...)` para persistir) mediante `pool.query`, y usa `agregado.obtenerParametros()` para mapear el contrato posicional de los procedimientos almacenados.
+
+### Módulo: ListaHcAdultos (Vertical Slice)
+
+**Dominio (Core Pura):** Valida que `id` sea un UUID v4 mediante un Value Object (`IdUuidValueObject`) y protege la invariante mediante `ListaHcAdultosAggregate` que expone `obtenerParametros()` (sin acceso a BD). Errores de validación lanzan `DomainError`.
+
+- **Aplicación (Adaptador Primario):** El controlador `ListaHcAdultosController` construye el agregado desde `req.params.id` (`construirAgregado(req)`), captura `DomainError` para responder HTTP 400 y orquesta la llamada al repositorio para devolver las historias clínicas en JSON.
+- **Infraestructura (Adaptador Secundario):** El repositorio importa `pool` desde `db/db.js` y ejecuta `SELECT * FROM fn_listar_historias_clinicas_adultos_por_estudiante($1)` usando los parámetros posicionales de `agregado.obtenerParametros()`, aislando la lógica SQL del dominio.
+
+Este vertical slice separa validación, orquestación y acceso a datos, facilitando pruebas unitarias y reemplazo de adaptadores.
+
+### Módulo: Patient (Vertical Slice)
+
+**Dominio (Core Pura):** Value Objects validan `nombre` y `apellido` como textos no vacíos, `fechaNacimiento` como fecha válida (o nulo) e `id` como UUID; `PatientAggregate` protege estas invariantes y expone `obtenerParametrosParaCrear()` y `obtenerParametrosParaActualizar()` (sin acceso a BD). Errores de validación lanzan `DomainError`.
+
+- **Aplicación (Adaptador Primario):** `PatientController` construye el agregado desde `req.body` o `req.params` (`construirAgregadoParaCrear`, `construirAgregadoParaActualizar`), traduce `DomainError` a HTTP 400 y orquesta llamadas a `PatientRepository` para crear o actualizar.
+- **Infraestructura (Adaptador Secundario):** `PatientRepository` importa `pool` desde `db/db.js` y ejecuta `SELECT fn_crear_paciente(...)` y `CALL u_paciente(...)` utilizando los parámetros posicionales del agregado, aislando la SQL del dominio.
+
+## Módulo: Catalogo (Vertical Slice)
+
+- **Dominio (Core Pura):** Contiene Value Objects que validan y normalizan el nombre del catálogo (lista blanca) y el id (positivo). El dominio no conoce la base de datos y lanza `DomainError` en caso de validaciones fallidas (`CatalogNameValueObject`, `IdPositiveValueObject`, `CatalogoAggregate`).
+- **Aplicación (Adaptador Primario):** El controlador construye el agregado desde `req.params`, captura `DomainError` para responder con HTTP 400 y orquesta llamadas al repositorio para listar o resolver nombres de opciones.
+- **Infraestructura (Adaptador Secundario):** El repositorio importa `pool` desde `db/db.js` y ejecuta consultas SQL limitadas a tablas permitidas. La interpolación del nombre de tabla se realiza sólo después de la validación del dominio para minimizar riesgo de inyección.
+
+Este patrón separa validación y reglas del negocio del acceso a la base de datos, facilitando pruebas unitarias y reemplazo de adaptadores.

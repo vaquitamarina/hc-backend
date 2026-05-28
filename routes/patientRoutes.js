@@ -1,11 +1,8 @@
 import { Router } from 'express';
-import { PatientController } from '../controllers/patients/patientController.js';
-import { PatientModel } from '../models/patient/patientModel.js';
+import { PatientController } from '../patient/application/patientController.js';
 
 export const patientRoutes = Router();
 
-const patientController = new PatientController(PatientModel);
-
 // POST /api/pacientes - Crear nuevo paciente
-patientRoutes.post('/', patientController.registrarPaciente);
-patientRoutes.put('/:id', patientController.actualizarPaciente);
+patientRoutes.post('/', PatientController.registrarPaciente);
+patientRoutes.put('/:id', PatientController.actualizarPaciente);
