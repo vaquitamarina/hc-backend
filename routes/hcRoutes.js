@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { HcController } from '../controllers/hc/hcController.js';
-import { HcModel } from '../models/hc/hcModel.js';
-import { listarHistoriasClinicasAdultasDeEstudiante } from '../controllers/hc/hcController/listaHcAdultos.js';
+import HcController from '../hc/application/hcController.js';
+import { ListaHcAdultosController } from '../listaHcAdultos/application/listaHcAdultosController.js';
 import { ExamenGeneralController } from '../examenGeneral/application/examenGeneralController.js';
 import { ExamenRegionalController } from '../examenRegional/application/examenRegionalController.js';
 import { ExamenBocaController } from '../examenBoca/application/examenBocaController.js';
@@ -17,8 +16,6 @@ import { EnfermedadActualController } from '../enfermedadActual/application/enfe
 import { ModuloController } from '../filiacion/application/filiacionController.js';
 
 export const hcRoutes = Router();
-
-const hcController = new HcController(HcModel);
 
 hcRoutes.use(authMiddleware);
 
@@ -114,15 +111,15 @@ hcRoutes.put(
   ModuloController.actualizarDatosPersonalesPaciente
 );
 
-hcRoutes.get('/:id/patient', hcController.consultarPacientePorHistoriaClinica);
+hcRoutes.get('/:id/patient', HcController.consultarPacientePorHistoriaClinica);
 
-hcRoutes.post('/review', hcController.registrarRevisionHistoriaClinica);
+hcRoutes.post('/review', HcController.registrarRevisionHistoriaClinica);
 
 // Nuevas rutas para el flujo de borrador
-hcRoutes.post('/draft', hcController.obtenerBorradorHistoriaClinica);
-hcRoutes.patch('/assign-patient', hcController.asignarPacienteAHistoriaClinica);
+hcRoutes.post('/draft', HcController.obtenerBorradorHistoriaClinica);
+hcRoutes.patch('/assign-patient', HcController.asignarPacienteAHistoriaClinica);
 // Endpoint para registrar una historia clínica
-hcRoutes.post('/register', hcController.registrarHistoriaClinica);
+hcRoutes.post('/register', HcController.registrarHistoriaClinica);
 // Nuevo endpoint para asignar alumno a una historia clínica
 
 // --- RUTAS DE EXAMEN FÍSICO GENERAL ---
@@ -218,9 +215,9 @@ hcRoutes.get('/:id/evolucion', EvolucionController.consultarEvoluciones);
 hcRoutes.post('/:id/evolucion', EvolucionController.registrarEvolucion);
 
 // Endpoint para obtener todas las historias clínicas de un estudiante
-hcRoutes.get('/student/:id', hcController.listarHistoriasClinicasPorEstudiante);
+hcRoutes.get('/student/:id', HcController.listarHistoriasClinicasPorEstudiante);
 // Endpoint para obtener historias clínicas adultas de un estudiante específico
 hcRoutes.get(
   '/student/:id/adult-historias',
-  listarHistoriasClinicasAdultasDeEstudiante
+  ListaHcAdultosController.listarHistoriasClinicasAdultasDeEstudiante
 );
